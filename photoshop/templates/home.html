@@ -3,509 +3,475 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Photoghor Gallery</title>
-    
-</head>
-<style>
-   
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fff;
-}
-
-header {
-    background-color: #111;
-    color: white;
-    padding: 20px 0;
-    position: sticky;
-    top: 0;
-    z-index: 999;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-
-.nav-links {
-    display: none; 
-}
-
-.nav-links ul {
-    list-style: none;
-    display: flex;
-    gap: 25px;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-links a {
-    color: #ccc;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    transition: color 0.3s;
-}
-
-.nav-links a:hover {
-    color: white;
-}
-
-
-.nav-links.active {
-    display: block;
-}
-
-
-.hamburger {
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.bar {
-    width: 30px;
-    height: 2px;
-    background-color: white;
-    transition: 0.3s;
-}
-
-
-.hamburger.open .bar:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-}
-
-.hamburger.open .bar:nth-child(2) {
-    opacity: 0;
-}
-
-.hamburger.open .bar:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-}
-
-
-.gallery-container {
-    padding: 40px 20px;
-}
-
-.photo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.photo-item img {
-    width: 100%;
-    display: block;
-}
-.hero-banner {
-    position: relative;
-    background-image: url('https://www.shutterstock.com/image-photo/photographer-photographic-camera-dslr-photo-260nw-525066541.jpg'); 
-    background-size: cover;
-    background-position: center;
-    height: 180px; /* Adjust height as needed */
-    display: flex;
-    align-items: center;
-    color: #ffffff;
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
-}
-
-
-.hero-banner::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: 1;
-}
-
-.banner-container {
-    position: relative;
-    z-index: 2; /* Ensures text stays above the dark overlay */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; /* Limits content width on large screens */
-    margin: 0 auto;
-    padding: 0 50px;
-}
-
-.banner-title {
-    font-size: 42px;
-    font-weight: 800;
-    margin: 0;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.breadcrumbs {
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-}
-
-.breadcrumbs a {
-    color: #ffffff;
-    text-decoration: none;
-    transition: opacity 0.3s;
-}
-
-.breadcrumbs a:hover {
-    opacity: 0.7;
-}
-
-/* Mobile Responsive styling */
-@media (max-width: 768px) {
-    .banner-container {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-        padding: 0 20px;
-    }
-    
-    .banner-title {
-        font-size: 32px;
-    }
-}
-
-
-        .menu-section{
-            width:100%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            gap:40px;
-            padding:50px 20px;
-            flex-wrap:wrap;
-            
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .menu-section a{
-            text-decoration:none;
-            color:#222;
-            font-size:15px;
-            font-weight:700;
-            text-transform:uppercase;
-            letter-spacing:1px;
-            padding:12px 28px;
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff;
+            overflow-x: hidden;
+        }
 
-    border:2px solid #e0b04f;
+        /* ===== HEADER ===== */
+        header.top-header {
+            background-color: #111;
+            color: white;
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
 
-    border-radius:40px;
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
 
-    transition:0.3s;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    background:#fff;
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* ===== HAMBURGER ===== */
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 6px;
+        }
+
+        .bar {
+            width: 26px;
+            height: 2px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .hamburger.open .bar:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.open .bar:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* ===== MOBILE NAV DRAWER ===== */
+        .nav-drawer {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 75vw;
+            max-width: 280px;
+            height: 100vh;
+            background: #111;
+            z-index: 1100;
+            flex-direction: column;
+            padding: 60px 24px 32px;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-drawer.active {
+            display: flex;
+        }
+
+        .nav-drawer ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .nav-drawer ul li {
+            border-bottom: 1px solid #222;
+        }
+
+        .nav-drawer ul li:first-child {
+            border-top: 1px solid #222;
+        }
+
+        .nav-drawer a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: block;
+            padding: 16px 0;
+            transition: color 0.2s;
+        }
+
+        .nav-drawer a:hover,
+        .nav-drawer a:active {
+            color: #e0b04f;
+        }
+
+        .nav-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 6px;
+            line-height: 1;
+        }
+
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1050;
+        }
+
+        .nav-overlay.active {
+            display: block;
+        }
+
+        /* ===== HERO BANNER ===== */
+        .hero-banner {
+            position: relative;
+            background-image: url('https://www.shutterstock.com/image-photo/photographer-photographic-camera-dslr-photo-260nw-525066541.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1;
+        }
+
+        .banner-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .banner-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .breadcrumbs {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .breadcrumbs a {
+            color: #e0b04f;
+            text-decoration: none;
+        }
+
+        .breadcrumbs span {
+            color: #ccc;
+        }
+
+        /* ===== CATEGORY MENU ===== */
+        .menu-section {
+            width: 100%;
+            display: flex;
+            gap: 10px;
+            padding: 20px 16px 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .menu-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        .menu-section a {
+            text-decoration: none;
+            color: #222;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 9px 18px;
+            border: 2px solid #e0b04f;
+            border-radius: 40px;
+            white-space: nowrap;
+            transition: 0.25s;
+            background: #fff;
+            flex-shrink: 0;
         }
 
         .menu-section a:hover,
-        .menu-section a.active{
-            background:#e0b04f;
-
-            color:#fff;
-
-            transform:translateY(-2px);
+        .menu-section a.active {
+            background: #e0b04f;
+            color: #fff;
         }
-/* ================= GALLERY ================= */
 
-.gallery{
-
-    width:250%;
-    height: 500px;
-
-    max-width:1200px;
-
-    margin:auto;
-
-    padding:40px 20px;
-
-    display:grid;
-
-    grid-template-columns:repeat(4,1fr);
-
-    gap:25px;
-}
-
-/* ================= IMAGE BOX ================= */
-
-.gallery-item{
-
-    position:relative;
-
-    overflow:hidden;
-
-    border-radius:4px;
-}
-
-/* ================= IMAGE ================= */
-
-.gallery-item img{
-
-    width:100%;
-
-    height:250px;
-
-    object-fit:cover;
-
-    display:block;
-
-    transition:0.4s;
-}
-
-/* ================= HOVER ================= */
-
-.gallery-item:hover img{
-
-    transform:scale(1.05);
-}
-
-/* ================= OVERLAY ================= */
-
-.overlay{
-
-    position:absolute;
-
-    top:0;
-
-    left:0;
-
-    width:100%;
-
-    height:100%;
-
-    background:rgba(0,0,0,0.35);
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    opacity:0;
-
-    transition:0.4s;
-    color: #e0b04f;
-}
-
-.gallery-item:hover .overlay{
-
-    opacity:1;
-}
-
-/* ================= TITLE ================= */
-
-.overlay h3{
-
-    color:#fff;
-
-    font-size:13px;
-
-    font-weight:600;
-
-    text-transform:uppercase;
-}
-
-/* ================= TABLET ================= */
-
-@media(max-width:992px){
-
-    .gallery{
-
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
-/* ================= MOBILE ================= */
-
-@media(max-width:576px){
-
-    .gallery{
-
-        grid-template-columns:1fr;
-    }
-
-    .gallery-item img{
-
-        height:220px;
-    }
-}
-
-.gallery-item{
-    position:relative;
-    overflow:hidden;
-    border-radius:12px;
-}
-
-.gallery-item img{
-    width:100%;
-    height:250px;
-    object-fit:cover;
-    display:block;
-    transition:0.4s;
-}
-
-/* Hide icon by default */
-.icon {
-    width: 25px;
-    height: 25px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    background: rgba(80, 80, 80, 0.75);
-    color: #fff;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    z-index: 10;
-    cursor: pointer;
-    transition: 0.3s;
-    
-
-    /* ✅ Always visible */
-    opacity: 1;
-    visibility: hidden;
-    transform: scale(1);
-}
-
-.icon:hover {
-    background: rgba(20, 20, 20, 0.95);
-    transform: scale(1.1);
-}
-
-/* Show icon when hovering the gallery-item */
-.gallery-item:hover .icon {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-}
-
-/* Icon hover effect */
-.icon:hover {
-   background: #00f0ff;
-    color: #000;
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.9);
-    transform: scale(1.1);
-    background: url("{% static 'images/11.jpg' %}");
-}
-.lightbox {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    
-}
-
-.close {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-
-    width: 42px;
-    height: 42px;
-
-    background: transparent;
-    color: #00f0ff;
-    border-radius: 8px;
-    border: 2px solid #00f0ff;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 18px;
-    cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
-}
-
-.close:hover {
-    background: #00f0ff;
-    color: #000;
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.9);
-    transform: scale(1.1);
-}
-#lb-download {
-    position: absolute;
-    top: 15px;
-    right: 70px;
-
-    width: 42px;
-    height: 42px;
-
-    background: transparent;
-    color: #2563eb;
-    border-radius: 8px;
-    border: 2px solid #2563eb;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 18px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: 0.3s;
-    box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
-}
-
-#lb-download:hover {
-    background: #2563eb;
-    color: #fff;
-    box-shadow: 0 0 25px rgba(37, 99, 235, 0.9);
-    transform: scale(1.1);
-}
-
-</style>
+        /* ===== GALLERY GRID ===== */
+        .gallery {
+            width: 100%;
+            max-width: 100%;
+            padding: 12px 12px 40px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        /* ===== GALLERY ITEM ===== */
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease;
+        }
+
+        .gallery-item:active img {
+            transform: scale(1.04);
+        }
+
+        /* ===== OVERLAY ===== */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.38);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .overlay,
+        .gallery-item:active .overlay {
+            opacity: 1;
+        }
+
+        .overlay h3 {
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-align: center;
+            padding: 0 8px;
+        }
+
+        /* ===== EYE ICON ===== */
+        .icon {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.25s;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .gallery-item:hover .icon,
+        .gallery-item:active .icon {
+            opacity: 1;
+        }
+
+        .icon:active {
+            background: #00f0ff;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.93);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .lightbox.open {
+            display: flex;
+        }
+
+        #lightbox-img {
+            width: calc(100% - 24px);
+            max-height: 60vh;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        #lb-counter {
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .lb-close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            width: 38px;
+            height: 38px;
+            background: transparent;
+            color: #00f0ff;
+            border-radius: 8px;
+            border: 1.5px solid #00f0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .lb-close:active {
+            background: #00f0ff;
+            color: #000;
+        }
+
+        #lb-download {
+            position: absolute;
+            top: 10px;
+            right: 58px;
+            width: 38px;
+            height: 38px;
+            background: transparent;
+            color: #2563eb;
+            border-radius: 8px;
+            border: 1.5px solid #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+        }
+
+        #lb-download:active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .lb-login-download {
+            position: absolute;
+            top: 14px;
+            right: 58px;
+            color: #fff;
+            font-size: 11px;
+            text-decoration: none;
+            background: rgba(37,99,235,0.2);
+            border: 1.5px solid #2563eb;
+            border-radius: 8px;
+            padding: 0 10px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        /* ===== LIGHTBOX ARROWS ===== */
+        .lb-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 32px;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+            user-select: none;
+            padding: 10px 8px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            line-height: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .lb-arrow:active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .lb-arrow.left { left: 8px; }
+        .lb-arrow.right { right: 8px; }
+
+        /* ===== SWIPE HINT ===== */
+        .lb-swipe-hint {
+            position: absolute;
+            bottom: 24px;
+            color: rgba(255,255,255,0.35);
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
 <body>
 
-    <header>
+    <!-- TOP HEADER -->
+    <header class="top-header">
         <div class="container header-content">
             <div class="logo">PHOTOGHOR</div>
-            
-            <nav id="nav-menu" class="nav-links">
-                <ul>
-                    <li><a href="#">HOME</a></li>
-                    <li><a href="#">PHOTO GALLERY</a></li>
-                    <li><a href="#">2 COLUMN GALLERY</a></li>
-                    <li><a href="#">4 COLUMN GALLERY</a></li>
-                    <li><a href="#">PHOTO DETAILS</a></li>
-                </ul>
-            </nav>
-
-            <div id="menu-toggle" class="hamburger">
+            <div id="menu-toggle" class="hamburger" aria-label="Open navigation" role="button" tabindex="0">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -513,167 +479,153 @@ header {
         </div>
     </header>
 
-  <header class="hero-banner">
-    <div class="banner-container">
-        <h1 class="banner-title">PHOTO GALLERY</h1>
-        <nav class="breadcrumbs">
-            <a href="{% url 'index' %}">HOME</a> /
-            <span>PHOTO GALLERY</span>
-        </nav>
-    </div>
-  </header>
+    <!-- NAV OVERLAY -->
+    <div class="nav-overlay" id="nav-overlay"></div>
 
-<div class="menu-section">
+    <!-- NAV DRAWER -->
+    <nav class="nav-drawer" id="nav-drawer" aria-label="Main navigation">
+        <button class="nav-close" id="nav-close" aria-label="Close navigation">&#10005;</button>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Photo Gallery</a></li>
+            <li><a href="#">2 Column Gallery</a></li>
+            <li><a href="#">4 Column Gallery</a></li>
+            <li><a href="#">Photo Details</a></li>
+        </ul>
+    </nav>
 
-    <a href="{% url 'home' %}"
-       class="{% if not request.GET.category %}active{% endif %}">
-        ALL
-    </a>
-
-    {% for category in categories %}
-
-    <a href="{% url 'home' %}?category={{ category.name }}"
-       class="{% if request.GET.category == category.name %}active{% endif %}">
-
-        {{ category.name }}
-
-    </a>
-
-    {% endfor %}
-
-</div>
-
-    <!-- GALLERY -->
-<section class="gallery">
-
-    {% for photo in photos %}
-
-  <div class="gallery-item">
-    <a href="{% url 'photo_detail' photo.id %}">
-        <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
-        <div class="overlay">
-            <h3>{{ photo.title }}</h3>
+    <!-- HERO BANNER -->
+    <header class="hero-banner">
+        <div class="banner-container">
+            <h1 class="banner-title">Photo Gallery</h1>
+            <nav class="breadcrumbs">
+                <a href="{% url 'index' %}">Home</a> /
+                <span>Photo Gallery</span>
+            </nav>
         </div>
-    </a>
-  <div class="icon" onclick="openImage('{{ photo.image.url }}')">
-    
-      <i class="fa-solid fa-eye"></i>
-  </div>
-</div>
+    </header>
 
-    {% endfor %}
+    <!-- CATEGORY MENU (Horizontal Scroll) -->
+    <div class="menu-section">
+        <a href="{% url 'home' %}" class="{% if not request.GET.category %}active{% endif %}">All</a>
+        {% for category in categories %}
+        <a href="{% url 'home' %}?category={{ category.name }}"
+           class="{% if request.GET.category == category.name %}active{% endif %}">
+            {{ category.name }}
+        </a>
+        {% endfor %}
+    </div>
 
-</section>
-<div class="lightbox" id="lightbox">
-    <div style="position:absolute;top:15px;left:20px;color:#fff;font-size:14px;font-weight:600;" id="lb-counter"></div>
-    <span class="close" onclick="closeImage()" style="font-size:30px;">&#10005;</span>
-    <a onclick="changeImage(-1)" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:40px;color:#fff;cursor:pointer;user-select:none;">&#8592;</a>
-    <img id="lightbox-img" style="width:90%;max-width:900px;max-height:85vh;border-radius:10px;">
-    <a id="lb-download" download style="position:absolute;top:15px;right:70px;color:#fff;font-size:26px;cursor:pointer;text-decoration:none;" title="Download">&#8681;</a>
-   
-    <a onclick="changeImage(1)" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:40px;color:#fff;cursor:pointer;user-select:none;">&#8594;</a>
-</div>
-    {% if request.session.userid %}
+    <!-- GALLERY GRID -->
+    <section class="gallery">
+        {% for photo in photos %}
+        <div class="gallery-item">
+            <a href="{% url 'photo_detail' photo.id %}">
+                <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+                <div class="overlay">
+                    <h3>{{ photo.title }}</h3>
+                </div>
+            </a>
+            <div class="icon" onclick="openImage('{{ photo.image.url }}')">
+                <i class="fa-solid fa-eye"></i>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
 
-    <a id="lb-download"
-       download
-       style="position:absolute;
-              top:15px;
-              right:70px;
-              color:#fff;
-              font-size:26px;
-              cursor:pointer;
-              text-decoration:none;"
-       title="Download">
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+        <div id="lb-counter"></div>
 
-        &#8681;
+        <button class="lb-close" onclick="closeImage()">&#10005;</button>
 
-    </a>
+        {% if request.session.userid %}
+        <a id="lb-download" download title="Download">&#8681;</a>
+        {% else %}
+        <a href="{% url 'index' %}" class="lb-login-download" title="Login to Download">Login to Download</a>
+        {% endif %}
 
-    {% else %}
+        <span class="lb-arrow left" onclick="changeImage(-1)">&#8592;</span>
+        <img id="lightbox-img" src="" alt="Preview">
+        <span class="lb-arrow right" onclick="changeImage(1)">&#8594;</span>
 
-    <a href="{% url 'index' %}"
-       class="login-download"
-       style="position:absolute;
-              top:15px;
-              right:70px;
-              color:#fff;
-              font-size:18px;
-              text-decoration:none;">
+        <span class="lb-swipe-hint">Swipe left / right to navigate</span>
+    </div>
 
-        Login to Download
+    <script>
+        /* ===== HAMBURGER / DRAWER ===== */
+        const toggle = document.getElementById('menu-toggle');
+        const drawer = document.getElementById('nav-drawer');
+        const overlay = document.getElementById('nav-overlay');
+        const closeBtn = document.getElementById('nav-close');
 
-    </a>
+        function openDrawer() {
+            drawer.classList.add('active');
+            overlay.classList.add('active');
+            toggle.classList.add('open');
+        }
+        function closeDrawer() {
+            drawer.classList.remove('active');
+            overlay.classList.remove('active');
+            toggle.classList.remove('open');
+        }
 
-    {% endif %}
+        toggle.addEventListener('click', openDrawer);
+        overlay.addEventListener('click', closeDrawer);
+        closeBtn.addEventListener('click', closeDrawer);
 
-    <!-- NEXT -->
+        /* ===== LIGHTBOX ===== */
+        let images = [];
+        let currentIndex = 0;
 
-    <a onclick="changeImage(1)"
-       style="position:absolute;
-              right:20px;
-              top:50%;
-              transform:translateY(-50%);
-              font-size:40px;
-              color:#fff;
-              cursor:pointer;
-              user-select:none;">
-
-        &#8594;
-
-    </a>
-
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const menuToggle = document.getElementById('menu-toggle');
-        const navMenu = document.getElementById('nav-menu');
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            menuToggle.classList.toggle('open');
+        document.addEventListener('DOMContentLoaded', () => {
+            images = Array.from(document.querySelectorAll('.gallery-item img')).map(img => img.src);
         });
-    });
 
-    let images = [];
-    let currentIndex = 0;
+        function openImage(src) {
+            currentIndex = images.indexOf(src);
+            if (currentIndex === -1) currentIndex = 0;
+            showImage(currentIndex);
+            document.getElementById('lightbox').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        images = Array.from(document.querySelectorAll('.gallery-item img')).map(img => img.src);
-    });
+        function showImage(index) {
+            const img = document.getElementById('lightbox-img');
+            const dl = document.getElementById('lb-download');
+            const counter = document.getElementById('lb-counter');
+            img.src = images[index];
+            if (dl) dl.href = images[index];
+            counter.textContent = (index + 1) + ' / ' + images.length;
+        }
 
-    function openImage(src) {
-        currentIndex = images.indexOf(src);
-        if (currentIndex === -1) currentIndex = 0;
-        showImage(currentIndex);
-        document.getElementById('lightbox').style.display = 'flex';
-    }
+        function changeImage(direction) {
+            currentIndex = (currentIndex + direction + images.length) % images.length;
+            showImage(currentIndex);
+        }
 
-    function showImage(index) {
-        const img = document.getElementById('lightbox-img');
-        const dl = document.getElementById('lb-download');
-        const counter = document.getElementById('lb-counter');
-        img.src = images[index];
-        dl.href = images[index];
-        counter.textContent = (index + 1) + ' / ' + images.length;
-    }
+        function closeImage() {
+            document.getElementById('lightbox').classList.remove('open');
+            document.body.style.overflow = '';
+        }
 
-    function changeImage(direction) {
-        currentIndex = (currentIndex + direction + images.length) % images.length;
-        showImage(currentIndex);
-    }
+        /* ===== KEYBOARD ===== */
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('open')) return;
+            if (e.key === 'ArrowRight') changeImage(1);
+            if (e.key === 'ArrowLeft') changeImage(-1);
+            if (e.key === 'Escape') closeImage();
+        });
 
-    function closeImage() {
-        document.getElementById('lightbox').style.display = 'none';
-    }
-
-    document.addEventListener('keydown', (e) => {
+        /* ===== TOUCH SWIPE for LIGHTBOX ===== */
+        let touchStartX = 0;
         const lb = document.getElementById('lightbox');
-        if (lb.style.display !== 'flex') return;
-        if (e.key === 'ArrowRight') changeImage(1);
-        if (e.key === 'ArrowLeft') changeImage(-1);
-        if (e.key === 'Escape') closeImage();
-    });
-</script>
+        lb.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+        lb.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 40) changeImage(diff > 0 ? 1 : -1);
+        });
+    </script>
+
 </body>
 </html>
