@@ -1,0 +1,273 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Photoghor | Login</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body{
+            width:100%;
+            min-height:100vh;
+
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+
+            padding:120px;
+
+            background-image:url("{% static 'images/1920.jpg' %}");
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+
+            position:relative;
+        }
+
+        /* ================= DARK OVERLAY ================= */
+
+        body::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:rgba(0,0,0,0.45);
+        }
+
+        /* ================= LOGIN BOX ================= */
+
+        .login-box{
+            width:100%;
+            max-width:380px;
+
+            background:rgba(17,17,17,0.78);
+
+            padding:45px 35px;
+
+            border-radius:20px;
+
+            backdrop-filter:blur(8px);
+
+            position:relative;
+            z-index:2;
+
+            box-shadow:0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        /* ================= LOGO ================= */
+
+        .logo{
+            text-align:center;
+            color:#fff;
+            font-size:30px;
+            font-weight:800;
+            letter-spacing:2px;
+            margin-bottom:10px;
+        }
+
+        .sub-title{
+            text-align:center;
+            color:#bbb;
+            margin-bottom:35px;
+            font-size:14px;
+            letter-spacing:1px;
+        }
+
+        /* ================= INPUTS ================= */
+
+        .input-group{
+            margin-bottom:20px;
+        }
+
+        .input-group input{
+            width:100%;
+            padding:15px 18px;
+
+            border:none;
+            outline:none;
+
+            border-radius:12px;
+
+            background:#2a2a2a;
+
+            color:#fff;
+
+            font-size:15px;
+        }
+
+        .input-group input::placeholder{
+            color:#aaa;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .login-btn{
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+            border-radius:12px;
+
+            background:#f3b14e;
+
+            color:#111;
+
+            font-size:16px;
+            font-weight:700;
+
+            cursor:pointer;
+
+            transition:0.3s;
+
+            margin-top:10px;
+        }
+
+        .login-btn:hover{
+            background:#fff;
+        }
+
+        .register-link{
+            margin-top:22px;
+            text-align:center;
+            color:#bbb;
+            font-size:14px;
+        }
+
+        .register-link a{
+            color:#f3b14e;
+            text-decoration:none;
+            font-weight:700;
+        }
+
+        .register-link a:hover{
+            color:#fff;
+        }
+
+        /* ================= ERROR MESSAGE ================= */
+
+        .message{
+            width:100%;
+            background:#ff4d4d;
+            color:#fff;
+            padding:12px;
+            border-radius:10px;
+            margin-bottom:20px;
+            text-align:center;
+            font-size:14px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media(max-width:768px){
+
+            body{
+                justify-content:center;
+                padding:30px;
+            }
+
+            .login-box{
+                padding:40px 25px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-box">
+
+        <div class="logo">
+
+            PHOTOGHOR
+
+        </div>
+
+        <div class="sub-title">
+
+            LOGIN TO YOUR ACCOUNT
+
+        </div>
+
+        <!-- DJANGO MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+        <!-- LOGIN FORM -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="input-group">
+
+    <input type="email"
+           name="email"
+           placeholder="Enter Email ID"
+           required>
+
+</div>
+
+            <div class="input-group">
+
+                <input type="password"
+                       name="password"
+                       placeholder="Enter Password"
+                       required>
+
+            </div>
+
+            <button type="submit"
+                    class="login-btn">
+                LOGIN
+            </button>
+
+        </form>
+
+        <!-- REGISTER -->
+
+        <div class="register-link">
+
+            Don't have an account?
+
+            <a href="{% url 'register' %}">
+
+                Register
+
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
