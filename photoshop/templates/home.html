@@ -56,18 +56,42 @@ header.top-header {
 }
 
 /* ===========================
-   DESKTOP NAV — hidden always (hamburger replaces it)
+   DESKTOP NAV — visible on desktop
 =========================== */
 .nav-links {
-    display: none;
+    display: flex;
+    align-items: center;
+}
+
+.nav-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 28px;
+}
+
+.nav-links ul li a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    white-space: nowrap;
+}
+
+.nav-links ul li a:hover {
+    color: #e0b04f;
 }
 
 /* ===========================
-   HAMBURGER — always visible
+   HAMBURGER — hidden on desktop, visible on mobile
 =========================== */
 .hamburger {
     cursor: pointer;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 6px;
     padding: 4px;
@@ -519,6 +543,10 @@ header.top-header {
 
     .nav-links {
         display: none !important;
+    }
+
+    .hamburger {
+        display: flex !important;
     }
 
     .hero-banner {
