@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,626 +6,851 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Photoghor Gallery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fff;
-            overflow-x: hidden;
-        }
-
-        /* ===== HEADER ===== */
-        header.top-header {
-            background-color: #111;
-            color: white;
-            padding: 14px 0;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-        }
-
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        /* ===== HAMBURGER ===== */
-        .hamburger {
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            padding: 6px;
-        }
-
-        .bar {
-            width: 26px;
-            height: 2px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 2px;
-        }
-
-        .hamburger.open .bar:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
-        }
-        .hamburger.open .bar:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.open .bar:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-
-        /* ===== MOBILE NAV DRAWER ===== */
-        .nav-drawer {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 75vw;
-            max-width: 280px;
-            height: 100vh;
-            background: #111;
-            z-index: 1100;
-            flex-direction: column;
-            padding: 60px 24px 32px;
-            box-shadow: -4px 0 20px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
-        }
-
-        .nav-drawer.active {
-            display: flex;
-        }
-
-        .nav-drawer ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .nav-drawer ul li {
-            border-bottom: 1px solid #222;
-        }
-
-        .nav-drawer ul li:first-child {
-            border-top: 1px solid #222;
-        }
-
-        .nav-drawer a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            display: block;
-            padding: 16px 0;
-            transition: color 0.2s;
-        }
-
-        .nav-drawer a:hover,
-        .nav-drawer a:active {
-            color: #e0b04f;
-        }
-
-        .nav-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 6px;
-            line-height: 1;
-        }
-
-        .nav-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 1050;
-        }
-
-        .nav-overlay.active {
-            display: block;
-        }
-
-        /* ===== HERO BANNER ===== */
-        .hero-banner {
-            position: relative;
-            background-image: url('https://www.shutterstock.com/image-photo/photographer-photographic-camera-dslr-photo-260nw-525066541.jpg');
-            background-size: cover;
-            background-position: center;
-            height: 130px;
-            display: flex;
-            align-items: center;
-            color: #fff;
-            overflow: hidden;
-        }
-
-        .hero-banner::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 1;
-        }
-
-        .banner-container {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            padding: 0 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .banner-title {
-            font-size: 24px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            line-height: 1.1;
-        }
-
-        .breadcrumbs {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .breadcrumbs a {
-            color: #e0b04f;
-            text-decoration: none;
-        }
-
-        .breadcrumbs span {
-            color: #ccc;
-        }
-
-        /* ===== CATEGORY MENU ===== */
-        .menu-section {
-            width: 100%;
-            display: flex;
-            gap: 10px;
-            padding: 20px 16px 10px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .menu-section::-webkit-scrollbar {
-            display: none;
-        }
-
-        .menu-section a {
-            text-decoration: none;
-            color: #222;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 9px 18px;
-            border: 2px solid #e0b04f;
-            border-radius: 40px;
-            white-space: nowrap;
-            transition: 0.25s;
-            background: #fff;
-            flex-shrink: 0;
-        }
-
-        .menu-section a:hover,
-        .menu-section a.active {
-            background: #e0b04f;
-            color: #fff;
-        }
-
-        /* ===== GALLERY GRID ===== */
-        .gallery {
-            width: 100%;
-            max-width: 100%;
-            padding: 12px 12px 40px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        /* ===== GALLERY ITEM ===== */
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.35s ease;
-        }
-
-        .gallery-item:active img {
-            transform: scale(1.04);
-        }
-
-        /* ===== OVERLAY ===== */
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.38);
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            padding-bottom: 10px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .gallery-item:hover .overlay,
-        .gallery-item:active .overlay {
-            opacity: 1;
-        }
-
-        .overlay h3 {
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin: 0;
-            letter-spacing: 0.5px;
-            text-align: center;
-            padding: 0 8px;
-        }
-
-        /* ===== EYE ICON ===== */
-        .icon {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            width: 32px;
-            height: 32px;
-            background: rgba(0,0,0,0.55);
-            color: #fff;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.25s;
-            opacity: 0;
-            z-index: 5;
-        }
-
-        .gallery-item:hover .icon,
-        .gallery-item:active .icon {
-            opacity: 1;
-        }
-
-        .icon:active {
-            background: #00f0ff;
-            color: #000;
-            transform: scale(1.1);
-        }
-
-        /* ===== LIGHTBOX ===== */
-        .lightbox {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.93);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            flex-direction: column;
-        }
-
-        .lightbox.open {
-            display: flex;
-        }
-
-        #lightbox-img {
-            width: calc(100% - 24px);
-            max-height: 60vh;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-
-        #lb-counter {
-            position: absolute;
-            top: 14px;
-            left: 16px;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .lb-close {
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            width: 38px;
-            height: 38px;
-            background: transparent;
-            color: #00f0ff;
-            border-radius: 8px;
-            border: 1.5px solid #00f0ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-
-        .lb-close:active {
-            background: #00f0ff;
-            color: #000;
-        }
-
-        #lb-download {
-            position: absolute;
-            top: 10px;
-            right: 58px;
-            width: 38px;
-            height: 38px;
-            background: transparent;
-            color: #2563eb;
-            border-radius: 8px;
-            border: 1.5px solid #2563eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.25s;
-        }
-
-        #lb-download:active {
-            background: #2563eb;
-            color: #fff;
-        }
-
-        .lb-login-download {
-            position: absolute;
-            top: 14px;
-            right: 58px;
-            color: #fff;
-            font-size: 11px;
-            text-decoration: none;
-            background: rgba(37,99,235,0.2);
-            border: 1.5px solid #2563eb;
-            border-radius: 8px;
-            padding: 0 10px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-        }
-
-        /* ===== LIGHTBOX ARROWS ===== */
-        .lb-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 32px;
-            color: rgba(255,255,255,0.8);
-            cursor: pointer;
-            user-select: none;
-            padding: 10px 8px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 8px;
-            line-height: 1;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .lb-arrow:active {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .lb-arrow.left { left: 8px; }
-        .lb-arrow.right { right: 8px; }
-
-        /* ===== SWIPE HINT ===== */
-        .lb-swipe-hint {
-            position: absolute;
-            bottom: 24px;
-            color: rgba(255,255,255,0.35);
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-    </style>
 </head>
+
+<style>
+
+/* ===========================
+   RESET & BASE
+=========================== */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    overflow-x: hidden;
+}
+
+/* ===========================
+   HEADER (DESKTOP)
+=========================== */
+header.top-header {
+    background-color: #111;
+    color: white;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* ===========================
+   DESKTOP NAV — hidden always (hamburger replaces it)
+=========================== */
+.nav-links {
+    display: none;
+}
+
+/* ===========================
+   HAMBURGER — always visible
+=========================== */
+.hamburger {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px;
+}
+
+.bar {
+    width: 28px;
+    height: 2px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 2px;
+    display: block;
+}
+
+.hamburger.open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger.open .bar:nth-child(2) { opacity: 0; }
+.hamburger.open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* ===========================
+   MOBILE NAV DRAWER
+=========================== */
+.nav-drawer {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    max-width: 90vw;
+    height: 100vh;
+    background: #111;
+    z-index: 1100;
+    flex-direction: column;
+    padding: 60px 24px 32px;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.6);
+}
+
+.nav-drawer.active {
+    display: flex;
+}
+
+.nav-drawer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-drawer ul li {
+    border-bottom: 1px solid #222;
+}
+
+.nav-drawer ul li:first-child {
+    border-top: 1px solid #222;
+}
+
+.nav-drawer a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: block;
+    padding: 16px 0;
+    transition: color 0.2s;
+}
+
+.nav-drawer a:hover { color: #e0b04f; }
+
+.nav-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px;
+    line-height: 1;
+}
+
+.nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1050;
+}
+
+.nav-overlay.active { display: block; }
+
+/* ===========================
+   HERO BANNER
+=========================== */
+.hero-banner {
+    position: relative;
+    background-image: url('https://www.shutterstock.com/image-photo/photographer-photographic-camera-dslr-photo-260nw-525066541.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    overflow: hidden;
+}
+
+.hero-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1;
+}
+
+.banner-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 50px;
+}
+
+.banner-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.breadcrumbs {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.breadcrumbs a {
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.breadcrumbs a:hover { opacity: 0.7; }
+
+/* ===========================
+   CATEGORY MENU
+=========================== */
+.menu-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 50px 20px;
+    flex-wrap: wrap;
+}
+
+.menu-section a {
+    text-decoration: none;
+    color: #222;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 28px;
+    border: 2px solid #e0b04f;
+    border-radius: 40px;
+    transition: 0.3s;
+    background: #fff;
+}
+
+.menu-section a:hover,
+.menu-section a.active {
+    background: #e0b04f;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* ===========================
+   GALLERY (4 col desktop)
+=========================== */
+.gallery {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+/* ===========================
+   GALLERY ITEM
+=========================== */
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+    transition: 0.4s;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* ===========================
+   OVERLAY
+=========================== */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: 0.4s;
+    color: #e0b04f;
+}
+
+.gallery-item:hover .overlay { opacity: 1; }
+
+.overlay h3 {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* ===========================
+   EYE ICON
+=========================== */
+.icon {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: rgba(80,80,80,0.75);
+    color: #fff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 10;
+    cursor: pointer;
+    transition: 0.3s;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.gallery-item:hover .icon {
+    opacity: 1;
+    visibility: visible;
+}
+
+.icon:hover {
+    background: #00f0ff;
+    color: #000;
+    transform: scale(1.1);
+}
+
+/* ===========================
+   LIGHTBOX
+=========================== */
+.lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    flex-direction: column;
+}
+
+.lightbox.open { display: flex; }
+
+#lb-counter {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#lightbox-img {
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* Close button */
+.lb-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    width: 42px;
+    height: 42px;
+    background: transparent;
+    color: #00f0ff;
+    border-radius: 8px;
+    border: 2px solid #00f0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(0,240,255,0.4);
+    line-height: 1;
+}
+
+.lb-close:hover {
+    background: #00f0ff;
+    color: #000;
+    box-shadow: 0 0 25px rgba(0,240,255,0.9);
+    transform: scale(1.1);
+}
+
+/* ===========================
+   DOWNLOAD BUTTON (logged in)
+=========================== */
+#lb-download {
+    position: absolute;
+    top: 15px;
+    right: 70px;
+    width: 42px;
+    height: 42px;
+    background: transparent;
+    color: #2563eb;
+    border-radius: 8px;
+    border: 2px solid #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(37,99,235,0.4);
+}
+
+#lb-download:hover {
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 0 25px rgba(37,99,235,0.9);
+    transform: scale(1.1);
+}
+
+/* ===========================
+   LOGIN TO DOWNLOAD (not logged in)
+=========================== */
+.lb-login-download {
+    position: absolute;
+    top: 15px;
+    right: 70px;
+    color: #fff;
+    font-size: 12px;
+    text-decoration: none;
+    background: rgba(37,99,235,0.15);
+    border: 1.5px solid #2563eb;
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+
+.lb-login-download:hover {
+    background: #2563eb;
+}
+
+/* ===========================
+   ARROWS
+=========================== */
+.lb-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    user-select: none;
+    padding: 10px 8px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.lb-arrow:hover { color: #fff; }
+.lb-arrow.left  { left: 20px; }
+.lb-arrow.right { right: 20px; }
+
+/* ===========================
+   SWIPE HINT (mobile only)
+=========================== */
+.lb-swipe-hint {
+    position: absolute;
+    bottom: 20px;
+    color: rgba(255,255,255,0.3);
+    font-size: 11px;
+    letter-spacing: 1px;
+    display: none;
+}
+
+/* ============================================================
+   TABLET — max-width: 992px
+============================================================ */
+@media (max-width: 992px) {
+    .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+}
+
+/* ============================================================
+   MOBILE — max-width: 768px
+============================================================ */
+@media (max-width: 768px) {
+
+    header.top-header {
+        padding: 14px 0;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .nav-links {
+        display: none !important;
+    }
+
+    .hero-banner {
+        height: 120px;
+    }
+
+    .banner-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 0 16px;
+    }
+
+    .banner-title {
+        font-size: 22px;
+        letter-spacing: 0.5px;
+    }
+
+    .breadcrumbs {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .menu-section {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 10px;
+        padding: 18px 16px 10px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .menu-section::-webkit-scrollbar {
+        display: none;
+    }
+
+    .menu-section a {
+        font-size: 12px;
+        padding: 9px 18px;
+        flex-shrink: 0;
+        transform: none !important;
+    }
+
+    .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 12px 12px 40px;
+    }
+
+    .gallery-item img {
+        height: 155px;
+    }
+
+    .gallery-item {
+        border-radius: 10px;
+    }
+
+    /* Always show eye icon on mobile */
+    .icon {
+        opacity: 1;
+        visibility: visible;
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        right: 7px;
+        top: 7px;
+    }
+
+    /* Always show overlay on mobile */
+    .overlay {
+        opacity: 1;
+        background: rgba(0,0,0,0.22);
+        align-items: flex-end;
+        padding-bottom: 8px;
+    }
+
+    .overlay h3 {
+        font-size: 10px;
+    }
+
+    #lightbox-img {
+        width: calc(100% - 20px);
+        max-height: 62vh;
+    }
+
+    .lb-close {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        top: 10px;
+        right: 12px;
+    }
+
+    #lb-download {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        top: 10px;
+        right: 56px;
+    }
+
+    .lb-login-download {
+        height: 36px;
+        font-size: 11px;
+        top: 10px;
+        right: 56px;
+        padding: 0 8px;
+    }
+
+    .lb-arrow {
+        font-size: 28px;
+        padding: 8px 6px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 8px;
+    }
+
+    .lb-arrow.left  { left: 8px; }
+    .lb-arrow.right { right: 8px; }
+
+    .lb-swipe-hint {
+        display: block;
+    }
+}
+
+/* ============================================================
+   SMALL MOBILE — max-width: 400px
+============================================================ */
+@media (max-width: 400px) {
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-item img {
+        height: 200px;
+    }
+}
+
+</style>
+
 <body>
 
-    <!-- TOP HEADER -->
-    <header class="top-header">
-        <div class="container header-content">
-            <div class="logo">PHOTOGHOR</div>
-            <div id="menu-toggle" class="hamburger" aria-label="Open navigation" role="button" tabindex="0">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+<!-- ===== TOP HEADER ===== -->
+<header class="top-header">
+    <div class="container header-content">
+        <div class="logo">PHOTOGHOR</div>
+
+        <!-- Desktop Nav -->
+        <nav id="nav-menu" class="nav-links">
+            <ul>
+                <li><a href="#">HOME</a></li>
+                <li><a href="#">PHOTO GALLERY</a></li>
+                <li><a href="#">2 COLUMN GALLERY</a></li>
+                <li><a href="#">4 COLUMN GALLERY</a></li>
+                <li><a href="#">PHOTO DETAILS</a></li>
+            </ul>
+        </nav>
+
+        <!-- Mobile Hamburger -->
+        <div id="menu-toggle" class="hamburger" role="button" aria-label="Open navigation" tabindex="0">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Nav Overlay -->
+<div class="nav-overlay" id="nav-overlay"></div>
+
+<!-- Mobile Nav Drawer -->
+<nav class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation">
+    <button class="nav-close" id="nav-close" aria-label="Close navigation">&#10005;</button>
+    <ul>
+        <li><a href="#">HOME</a></li>
+        <li><a href="#">PHOTO GALLERY</a></li>
+        <li><a href="#">2 COLUMN GALLERY</a></li>
+        <li><a href="#">4 COLUMN GALLERY</a></li>
+        <li><a href="#">PHOTO DETAILS</a></li>
+    </ul>
+</nav>
+
+<!-- ===== HERO BANNER ===== -->
+<header class="hero-banner">
+    <div class="banner-container">
+        <h1 class="banner-title">PHOTO GALLERY</h1>
+        <nav class="breadcrumbs">
+            <a href="{% url 'index' %}">HOME</a> /
+            <span>PHOTO GALLERY</span>
+        </nav>
+    </div>
+</header>
+
+<!-- ===== CATEGORY MENU ===== -->
+<div class="menu-section">
+    <a href="{% url 'home' %}" class="{% if not request.GET.category %}active{% endif %}">ALL</a>
+
+    {% for category in categories %}
+    <a href="{% url 'home' %}?category={{ category.name }}"
+       class="{% if request.GET.category == category.name %}active{% endif %}">
+        {{ category.name }}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- ===== GALLERY ===== -->
+<section class="gallery">
+    {% for photo in photos %}
+    <div class="gallery-item">
+        <a href="{% url 'photo_detail' photo.id %}">
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+            <div class="overlay">
+                <h3>{{ photo.title }}</h3>
             </div>
-        </div>
-    </header>
-
-    <!-- NAV OVERLAY -->
-    <div class="nav-overlay" id="nav-overlay"></div>
-
-    <!-- NAV DRAWER -->
-    <nav class="nav-drawer" id="nav-drawer" aria-label="Main navigation">
-        <button class="nav-close" id="nav-close" aria-label="Close navigation">&#10005;</button>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Photo Gallery</a></li>
-            <li><a href="#">2 Column Gallery</a></li>
-            <li><a href="#">4 Column Gallery</a></li>
-            <li><a href="#">Photo Details</a></li>
-        </ul>
-    </nav>
-
-    <!-- HERO BANNER -->
-    <header class="hero-banner">
-        <div class="banner-container">
-            <h1 class="banner-title">Photo Gallery</h1>
-            <nav class="breadcrumbs">
-                <a href="{% url 'index' %}">Home</a> /
-                <span>Photo Gallery</span>
-            </nav>
-        </div>
-    </header>
-
-    <!-- CATEGORY MENU (Horizontal Scroll) -->
-    <div class="menu-section">
-        <a href="{% url 'home' %}" class="{% if not request.GET.category %}active{% endif %}">All</a>
-        {% for category in categories %}
-        <a href="{% url 'home' %}?category={{ category.name }}"
-           class="{% if request.GET.category == category.name %}active{% endif %}">
-            {{ category.name }}
         </a>
-        {% endfor %}
-    </div>
-
-    <!-- GALLERY GRID -->
-    <section class="gallery">
-        {% for photo in photos %}
-        <div class="gallery-item">
-            <a href="{% url 'photo_detail' photo.id %}">
-                <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
-                <div class="overlay">
-                    <h3>{{ photo.title }}</h3>
-                </div>
-            </a>
-            <div class="icon" onclick="openImage('{{ photo.image.url }}')">
-                <i class="fa-solid fa-eye"></i>
-            </div>
+        <div class="icon" onclick="openImage('{{ photo.image.url }}')">
+            <i class="fa-solid fa-eye"></i>
         </div>
-        {% endfor %}
-    </section>
-
-    <!-- LIGHTBOX -->
-    <div class="lightbox" id="lightbox">
-        <div id="lb-counter"></div>
-
-        <button class="lb-close" onclick="closeImage()">&#10005;</button>
-
-        {% if request.session.userid %}
-        <a id="lb-download" download title="Download">&#8681;</a>
-        {% else %}
-        <a href="{% url 'index' %}" class="lb-login-download" title="Login to Download">Login to Download</a>
-        {% endif %}
-
-        <span class="lb-arrow left" onclick="changeImage(-1)">&#8592;</span>
-        <img id="lightbox-img" src="" alt="Preview">
-        <span class="lb-arrow right" onclick="changeImage(1)">&#8594;</span>
-
-        <span class="lb-swipe-hint">Swipe left / right to navigate</span>
     </div>
+    {% endfor %}
+</section>
 
-    <script>
-        /* ===== HAMBURGER / DRAWER ===== */
-        const toggle = document.getElementById('menu-toggle');
-        const drawer = document.getElementById('nav-drawer');
-        const overlay = document.getElementById('nav-overlay');
-        const closeBtn = document.getElementById('nav-close');
+<!-- ===== LIGHTBOX ===== -->
+<div class="lightbox" id="lightbox">
+    <div id="lb-counter"></div>
 
-        function openDrawer() {
-            drawer.classList.add('active');
-            overlay.classList.add('active');
-            toggle.classList.add('open');
-        }
-        function closeDrawer() {
-            drawer.classList.remove('active');
-            overlay.classList.remove('active');
-            toggle.classList.remove('open');
-        }
+    <!-- Close button -->
+    <button class="lb-close" onclick="closeImage()">&#10005;</button>
 
-        toggle.addEventListener('click', openDrawer);
-        overlay.addEventListener('click', closeDrawer);
-        closeBtn.addEventListener('click', closeDrawer);
+    <!-- ✅ FIX: Login check பண்ணி button காட்டுது -->
+    {% if user.is_authenticated %}
+        <!-- Login ஆனால் → Download icon button -->
+        <a id="lb-download" href="#" download title="Download">
+            <i class="fa-solid fa-download"></i>
+        </a>
+    {% else %}
+        <!-- Login ஆகலன்னா → Login to Download link -->
+        <a href="{% url 'login' %}?next={{ request.path }}" class="lb-login-download" title="Login to Download">
+            Login to Download
+        </a>
+    {% endif %}
 
-        /* ===== LIGHTBOX ===== */
-        let images = [];
-        let currentIndex = 0;
+    <span class="lb-arrow left"  onclick="changeImage(-1)">&#8592;</span>
+    <img id="lightbox-img" src="" alt="Preview">
+    <span class="lb-arrow right" onclick="changeImage(1)">&#8594;</span>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            images = Array.from(document.querySelectorAll('.gallery-item img')).map(img => img.src);
-        });
+    <span class="lb-swipe-hint">Swipe to navigate</span>
+</div>
 
-        function openImage(src) {
-            currentIndex = images.indexOf(src);
-            if (currentIndex === -1) currentIndex = 0;
-            showImage(currentIndex);
-            document.getElementById('lightbox').classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
+<script>
+/* ===== MOBILE DRAWER ===== */
+const menuToggle  = document.getElementById('menu-toggle');
+const navDrawer   = document.getElementById('nav-drawer');
+const navOverlay  = document.getElementById('nav-overlay');
+const navClose    = document.getElementById('nav-close');
 
-        function showImage(index) {
-            const img = document.getElementById('lightbox-img');
-            const dl = document.getElementById('lb-download');
-            const counter = document.getElementById('lb-counter');
-            img.src = images[index];
-            if (dl) dl.href = images[index];
-            counter.textContent = (index + 1) + ' / ' + images.length;
-        }
+function openDrawer() {
+    navDrawer.classList.add('active');
+    navOverlay.classList.add('active');
+    menuToggle.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+    navDrawer.classList.remove('active');
+    navOverlay.classList.remove('active');
+    menuToggle.classList.remove('open');
+    document.body.style.overflow = '';
+}
 
-        function changeImage(direction) {
-            currentIndex = (currentIndex + direction + images.length) % images.length;
-            showImage(currentIndex);
-        }
+menuToggle.addEventListener('click', openDrawer);
+navOverlay.addEventListener('click', closeDrawer);
+navClose.addEventListener('click', closeDrawer);
 
-        function closeImage() {
-            document.getElementById('lightbox').classList.remove('open');
-            document.body.style.overflow = '';
-        }
+/* ===== LIGHTBOX ===== */
+let images = [];
+let currentIndex = 0;
 
-        /* ===== KEYBOARD ===== */
-        document.addEventListener('keydown', (e) => {
-            if (!document.getElementById('lightbox').classList.contains('open')) return;
-            if (e.key === 'ArrowRight') changeImage(1);
-            if (e.key === 'ArrowLeft') changeImage(-1);
-            if (e.key === 'Escape') closeImage();
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    images = Array.from(document.querySelectorAll('.gallery-item img')).map(img => img.src);
+});
 
-        /* ===== TOUCH SWIPE for LIGHTBOX ===== */
-        let touchStartX = 0;
-        const lb = document.getElementById('lightbox');
-        lb.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-        lb.addEventListener('touchend', e => {
-            const diff = touchStartX - e.changedTouches[0].screenX;
-            if (Math.abs(diff) > 40) changeImage(diff > 0 ? 1 : -1);
-        });
-    </script>
+function openImage(src) {
+    currentIndex = images.indexOf(src);
+    if (currentIndex === -1) currentIndex = 0;
+    showImage(currentIndex);
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
 
+function showImage(index) {
+    const img     = document.getElementById('lightbox-img');
+    const dl      = document.getElementById('lb-download');  // Login ஆனால் மட்டும் இருக்கும்
+    const counter = document.getElementById('lb-counter');
+
+    img.src = images[index];
+
+    // ✅ Login ஆனவங்களுக்கு மட்டும் download href update ஆகும்
+    if (dl) {
+        dl.href = images[index];
+    }
+
+    counter.textContent = (index + 1) + ' / ' + images.length;
+}
+
+function changeImage(direction) {
+    currentIndex = (currentIndex + direction + images.length) % images.length;
+    showImage(currentIndex);
+}
+
+function closeImage() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/* Keyboard navigation */
+document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'ArrowRight') changeImage(1);
+    if (e.key === 'ArrowLeft')  changeImage(-1);
+    if (e.key === 'Escape')     closeImage();
+});
+
+/* Touch swipe for lightbox */
+let touchStartX = 0;
+const lb = document.getElementById('lightbox');
+lb.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+lb.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 40) changeImage(diff > 0 ? 1 : -1);
+});
+</script>
 </body>
 </html>

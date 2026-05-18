@@ -101,3 +101,5 @@ def photo_detail(request, id):
 def live_preview(request):
 
     return render(request, 'live_preview.html')
+
+
