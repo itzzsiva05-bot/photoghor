@@ -824,7 +824,7 @@ header.top-header {
         </a>
     {% else %}
         <!-- Login ஆகலன்னா → Login to Download link -->
-        <a href="{% url 'login' %}?next={{ request.path }}" class="lb-login-download" title="Login to Download">
+        <a href="{% url 'index' %}?next={{ request.path }}" class="lb-login-download" title="Login to Download">
             Login to Download
         </a>
     {% endif %}
