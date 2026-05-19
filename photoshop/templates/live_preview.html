@@ -47,6 +47,12 @@
             justify-content:space-between;
 
             align-items:center;
+
+            position:sticky;
+
+            top:0;
+
+            z-index:999;
         }
 
         /* ================= LOGO ================= */
@@ -78,13 +84,18 @@
             color:#0d6efd;
         }
 
-        /* ================= SIGNUP BUTTON ================= */
+        /* ================= AUTH BUTTONS ================= */
 
-        .signup-btn{
+        .auth-buttons{
 
-            background:#0d6efd;
+            display:flex;
 
-            color:white;
+            align-items:center;
+
+            gap:15px;
+        }
+
+        .auth-btn{
 
             text-decoration:none;
 
@@ -94,12 +105,39 @@
 
             font-size:18px;
 
+            color:white;
+
             transition:0.3s;
+        }
+
+        .login-btn{
+
+            background:#198754;
+        }
+
+        .login-btn:hover{
+
+            background:#146c43;
+        }
+
+        .signup-btn{
+
+            background:#0d6efd;
         }
 
         .signup-btn:hover{
 
             background:#084298;
+        }
+
+        .logout-btn{
+
+            background:#dc3545;
+        }
+
+        .logout-btn:hover{
+
+            background:#bb2d3b;
         }
 
         /* ================= MAIN CONTAINER ================= */
@@ -345,42 +383,97 @@
             background:#E4405F;
         }
 
+        /* ================= DESKTOP VIEW ================= */
+
+        @media(min-width:769px){
+
+            .header{
+                padding:20px 50px;
+            }
+
+            .logo{
+                font-size:34px;
+            }
+
+            .logo i{
+                font-size:36px;
+            }
+
+            .auth-buttons{
+                gap:15px;
+            }
+
+            .auth-btn{
+                padding:12px 28px;
+                font-size:18px;
+            }
+
+            .single-preview img{
+                height:500px;
+            }
+
+            .banner-text h1{
+                font-size:65px;
+            }
+
+            .banner-text p{
+                font-size:24px;
+            }
+
+            .btn-group{
+                flex-direction:row;
+            }
+        }
+
         /* ================= MOBILE VIEW ================= */
 
         @media(max-width:768px){
 
             .header{
 
-                padding:15px;
+                padding:12px;
+
+                justify-content:space-between;
+
+                align-items:center;
             }
 
             .logo{
 
-                font-size:20px;
+                font-size:18px;
+
+                gap:8px;
             }
 
             .logo i{
 
-                font-size:24px;
+                font-size:22px;
             }
 
-            .signup-btn{
+            .auth-buttons{
 
-                padding:10px 18px;
+                gap:6px;
+            }
 
-                font-size:14px;
+            .auth-btn{
+
+                padding:8px 12px;
+
+                font-size:12px;
+
+                border-radius:5px;
             }
 
             .container{
 
                 width:95%;
 
-                margin:20px auto;
+                margin:15px auto;
             }
 
             .single-preview img{
 
-                height:280px;
+                height:260px;
             }
 
             .image-overlay{
@@ -395,12 +488,16 @@
 
             .banner-text h1{
 
-                font-size:34px;
+                font-size:30px;
+
+                margin-bottom:10px;
             }
 
             .banner-text p{
 
-                font-size:15px;
+                font-size:14px;
+
+                letter-spacing:1px;
             }
 
             .btn-group{
@@ -410,6 +507,8 @@
                 align-items:center;
 
                 gap:15px;
+
+                padding:25px 15px;
             }
 
             .live-btn,
@@ -417,20 +516,27 @@
 
                 width:100%;
 
-                max-width:320px;
+                max-width:300px;
 
-                font-size:17px;
+                font-size:16px;
 
                 padding:14px 20px;
             }
 
+            .share-box{
+
+                gap:15px;
+
+                padding-bottom:25px;
+            }
+
             .share-box a{
 
-                width:55px;
+                width:50px;
 
-                height:55px;
+                height:50px;
 
-                font-size:24px;
+                font-size:22px;
             }
         }
 
@@ -452,12 +558,44 @@
 
         </div>
 
-        <a href="{% url 'index' %}"
-           class="signup-btn">
+        <!-- ================= AUTH BUTTONS ================= -->
 
-           Sign Up
+        <div class="auth-buttons">
 
-        </a>
+            {% if user.is_authenticated %}
+
+                <!-- LOGOUT BUTTON -->
+
+                <a href="{% url 'logout' %}"
+                   class="auth-btn logout-btn">
+
+                    Logout
+
+                </a>
+
+            {% else %}
+
+                <!-- LOGIN BUTTON -->
+
+                <a href="{% url 'index' %}"
+                   class="auth-btn login-btn">
+
+                    Login
+
+                </a>
+
+                <!-- SIGNUP BUTTON -->
+
+                <a href="{% url 'index' %}"
+                   class="auth-btn signup-btn">
+
+                    Sign Up
+
+                </a>
+
+            {% endif %}
+
+        </div>
 
     </div>
 
@@ -512,7 +650,7 @@
 
         </div>
 
-        <!-- DESKTOP SHARE ICONS -->
+        <!-- SHARE ICONS -->
 
         <div class="share-box"
              id="shareBox">
@@ -559,8 +697,6 @@
 
             const pageUrl = window.location.href;
 
-            /* MOBILE SHARE */
-
             if(navigator.share){
 
                 navigator.share({
@@ -571,15 +707,9 @@
 
                     url: pageUrl
 
-                })
-
-                .then(() => console.log("Shared"))
-
-                .catch((error) => console.log(error));
+                });
 
             }
-
-            /* DESKTOP SHARE */
 
             else{
 

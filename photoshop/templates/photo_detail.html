@@ -24,27 +24,25 @@
 }
 
 :root{
-    --black:#111111;
-    --dark:#1a1a1a;
-    --white:#ffffff;
-    --grey:#888888;
-    --light:#f5f5f5;
-    --border:#e0e0e0;
+    --black:#111;
+    --white:#fff;
+    --border:#e5e5e5;
+    --grey:#777;
 }
 
 body{
     font-family:'Barlow',sans-serif;
-    background:var(--white);
+    background:#fff;
     color:#333;
-    line-height:1.7;
+    overflow-x:hidden;
 }
 
 /* ================= NAVBAR ================= */
 
 nav{
     width:100%;
-    height:72px;
-    background:var(--black);
+    height:70px;
+    background:#111;
 
     display:flex;
     align-items:center;
@@ -54,15 +52,16 @@ nav{
 
     position:sticky;
     top:0;
-    z-index:1000;
+    z-index:999;
 }
 
 .logo{
+    color:#fff;
     text-decoration:none;
-    color:var(--white);
 
     font-size:28px;
     font-weight:700;
+
     letter-spacing:2px;
     text-transform:uppercase;
 
@@ -72,35 +71,27 @@ nav{
 .hamburger{
     display:flex;
     flex-direction:column;
-    gap:6px;
+    gap:5px;
     cursor:pointer;
 }
 
 .hamburger span{
-    width:28px;
+    width:26px;
     height:2px;
-    background:var(--white);
-    display:block;
-}
-
-.hamburger span:last-child{
-    width:20px;
+    background:#fff;
 }
 
 /* ================= HERO ================= */
 
 .hero{
-    position:relative;
-
-    height:280px;
+    height:260px;
 
     background:
-    linear-gradient(rgba(0,0,0,.60),rgba(0,0,0,.60)),
+    linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
     url("{% static 'images/1920.jpg' %}");
 
-    background-position:center;
     background-size:cover;
-    background-repeat:no-repeat;
+    background-position:center;
 
     display:flex;
     align-items:center;
@@ -110,18 +101,20 @@ nav{
 
 .hero-content{
     width:100%;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
 }
 
 .hero-title{
-    color:var(--white);
+    color:#fff;
 
-    font-size:50px;
+    font-size:52px;
     font-weight:700;
-    letter-spacing:3px;
+
     text-transform:uppercase;
+    letter-spacing:3px;
 
     font-family:'Barlow Condensed',sans-serif;
 }
@@ -131,33 +124,24 @@ nav{
     align-items:center;
     gap:10px;
 
-    color:var(--white);
+    color:#fff;
 
+    font-size:14px;
     text-transform:uppercase;
     letter-spacing:1px;
-    font-size:14px;
 
     font-family:'Barlow Condensed',sans-serif;
 }
 
 .breadcrumb a{
-    color:var(--white);
+    color:#fff;
     text-decoration:none;
-}
-
-.breadcrumb a:hover{
-    text-decoration:underline;
-}
-
-.current{
-    opacity:.7;
 }
 
 /* ================= IMAGE ================= */
 
 .photo-wrap{
-    width:100%;
-    padding:70px 60px 0;
+    padding:60px;
 }
 
 .photo-wrap img{
@@ -165,29 +149,29 @@ nav{
     height:600px;
     object-fit:cover;
     display:block;
+    border-radius:10px;
 }
 
 /* ================= INFO SECTION ================= */
 
 .info-section{
+    padding:0 60px 80px;
+
     display:grid;
     grid-template-columns:300px 1fr;
-
     gap:60px;
-
-    padding:70px 60px 100px;
 }
 
-/* ===== SIDEBAR ===== */
+/* ================= SIDEBAR ================= */
 
 .sidebar{
     border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
 }
 
 .sidebar-row{
     display:flex;
-    align-items:flex-start;
-
     gap:15px;
 
     padding:22px;
@@ -200,7 +184,7 @@ nav{
 }
 
 .sidebar-row i{
-    color:var(--grey);
+    color:#888;
     margin-top:5px;
 }
 
@@ -217,20 +201,18 @@ nav{
 }
 
 .sidebar-value{
-    margin-top:4px;
-    color:#333;
+    margin-top:5px;
 }
 
-/* ===== CONTENT ===== */
+/* ================= CONTENT ================= */
 
 .photo-info h2{
     font-size:42px;
-    font-weight:700;
 
     text-transform:uppercase;
     letter-spacing:2px;
 
-    margin-bottom:30px;
+    margin-bottom:25px;
     padding-bottom:15px;
 
     border-bottom:1px solid var(--border);
@@ -239,48 +221,19 @@ nav{
 }
 
 .photo-name{
-    font-size:22px;
+    font-size:24px;
     font-weight:600;
 
-    text-transform:uppercase;
-    letter-spacing:1px;
-
     margin-bottom:20px;
+
+    text-transform:uppercase;
 
     font-family:'Barlow Condensed',sans-serif;
 }
 
 .photo-info p{
     color:#555;
-    margin-bottom:18px;
-}
-
-/* ================= BACK BUTTON ================= */
-
-.back-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-
-    text-decoration:none;
-
-    margin-bottom:30px;
-
-    color:#555;
-
-    text-transform:uppercase;
-    letter-spacing:1px;
-
-    font-size:14px;
-    font-weight:600;
-
-    font-family:'Barlow Condensed',sans-serif;
-
-    transition:.3s;
-}
-
-.back-btn:hover{
-    color:#000;
+    line-height:1.9;
 }
 
 /* ================= SHARE ================= */
@@ -293,12 +246,15 @@ nav{
 
     display:flex;
     align-items:center;
-    gap:18px;
+    gap:20px;
+    flex-wrap:wrap;
 }
 
 .share-label{
-    text-transform:uppercase;
+    font-size:16px;
     font-weight:600;
+
+    text-transform:uppercase;
     letter-spacing:1px;
 
     font-family:'Barlow Condensed',sans-serif;
@@ -306,24 +262,38 @@ nav{
 
 .share-icons{
     display:flex;
-    gap:16px;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
 }
 
 .share-icons a{
+    width:42px;
+    height:42px;
+
+    border:1px solid var(--border);
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
     color:#555;
-    font-size:17px;
+    text-decoration:none;
 
     transition:.3s;
 }
 
 .share-icons a:hover{
-    color:#000;
+    background:#111;
+    color:#fff;
+    border-color:#111;
 }
 
 /* ================= FOOTER ================= */
 
 footer{
-    background:var(--black);
+    background:#111;
 
     padding:35px 60px;
 
@@ -337,19 +307,17 @@ footer{
 
 .footer-links{
     display:flex;
-    gap:25px;
+    gap:20px;
     flex-wrap:wrap;
 }
 
 .footer-links a{
     color:#aaa;
     text-decoration:none;
-
-    transition:.3s;
 }
 
 .footer-links a:hover{
-    color:var(--white);
+    color:#fff;
 }
 
 .footer-copy{
@@ -358,39 +326,45 @@ footer{
 }
 
 .footer-copy strong{
-    color:var(--white);
+    color:#fff;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= MOBILE ================= */
 
 @media(max-width:900px){
+
+    nav{
+        padding:0 25px;
+    }
 
     .hero{
         height:220px;
         padding:0 25px;
     }
 
-    .hero-title{
-        font-size:36px;
+    .hero-content{
+        flex-direction:column;
+        align-items:flex-start;
+        justify-content:center;
+        gap:10px;
     }
 
-    .breadcrumb{
-        display:none;
+    .hero-title{
+        font-size:38px;
     }
 
     .photo-wrap{
-        padding:40px 25px 0;
+        padding:30px 25px;
     }
 
     .photo-wrap img{
-        height:400px;
+        height:420px;
     }
 
     .info-section{
         grid-template-columns:1fr;
+        padding:0 25px 60px;
         gap:35px;
-
-        padding:40px 25px 70px;
     }
 
     footer{
@@ -401,20 +375,67 @@ footer{
 @media(max-width:600px){
 
     nav{
-        padding:0 20px;
+        height:65px;
+        padding:0 15px;
+    }
+
+    .logo{
+        font-size:22px;
+    }
+
+    .hero{
+        height:180px;
+        padding:0 15px;
     }
 
     .hero-title{
         font-size:28px;
     }
 
+    .breadcrumb{
+        display:none;
+    }
+
+    .photo-wrap{
+        padding:20px 15px;
+    }
+
     .photo-wrap img{
-        height:280px;
+        height:250px;
+    }
+
+    .info-section{
+        padding:0 15px 50px;
+    }
+
+    .sidebar-row{
+        padding:18px 15px;
     }
 
     .photo-info h2{
-        font-size:30px;
+        font-size:28px;
     }
+
+    .photo-name{
+        font-size:18px;
+    }
+
+    .photo-info p{
+        font-size:15px;
+    }
+
+    .share-icons a{
+        width:38px;
+        height:38px;
+        font-size:14px;
+    }
+
+    footer{
+        padding:25px 15px;
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
 }
 
 </style>
@@ -462,7 +483,7 @@ footer{
 
             <span>/</span>
 
-            <span class="current">
+            <span>
                 Details
             </span>
 
@@ -542,37 +563,11 @@ footer{
 
         </div>
 
-        <div class="sidebar-row">
-
-            <i class="fas fa-link"></i>
-
-            <div>
-
-                <div class="sidebar-label">
-                    Client
-                </div>
-
-                <div class="sidebar-value">
-                    HasTech
-                </div>
-
-            </div>
-
-        </div>
-
     </aside>
 
     <!-- CONTENT -->
 
     <article class="photo-info">
-
-        <a href="{% url 'home' %}" class="back-btn">
-
-            <i class="fas fa-arrow-left"></i>
-
-            Back To Gallery
-
-        </a>
 
         <h2>
             Photo Info
@@ -586,7 +581,7 @@ footer{
             {{ photo.description }}
         </p>
 
-        <!-- SHARE -->
+        <!-- ================= SHARE ================= -->
 
         <div class="share-row">
 
@@ -596,17 +591,46 @@ footer{
 
             <div class="share-icons">
 
-    <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <!-- FACEBOOK -->
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+                   target="_blank">
 
-    <a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <i class="fab fa-facebook-f"></i>
 
-    <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                </a>
 
-    <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <!-- TWITTER -->
+                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ photo.title }}"
+                   target="_blank">
 
-    <a href="https://vimeo.com/" target="_blank"><i class="fab fa-vimeo-v"></i></a>
+                    <i class="fab fa-twitter"></i>
 
-</div>
+                </a>
+
+                <!-- WHATSAPP -->
+                <a href="https://web.whatsapp.com/send?text={{ request.build_absolute_uri }}"
+                   target="_blank">
+
+                    <i class="fab fa-whatsapp"></i>
+
+                </a>
+
+                <!-- LINKEDIN -->
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}"
+                   target="_blank">
+
+                    <i class="fab fa-linkedin-in"></i>
+
+                </a>
+
+                <!-- COPY LINK -->
+                <a href="javascript:void(0);" onclick="copyLink()">
+
+                    <i class="fas fa-link"></i>
+
+                </a>
+
+            </div>
 
         </div>
 
@@ -620,10 +644,21 @@ footer{
 
     <div class="footer-links">
 
-        <a href="https://www.facebook.com/" target="_blank">Facebook</a>
-        <a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
-        <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://www.facebook.com/" target="_blank">
+            Facebook
+        </a>
+
+        <a href="https://twitter.com/" target="_blank">
+            Twitter
+        </a>
+
+        <a href="https://www.instagram.com/" target="_blank">
+            Instagram
+        </a>
+
+        <a href="https://www.linkedin.com/" target="_blank">
+            Linkedin
+        </a>
 
     </div>
 
@@ -632,6 +667,20 @@ footer{
     </p>
 
 </footer>
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+function copyLink(){
+
+    navigator.clipboard.writeText(window.location.href);
+
+    alert("Link Copied!");
+
+}
+
+</script>
 
 </body>
 </html>

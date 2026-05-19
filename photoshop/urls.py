@@ -14,6 +14,9 @@ urlpatterns = [
 
     path('live-preview/', views.live_preview, name='live_preview'),
 
+     path('logout/',views.logout_view,name='logout'),
+
+
 
    
 
