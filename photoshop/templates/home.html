@@ -2,12 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Photoghor Gallery</title>
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoghor Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 
@@ -69,11 +67,11 @@ header.main-header{
 }
 
 /* =========================
-   INLINE NAV
+   INLINE NAV  (hidden by default, shown on click)
 ========================= */
 
 .inline-nav{
-    display:none;
+    display:none;          /* hidden until JS adds .open */
     flex:1;
     justify-content:flex-end;
 }
@@ -95,7 +93,8 @@ header.main-header{
     font-size:14px;
     font-weight:700;
     text-transform:uppercase;
-    transition:0.3s;
+    transition:color .3s;
+    white-space:nowrap;
 }
 
 .inline-nav ul li a:hover,
@@ -104,7 +103,7 @@ header.main-header{
 }
 
 /* =========================
-   HAMBURGER
+   HAMBURGER  (☰)
 ========================= */
 
 .hamburger{
@@ -114,33 +113,46 @@ header.main-header{
     cursor:pointer;
     background:none;
     border:none;
+    padding:4px;
+    flex-shrink:0;
 }
 
 .bar{
     width:28px;
     height:2px;
     background:#fff;
+    border-radius:10px;
+    display:block;
 }
 
+/* Hide hamburger when nav is open — show close btn instead */
 .hamburger.hidden{
     display:none;
 }
 
 /* =========================
-   CLOSE BUTTON
+   CLOSE BUTTON  (✕) in header
 ========================= */
 
 .nav-close-inline{
-    display:none;
+    display:none;          /* shown only when nav is open */
     background:none;
     border:none;
     color:#fff;
     font-size:22px;
     cursor:pointer;
+    padding:4px 6px;
+    flex-shrink:0;
+    line-height:1;
+    transition:color .3s;
 }
 
 .nav-close-inline.visible{
     display:block;
+}
+
+.nav-close-inline:hover{
+    color:#e0b04f;
 }
 
 /* =========================
@@ -183,6 +195,7 @@ header.main-header{
 .breadcrumbs{
     color:#fff;
     font-size:13px;
+    font-weight:700;
 }
 
 .breadcrumbs a{
@@ -195,6 +208,7 @@ header.main-header{
 ========================= */
 
 .menu-section{
+    width:100%;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -208,6 +222,7 @@ header.main-header{
     color:#222;
     font-size:14px;
     font-weight:700;
+    text-transform:uppercase;
     border:2px solid #e0b04f;
     border-radius:40px;
     padding:12px 26px;
@@ -244,6 +259,7 @@ header.main-header{
     width:100%;
     height:250px;
     object-fit:cover;
+    display:block;
     transition:.4s;
 }
 
@@ -269,6 +285,7 @@ header.main-header{
 .overlay h3{
     color:#fff;
     font-size:13px;
+    text-transform:uppercase;
 }
 
 .icon{
@@ -290,6 +307,11 @@ header.main-header{
 
 .gallery-item:hover .icon{
     opacity:1;
+}
+
+.icon:hover{
+    background:#00f0ff;
+    color:#000;
 }
 
 /* =========================
@@ -355,6 +377,20 @@ header.main-header{
     text-decoration:none;
 }
 
+.lb-login-download{
+    position:absolute;
+    top:15px;
+    right:72px;
+    padding:0 12px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    border-radius:8px;
+    color:#fff;
+    text-decoration:none;
+    border:1px solid #2563eb;
+}
+
 .lb-arrow{
     position:absolute;
     top:50%;
@@ -362,81 +398,28 @@ header.main-header{
     color:#fff;
     font-size:40px;
     cursor:pointer;
-    z-index:99999;
 }
 
-.lb-arrow.left{
-    left:20px;
-}
-
-.lb-arrow.right{
-    right:20px;
-}
+.lb-arrow.left { left:20px; }
+.lb-arrow.right{ right:20px; }
 
 /* =========================
    TABLET
 ========================= */
 
 @media(max-width:992px){
-
-    .gallery{
-        grid-template-columns:repeat(2,1fr);
-    }
+    .gallery{ grid-template-columns:repeat(2,1fr); }
 }
 
 /* =========================
    MOBILE
 ========================= */
 
+/* =========================
+   MOBILE LIGHTBOX ARROWS FIX
+========================= */
+
 @media(max-width:768px){
-
-    .logo{
-        font-size:22px;
-    }
-
-    .hero-banner{
-        height:120px;
-    }
-
-    .banner-container{
-        flex-direction:column;
-        align-items:flex-start;
-        justify-content:center;
-        gap:6px;
-        padding:0 16px;
-    }
-
-    .banner-title{
-        font-size:24px;
-    }
-
-    .menu-section{
-        justify-content:flex-start;
-        overflow-x:auto;
-        flex-wrap:nowrap;
-    }
-
-    .gallery{
-        grid-template-columns:repeat(2,1fr);
-        gap:10px;
-        padding:12px;
-    }
-
-    .gallery-item img{
-        height:160px;
-    }
-
-    .overlay{
-        opacity:1;
-        align-items:flex-end;
-        padding-bottom:8px;
-    }
-
-    .icon{
-        opacity:1;
-    }
-
-    /* MOBILE ARROWS */
 
     .lb-arrow{
 
@@ -455,299 +438,267 @@ header.main-header{
         align-items:center;
 
         justify-content:center;
+
+        z-index:99999;
     }
 
     .lb-arrow.left{
+
         left:10px;
     }
 
     .lb-arrow.right{
+
         right:10px;
     }
 
     #lightbox-img{
+
         width:92%;
+
         max-height:70vh;
     }
 
     .lb-close{
+
         width:38px;
+
         height:38px;
+
         font-size:18px;
+
         top:10px;
+
         right:10px;
     }
 
-    #lb-download{
+    #lb-download,
+    .lb-login-download{
+
         top:10px;
+
         right:58px;
     }
 }
 
 @media(max-width:400px){
+    .gallery{ grid-template-columns:1fr; }
+    .gallery-item img{ height:220px; }
 
-    .gallery{
-        grid-template-columns:1fr;
-    }
-
-    .gallery-item img{
-        height:220px;
+    /* stack nav links vertically on very small screens */
+    .inline-nav ul{
+        flex-direction:column;
+        gap:8px;
+        align-items:flex-end;
     }
 }
 
 </style>
 </head>
-
 <body>
 
-<header class="main-header">
+<!-- =========================
+     HEADER
+========================= -->
 
+<header class="main-header">
     <div class="container header-content">
 
-        <div class="logo">
-            PHOTOGHOR
-        </div>
+        <!-- LOGO -->
+        <div class="logo">PHOTOGHOR</div>
 
+        <!-- INLINE NAV (shown when hamburger clicked) -->
         <nav class="inline-nav" id="inline-nav">
-
             <ul>
-
                 <li><a href="#" class="active">HOME</a></li>
-
                 <li><a href="#">PHOTO GALLERY</a></li>
-
                 <li><a href="#">2 COLUMN GALLERY</a></li>
-
                 <li><a href="#">4 COLUMN GALLERY</a></li>
-
                 <li><a href="#">PHOTO DETAILS</a></li>
-
             </ul>
-
         </nav>
 
-        <button class="hamburger"
-                id="menu-toggle">
-
+        <!-- HAMBURGER ☰ -->
+        <button class="hamburger" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
-
         </button>
 
-        <button class="nav-close-inline"
-                id="nav-close-inline">
-
-            ✕
-
-        </button>
+        <!-- CLOSE ✕ (replaces hamburger when nav is open) -->
+        <button class="nav-close-inline" id="nav-close-inline" aria-label="Close menu">✕</button>
 
     </div>
-
 </header>
+
+<!-- =========================
+     HERO
+========================= -->
 
 <header class="hero-banner">
-
     <div class="banner-container">
-
-        <h1 class="banner-title">
-            PHOTO GALLERY
-        </h1>
-
+        <h1 class="banner-title">PHOTO GALLERY</h1>
         <nav class="breadcrumbs">
-
-            <a href="{% url 'index' %}">
-                HOME
-            </a>
-
-            / PHOTO GALLERY
-
+            <a href="{% url 'index' %}">HOME</a>
+            / <span>PHOTO GALLERY</span>
         </nav>
-
     </div>
-
 </header>
+
+<!-- =========================
+     CATEGORY
+========================= -->
 
 <div class="menu-section">
 
     <a href="{% url 'home' %}"
-       class="{% if not request.GET.category %}active{% endif %}">
-
-       ALL
-
-    </a>
+       class="{% if not request.GET.category %}active{% endif %}">ALL</a>
 
     {% for category in categories %}
-
     <a href="{% url 'home' %}?category={{ category.name }}"
        class="{% if request.GET.category == category.name %}active{% endif %}">
-
         {{ category.name }}
-
     </a>
-
     {% endfor %}
 
 </div>
 
+<!-- =========================
+     GALLERY
+========================= -->
+
 <section class="gallery">
 
     {% for photo in photos %}
-
     <div class="gallery-item">
 
         <a href="{% url 'photo_detail' photo.id %}">
-
-            <img src="{{ photo.image.url }}"
-                 alt="{{ photo.title }}">
-
-            <div class="overlay">
-
-                <h3>{{ photo.title }}</h3>
-
-            </div>
-
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+            <div class="overlay"><h3>{{ photo.title }}</h3></div>
         </a>
 
-        <div class="icon"
-             onclick="openImage('{{ photo.image.url }}')">
-
+        <div class="icon" onclick="openImage('{{ photo.image.url }}')">
             <i class="fa-solid fa-eye"></i>
-
         </div>
 
     </div>
-
     {% endfor %}
 
 </section>
+
+<!-- =========================
+     LIGHTBOX
+========================= -->
 
 <div class="lightbox" id="lightbox">
 
     <div id="lb-counter"></div>
 
-    <button class="lb-close"
-            onclick="closeImage()">
+    <button class="lb-close" onclick="closeImage()">✕</button>
 
-        ✕
-
-    </button>
-
-    <a id="lb-download"
-       href="#"
-       download>
-
+    {% if user.is_authenticated %}
+    <a id="lb-download" href="#" download>
         <i class="fa-solid fa-download"></i>
-
     </a>
+    {% else %}
+    <a href="{% url 'index' %}?next={{ request.path }}" class="lb-login-download">
+        Login to Download
+    </a>
+    {% endif %}
 
-    <span class="lb-arrow left"
-          onclick="changeImage(-1)">
-
-        &#8592;
-
-    </span>
-
-    <img id="lightbox-img"
-         src=""
-         alt="Preview">
-
-    <span class="lb-arrow right"
-          onclick="changeImage(1)">
-
-        &#8594;
-
-    </span>
+    <span class="lb-arrow left"  onclick="changeImage(-1)">&#8592;</span>
+    <img id="lightbox-img" src="" alt="Preview">
+    <span class="lb-arrow right" onclick="changeImage(1)">&#8594;</span>
 
 </div>
 
+<!-- =========================
+     SCRIPTS
+========================= -->
+
 <script>
 
-/* MENU */
+/* =========================
+   HAMBURGER → INLINE NAV TOGGLE
+========================= */
 
-const menuToggle = document.getElementById('menu-toggle');
-const inlineNav = document.getElementById('inline-nav');
+const menuToggle     = document.getElementById('menu-toggle');
+const inlineNav      = document.getElementById('inline-nav');
 const navCloseInline = document.getElementById('nav-close-inline');
 
 function openNav(){
-
     inlineNav.classList.add('open');
-
     menuToggle.classList.add('hidden');
-
     navCloseInline.classList.add('visible');
+    menuToggle.setAttribute('aria-expanded','true');
 }
 
 function closeNav(){
-
     inlineNav.classList.remove('open');
-
     menuToggle.classList.remove('hidden');
-
     navCloseInline.classList.remove('visible');
+    menuToggle.setAttribute('aria-expanded','false');
 }
 
 menuToggle.addEventListener('click', openNav);
-
 navCloseInline.addEventListener('click', closeNav);
 
-/* LIGHTBOX */
+/* Close when a nav link is clicked */
+inlineNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+
+/* Close on Escape */
+document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeNav();
+});
+
+/* =========================
+   LIGHTBOX
+========================= */
 
 let images = [];
 let currentIndex = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
-
     images = Array.from(
         document.querySelectorAll('.gallery-item img')
     ).map(img => img.src);
-
 });
 
 function openImage(src){
-
     currentIndex = images.indexOf(src);
-
+    if(currentIndex === -1) currentIndex = 0;
     showImage(currentIndex);
-
     document.getElementById('lightbox').classList.add('open');
-
     document.body.style.overflow = 'hidden';
 }
 
 function showImage(index){
-
-    const img = document.getElementById('lightbox-img');
-
+    const img     = document.getElementById('lightbox-img');
     const counter = document.getElementById('lb-counter');
-
-    const dl = document.getElementById('lb-download');
-
+    const dl      = document.getElementById('lb-download');
     img.src = images[index];
-
-    dl.href = images[index];
-
+    if(dl) dl.href = images[index];
     counter.textContent = (index + 1) + ' / ' + images.length;
 }
 
 function changeImage(direction){
-
-    currentIndex =
-    (currentIndex + direction + images.length)
-    % images.length;
-
+    currentIndex = (currentIndex + direction + images.length) % images.length;
     showImage(currentIndex);
 }
 
 function closeImage(){
-
-    document.getElementById('lightbox')
-    .classList.remove('open');
-
+    document.getElementById('lightbox').classList.remove('open');
     document.body.style.overflow = '';
 }
 
-</script>
+document.addEventListener('keydown', e => {
+    const lb = document.getElementById('lightbox');
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'ArrowRight') changeImage(1);
+    if(e.key === 'ArrowLeft')  changeImage(-1);
+    if(e.key === 'Escape')     closeImage();
+});
 
+</script>
 </body>
 </html>
