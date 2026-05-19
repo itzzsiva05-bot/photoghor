@@ -12,38 +12,36 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<style>
+    <style>
 
-/* =========================
-   RESET
-========================= */
+/* ===========================
+   RESET & BASE
+=========================== */
 *{
-    margin:0;
-    padding:0;
     box-sizing:border-box;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color:transparent;
 }
 
 body{
-    font-family:Arial, Helvetica, sans-serif;
+    margin:0;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
     background:#fff;
     overflow-x:hidden;
 }
 
-/* =========================
+/* ===========================
    HEADER
-========================= */
-.top-header{
+=========================== */
+header.top-header{
     background:#111;
     color:#fff;
-    padding:18px 0;
+    padding:20px 0;
     position:sticky;
     top:0;
     z-index:999;
 }
 
 .container{
-    width:100%;
     max-width:1200px;
     margin:auto;
     padding:0 20px;
@@ -51,23 +49,27 @@ body{
 
 .header-content{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
 }
 
 .logo{
-    font-size:28px;
-    font-weight:bold;
+    font-size:24px;
+    font-weight:700;
     letter-spacing:2px;
 }
 
-/* =========================
-   MENU BUTTON
-========================= */
+.nav-links{
+    display:none;
+}
+
+/* ===========================
+   HAMBURGER
+=========================== */
 .hamburger{
     display:flex;
     flex-direction:column;
-    gap:5px;
+    gap:6px;
     cursor:pointer;
 }
 
@@ -76,26 +78,156 @@ body{
     height:2px;
     background:#fff;
     border-radius:2px;
+    transition:.3s;
 }
 
-/* =========================
+.hamburger.open .bar:nth-child(1){
+    transform:translateY(8px) rotate(45deg);
+}
+
+.hamburger.open .bar:nth-child(2){
+    opacity:0;
+}
+
+.hamburger.open .bar:nth-child(3){
+    transform:translateY(-8px) rotate(-45deg);
+}
+
+/* ===========================
+   DROPDOWN
+=========================== */
+.dropdown-menu{
+    display:none;
+    position:absolute;
+    top:100%;
+    right:20px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    border-radius:10px;
+    min-width:220px;
+    overflow:hidden;
+    z-index:2000;
+}
+
+.dropdown-menu.open{
+    display:block;
+}
+
+.dropdown-menu ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+.dropdown-menu ul li{
+    border-bottom:1px solid #222;
+}
+
+.dropdown-menu ul li:last-child{
+    border-bottom:none;
+}
+
+.dropdown-menu ul li a{
+    display:block;
+    padding:14px 20px;
+    color:#ccc;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.dropdown-menu ul li a:hover{
+    background:#222;
+    color:#e0b04f;
+}
+
+/* ===========================
+   MOBILE DRAWER
+=========================== */
+.nav-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:1050;
+}
+
+.nav-overlay.active{
+    display:block;
+}
+
+.nav-drawer{
+    display:none;
+    position:fixed;
+    top:0;
+    right:0;
+    width:300px;
+    max-width:90vw;
+    height:100vh;
+    background:#111;
+    z-index:1100;
+    padding:60px 24px 32px;
+    flex-direction:column;
+}
+
+.nav-drawer.active{
+    display:flex;
+}
+
+.nav-close{
+    position:absolute;
+    top:14px;
+    right:14px;
+    background:none;
+    border:none;
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.nav-drawer ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.nav-drawer li{
+    border-bottom:1px solid #222;
+}
+
+.nav-drawer a{
+    display:block;
+    padding:16px 0;
+    color:#ccc;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    text-transform:uppercase;
+}
+
+.nav-drawer a:hover{
+    color:#e0b04f;
+}
+
+/* ===========================
    HERO
-========================= */
+=========================== */
 .hero-banner{
-    height:180px;
-    background:url('https://www.shutterstock.com/image-photo/photographer-photographic-camera-dslr-photo-260nw-525066541.jpg');
-    background-size:cover;
-    background-position:center;
     position:relative;
+    background:url('https://www.shutterstock.com/image-photo/photographer-photographic-camera-dslr-photo-260nw-525066541.jpg') center/cover no-repeat;
+    height:180px;
     display:flex;
     align-items:center;
+    overflow:hidden;
 }
 
 .hero-banner::before{
     content:"";
     position:absolute;
     inset:0;
-    background:rgba(0,0,0,0.5);
+    background:rgba(0,0,0,.5);
 }
 
 .banner-container{
@@ -104,19 +236,22 @@ body{
     width:100%;
     max-width:1200px;
     margin:auto;
-    padding:0 30px;
+    padding:0 50px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#fff;
 }
 
 .banner-title{
-    color:#fff;
     font-size:42px;
     font-weight:800;
+    margin:0;
 }
 
 .breadcrumbs{
-    margin-top:10px;
-    color:#fff;
     font-size:14px;
+    font-weight:700;
 }
 
 .breadcrumbs a{
@@ -124,27 +259,27 @@ body{
     text-decoration:none;
 }
 
-/* =========================
-   CATEGORY
-========================= */
+/* ===========================
+   CATEGORY MENU
+=========================== */
 .menu-section{
     display:flex;
     justify-content:center;
-    align-items:center;
     gap:20px;
-    padding:40px 20px;
     flex-wrap:wrap;
+    padding:40px 20px;
 }
 
 .menu-section a{
     text-decoration:none;
-    color:#111;
-    border:2px solid #e0b04f;
-    padding:12px 24px;
-    border-radius:40px;
+    color:#222;
     font-size:14px;
     font-weight:700;
-    transition:0.3s;
+    text-transform:uppercase;
+    padding:12px 24px;
+    border:2px solid #e0b04f;
+    border-radius:40px;
+    transition:.3s;
 }
 
 .menu-section a:hover,
@@ -153,17 +288,17 @@ body{
     color:#fff;
 }
 
-/* =========================
+/* ===========================
    GALLERY
-========================= */
+=========================== */
 .gallery{
     width:100%;
     max-width:1200px;
     margin:auto;
-    padding:20px;
+    padding:40px 20px;
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:20px;
+    gap:25px;
 }
 
 .gallery-item{
@@ -176,27 +311,26 @@ body{
     width:100%;
     height:250px;
     object-fit:cover;
+    transition:.4s;
     display:block;
-    transition:0.4s;
 }
 
 .gallery-item:hover img{
     transform:scale(1.05);
 }
 
-/* =========================
+/* ===========================
    OVERLAY
-========================= */
+=========================== */
 .overlay{
     position:absolute;
     inset:0;
-    background:rgba(0,0,0,0.35);
+    background:rgba(0,0,0,.35);
     display:flex;
-    align-items:flex-end;
     justify-content:center;
-    padding-bottom:10px;
+    align-items:center;
     opacity:0;
-    transition:0.4s;
+    transition:.4s;
 }
 
 .gallery-item:hover .overlay{
@@ -209,24 +343,31 @@ body{
     text-transform:uppercase;
 }
 
-/* =========================
+/* ===========================
    EYE ICON
-========================= */
+=========================== */
 .icon{
+    width:32px;
+    height:32px;
     position:absolute;
     top:10px;
     right:10px;
-    width:34px;
-    height:34px;
-    background:rgba(0,0,0,0.7);
+    background:rgba(80,80,80,.75);
     color:#fff;
     border-radius:6px;
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     cursor:pointer;
-    z-index:10;
-    transition:0.3s;
+    opacity:0;
+    visibility:hidden;
+    transition:.3s;
+    z-index:5;
+}
+
+.gallery-item:hover .icon{
+    opacity:1;
+    visibility:visible;
 }
 
 .icon:hover{
@@ -234,18 +375,18 @@ body{
     color:#000;
 }
 
-/* =========================
+/* ===========================
    LIGHTBOX
-========================= */
+=========================== */
 .lightbox{
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.92);
-    z-index:9999;
+    background:rgba(0,0,0,.92);
     justify-content:center;
     align-items:center;
     flex-direction:column;
+    z-index:9999;
 }
 
 .lightbox.open{
@@ -260,21 +401,16 @@ body{
     border-radius:10px;
 }
 
-/* =========================
-   COUNTER
-========================= */
 #lb-counter{
     position:absolute;
     top:15px;
     left:20px;
     color:#fff;
-    font-size:16px;
+    font-size:14px;
     font-weight:600;
 }
 
-/* =========================
-   CLOSE BUTTON
-========================= */
+/* CLOSE */
 .lb-close{
     position:absolute;
     top:15px;
@@ -287,74 +423,51 @@ body{
     border-radius:8px;
     font-size:20px;
     cursor:pointer;
-    transition:0.3s;
 }
 
-.lb-close:hover{
-    background:#00f0ff;
-    color:#000;
-}
-
-/* =========================
-   DOWNLOAD BUTTON
-========================= */
+/* DOWNLOAD */
 #lb-download{
     position:absolute;
     top:15px;
-    right:75px;
+    right:70px;
     width:42px;
     height:42px;
     border:2px solid #2563eb;
+    background:transparent;
     color:#2563eb;
     border-radius:8px;
     display:flex;
     align-items:center;
     justify-content:center;
     text-decoration:none;
-    font-size:18px;
-    transition:0.3s;
+    font-size:20px;
 }
 
-#lb-download:hover{
-    background:#2563eb;
-    color:#fff;
-}
-
-/* =========================
-   LOGIN BUTTON
-========================= */
+/* LOGIN BTN */
 .lb-login-download{
     position:absolute;
     top:15px;
-    right:75px;
+    right:70px;
     height:42px;
-    padding:0 14px;
-    border:1.5px solid #2563eb;
-    border-radius:8px;
-    color:#fff;
-    background:rgba(37,99,235,0.15);
-    text-decoration:none;
+    padding:0 12px;
     display:flex;
     align-items:center;
-    font-size:13px;
-    transition:0.3s;
+    text-decoration:none;
+    border-radius:8px;
+    border:1px solid #2563eb;
+    color:#fff;
+    background:rgba(37,99,235,.15);
+    font-size:12px;
 }
 
-.lb-login-download:hover{
-    background:#2563eb;
-}
-
-/* =========================
-   ARROWS
-========================= */
+/* ARROWS */
 .lb-arrow{
     position:absolute;
     top:50%;
     transform:translateY(-50%);
-    font-size:42px;
     color:#fff;
+    font-size:40px;
     cursor:pointer;
-    padding:10px;
     user-select:none;
 }
 
@@ -366,75 +479,65 @@ body{
     right:20px;
 }
 
-/* =========================
+/* ===========================
    MOBILE
-========================= */
+=========================== */
 @media(max-width:768px){
+
+    .hero-banner{
+        height:120px;
+    }
+
+    .banner-container{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+        padding:0 16px;
+    }
+
+    .banner-title{
+        font-size:22px;
+    }
 
     .gallery{
         grid-template-columns:repeat(2,1fr);
         gap:10px;
+        padding:12px;
     }
 
     .gallery-item img{
-        height:160px;
-    }
-
-    .banner-title{
-        font-size:26px;
+        height:155px;
     }
 
     .icon{
-        width:28px;
-        height:28px;
-        font-size:12px;
+        opacity:1;
+        visibility:visible;
+    }
+
+    .overlay{
+        opacity:1;
+        align-items:flex-end;
+        padding-bottom:8px;
     }
 
     #lightbox-img{
-        width:95%;
-        max-height:65vh;
-    }
-
-    .lb-close{
-        width:36px;
-        height:36px;
-        font-size:16px;
-        top:10px;
-        right:10px;
-    }
-
-    #lb-download{
-        width:36px;
-        height:36px;
-        top:10px;
-        right:55px;
-    }
-
-    .lb-login-download{
-        height:36px;
-        top:10px;
-        right:55px;
-        font-size:11px;
-        padding:0 10px;
-    }
-
-    .lb-arrow{
-        font-size:28px;
+        width:calc(100% - 20px);
+        max-height:62vh;
     }
 }
 
-@media(max-width:450px){
+@media(max-width:400px){
 
     .gallery{
         grid-template-columns:1fr;
     }
 
     .gallery-item img{
-        height:220px;
+        height:200px;
     }
 }
 
-</style>
+    </style>
 </head>
 
 <body>
@@ -445,27 +548,65 @@ body{
 
         <div class="logo">PHOTOGHOR</div>
 
-        <div class="hamburger">
+        <!-- DESKTOP NAV -->
+        <nav class="nav-links">
+            <ul>
+                <li><a href="#">HOME</a></li>
+            </ul>
+        </nav>
+
+        <!-- HAMBURGER -->
+        <div id="menu-toggle" class="hamburger">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
+        </div>
+
+        <!-- DROPDOWN -->
+        <div class="dropdown-menu" id="dropdown-menu">
+            <ul>
+                <li><a href="#">HOME</a></li>
+                <li><a href="#">PHOTO GALLERY</a></li>
+                <li><a href="#">PHOTO DETAILS</a></li>
+            </ul>
         </div>
 
     </div>
 </header>
 
+<!-- MOBILE -->
+<div class="nav-overlay" id="nav-overlay"></div>
+
+<nav class="nav-drawer" id="nav-drawer">
+
+    <button class="nav-close" id="nav-close">
+        &times;
+    </button>
+
+    <ul>
+        <li><a href="#">HOME</a></li>
+        <li><a href="#">PHOTO GALLERY</a></li>
+        <li><a href="#">PHOTO DETAILS</a></li>
+    </ul>
+
+</nav>
+
 <!-- HERO -->
 <header class="hero-banner">
+
     <div class="banner-container">
 
-        <h1 class="banner-title">PHOTO GALLERY</h1>
-
-        <div class="breadcrumbs">
-            <a href="{% url 'index' %}">HOME</a> /
+        <h1 class="banner-title">
             PHOTO GALLERY
-        </div>
+        </h1>
+
+        <nav class="breadcrumbs">
+            <a href="{% url 'index' %}">HOME</a> /
+            <span>PHOTO GALLERY</span>
+        </nav>
 
     </div>
+
 </header>
 
 <!-- CATEGORY -->
@@ -492,14 +633,17 @@ body{
 
     <div class="gallery-item">
 
-        <img src="{{ photo.image.url }}"
-             alt="{{ photo.title }}"
-             loading="lazy">
+        <a href="{% url 'photo_detail' photo.id %}">
+            <img src="{{ photo.image.url }}"
+                 alt="{{ photo.title }}"
+                 loading="lazy">
 
-        <div class="overlay">
-            <h3>{{ photo.title }}</h3>
-        </div>
+            <div class="overlay">
+                <h3>{{ photo.title }}</h3>
+            </div>
+        </a>
 
+        <!-- EYE ICON -->
         <div class="icon"
              onclick="openImage('{{ photo.image.url }}')">
 
@@ -516,48 +660,41 @@ body{
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
 
-    <!-- COUNTER -->
     <div id="lb-counter"></div>
 
     <!-- CLOSE -->
     <button class="lb-close"
             onclick="closeImage()">
-
-        &#10005;
-
+            &#10005;
     </button>
 
-    <!-- LOGIN CHECK -->
+    <!-- DOWNLOAD -->
     {% if user.is_authenticated %}
 
-        <!-- LOGIN SUCCESS -->
-        <a id="lb-download"
-           href=""
-           download
-           title="Download">
+    <a id="lb-download"
+       href="#"
+       download
+       title="Download">
 
-            <i class="fa-solid fa-download"></i>
+       <i class="fa-solid fa-download"></i>
 
-        </a>
+    </a>
 
     {% else %}
 
-        <!-- NOT LOGIN -->
-        <a href="{% url 'index' %}?next={{ request.path }}"
-           class="lb-login-download">
+    <a href="{% url 'index' %}?next={{ request.path }}"
+       class="lb-login-download">
 
-           Login to Download
+       Login to Download
 
-        </a>
+    </a>
 
     {% endif %}
 
-    <!-- LEFT -->
+    <!-- PREV -->
     <span class="lb-arrow left"
           onclick="changeImage(-1)">
-
           &#8592;
-
     </span>
 
     <!-- IMAGE -->
@@ -565,25 +702,79 @@ body{
          src=""
          alt="Preview">
 
-    <!-- RIGHT -->
+    <!-- NEXT -->
     <span class="lb-arrow right"
           onclick="changeImage(1)">
-
           &#8594;
-
     </span>
 
 </div>
 
 <script>
 
-/* =========================
-   IMAGES ARRAY
-========================= */
+/* ===========================
+   NAVIGATION
+=========================== */
+const menuToggle   = document.getElementById('menu-toggle');
+const navDrawer    = document.getElementById('nav-drawer');
+const navOverlay   = document.getElementById('nav-overlay');
+const navClose     = document.getElementById('nav-close');
+const dropdownMenu = document.getElementById('dropdown-menu');
+
+function isMobile(){
+    return window.innerWidth <= 768;
+}
+
+function openDrawer(){
+    navDrawer.classList.add('active');
+    navOverlay.classList.add('active');
+    menuToggle.classList.add('open');
+}
+
+function closeDrawer(){
+    navDrawer.classList.remove('active');
+    navOverlay.classList.remove('active');
+    menuToggle.classList.remove('open');
+}
+
+function toggleDropdown(){
+    dropdownMenu.classList.toggle('open');
+    menuToggle.classList.toggle('open');
+}
+
+menuToggle.addEventListener('click',(e)=>{
+
+    e.stopPropagation();
+
+    if(isMobile()){
+        navDrawer.classList.contains('active')
+        ? closeDrawer()
+        : openDrawer();
+    }else{
+        toggleDropdown();
+    }
+});
+
+document.addEventListener('click',(e)=>{
+
+    if(!dropdownMenu.contains(e.target)
+    && !menuToggle.contains(e.target)){
+
+        dropdownMenu.classList.remove('open');
+        menuToggle.classList.remove('open');
+    }
+});
+
+navOverlay.addEventListener('click',closeDrawer);
+navClose.addEventListener('click',closeDrawer);
+
+/* ===========================
+   LIGHTBOX
+=========================== */
 let images = [];
 let currentIndex = 0;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded',()=>{
 
     images = Array.from(
         document.querySelectorAll('.gallery-item img')
@@ -591,9 +782,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-/* =========================
-   OPEN IMAGE
-========================= */
 function openImage(src){
 
     currentIndex = images.indexOf(src);
@@ -604,74 +792,50 @@ function openImage(src){
 
     showImage(currentIndex);
 
-    document
-        .getElementById('lightbox')
-        .classList
-        .add('open');
+    document.getElementById('lightbox')
+            .classList.add('open');
 
     document.body.style.overflow = 'hidden';
 }
 
-/* =========================
-   SHOW IMAGE
-========================= */
 function showImage(index){
 
     const img = document.getElementById('lightbox-img');
-
-    const downloadBtn =
-        document.getElementById('lb-download');
-
-    const counter =
-        document.getElementById('lb-counter');
+    const dl  = document.getElementById('lb-download');
+    const counter = document.getElementById('lb-counter');
 
     img.src = images[index];
 
-    /* LOGIN users-ku மட்டும் */
-    if(downloadBtn){
-        downloadBtn.href = images[index];
+    if(dl){
+        dl.href = images[index];
     }
 
-    counter.textContent =
+    counter.innerHTML =
         (index + 1) + ' / ' + images.length;
 }
 
-/* =========================
-   CHANGE IMAGE
-========================= */
 function changeImage(direction){
 
     currentIndex =
-        (currentIndex + direction + images.length)
-        % images.length;
+    (currentIndex + direction + images.length)
+    % images.length;
 
     showImage(currentIndex);
 }
 
-/* =========================
-   CLOSE IMAGE
-========================= */
 function closeImage(){
 
-    document
-        .getElementById('lightbox')
-        .classList
-        .remove('open');
+    document.getElementById('lightbox')
+            .classList.remove('open');
 
     document.body.style.overflow = '';
 }
 
-/* =========================
-   KEYBOARD
-========================= */
-document.addEventListener('keydown', function(e){
+/* KEYBOARD */
+document.addEventListener('keydown',(e)=>{
 
-    const lightbox =
-        document.getElementById('lightbox');
-
-    if(!lightbox.classList.contains('open')){
-        return;
-    }
+    if(!document.getElementById('lightbox')
+        .classList.contains('open')) return;
 
     if(e.key === 'ArrowRight'){
         changeImage(1);
@@ -684,40 +848,30 @@ document.addEventListener('keydown', function(e){
     if(e.key === 'Escape'){
         closeImage();
     }
-
 });
 
-/* =========================
-   MOBILE SWIPE
-========================= */
+/* TOUCH SWIPE */
 let touchStartX = 0;
 
-const lightbox =
-    document.getElementById('lightbox');
+const lb = document.getElementById('lightbox');
 
-lightbox.addEventListener('touchstart', function(e){
+lb.addEventListener('touchstart',e=>{
 
     touchStartX =
-        e.changedTouches[0].screenX;
+    e.changedTouches[0].screenX;
 
-}, { passive:true });
+},{passive:true});
 
-lightbox.addEventListener('touchend', function(e){
+lb.addEventListener('touchend',e=>{
 
-    let touchEndX =
-        e.changedTouches[0].screenX;
-
-    let diff = touchStartX - touchEndX;
+    const diff =
+    touchStartX -
+    e.changedTouches[0].screenX;
 
     if(Math.abs(diff) > 40){
 
-        if(diff > 0){
-            changeImage(1);
-        }else{
-            changeImage(-1);
-        }
+        changeImage(diff > 0 ? 1 : -1);
     }
-
 });
 
 </script>
