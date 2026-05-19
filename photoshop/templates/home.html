@@ -512,7 +512,49 @@ header.main-header{
         align-items:flex-end;
     }
 }
+/* MENU DEFAULT (Desktop) */
+.menu {
+    display: flex;
+    gap: 20px;
+    font-size: 18px;
+}
 
+/* MOBILE VIEW */
+@media (max-width: 768px) {
+
+    .menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;              /* important */
+        height: 100vh;
+        background: #111;
+        flex-direction: column;
+        padding: 60px 20px;
+        transition: 0.3s ease-in-out;
+        z-index: 999;
+    }
+
+    .menu a {
+        font-size: 20px;         /* text big aakkanum */
+        padding: 12px 0;
+        color: white;
+    }
+
+    .menu.active {
+        right: 0;
+    }
+}.menu-btn {
+    font-size: 20px;   /* small na increase */
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .menu-btn {
+        display: block;
+    }
+}
 </style>
 </head>
 <body>
