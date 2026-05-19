@@ -412,14 +412,34 @@ header.main-header{
 }
 
 /* =========================
-   MOBILE
-========================= */
-
-/* =========================
    MOBILE LIGHTBOX ARROWS FIX
 ========================= */
 
 @media(max-width:768px){
+
+        .gallery{
+
+        grid-template-columns:repeat(2,1fr);
+
+        gap:10px;
+
+        padding:12px;
+    }
+
+    .gallery-item img{
+
+        height:160px;
+    }
+
+    .overlay{
+
+        opacity:1;
+    }
+
+    .icon{
+
+        opacity:1;
+    }
 
     .lb-arrow{
 
@@ -483,7 +503,7 @@ header.main-header{
 
 @media(max-width:400px){
     .gallery{ grid-template-columns:1fr; }
-    .gallery-item img{ height:220px; }
+    
 
     /* stack nav links vertically on very small screens */
     .inline-nav ul{
