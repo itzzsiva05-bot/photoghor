@@ -747,7 +747,7 @@ header.main-header{
     }
 
     .gallery.four-column .gallery-item img{
-        height: 180px;
+        height: 100px;
     }
 
 }
@@ -772,9 +772,10 @@ header.main-header{
             <ul>
                 <li><a href="#" class="active">HOME</a></li>
                 <li><a href="{%url 'home'%}">PHOTO GALLERY</a></li>
+                <li><a href="javascript:void(0)" onclick="setColumns(1)">1 COLUMN GALLERY</a></li>
                 <li><a href="javascript:void(0)" onclick="setColumns(2)">2 COLUMN GALLERY</a></li>
                 <li><a href="javascript:void(0)" onclick="setColumns(4)">4 COLUMN GALLERY</a></li>
-                <li><a href="javascript:void(0)" onclick="setColumns(1)">PHOTO DETAILS</a></li>
+                <li><a href="#">PHOTO DETAILS</a></li>
             </ul>
         </nav>
 
@@ -800,7 +801,8 @@ header.main-header{
         <h1 class="banner-title">PHOTO GALLERY</h1>
         <nav class="breadcrumbs">
             <a href="{% url 'index' %}">HOME</a>
-            / <span>PHOTO GALLERY</span>
+            <span>/</span>
+            <a href="{%url 'home'%}">PHOTO GALLERY</a>
         </nav>
     </div>
 </header>
@@ -820,6 +822,9 @@ header.main-header{
         {{ category.name }}
     </a>
     {% endfor %}
+<div class="btn" >
+    <a href="/templates/gallery.html"> view more</a>
+</div>
 
 </div>
 
