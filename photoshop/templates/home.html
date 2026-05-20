@@ -440,6 +440,18 @@ header.main-header{
     background: #000;
     border-color: #fff;
 }
+/* =========================
+   DYNAMIC GALLERY COLUMNS
+========================= */
+
+.gallery.two-column{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.gallery.four-column{
+    grid-template-columns:repeat(4,1fr);
+}
+
 
 /* =========================
    MOBILE VIEW FIX
@@ -461,6 +473,25 @@ header.main-header{
         overflow:hidden;
     }
 
+    /* HAMBURGER */
+
+    .hamburger{
+        display:flex;
+        flex-direction:column;
+        gap:5px;
+        cursor:pointer;
+        background:none;
+        border:none;
+        z-index:10001;
+    }
+
+    .bar{
+        width:25px;
+        height:2px;
+        background:#fff;
+        transition:.3s;
+    }
+
     /* MOBILE MENU */
 
     .inline-nav{
@@ -471,7 +502,7 @@ header.main-header{
         max-width:280px;
         height:100vh;
         background:#111;
-        padding:90px 25px;
+        padding:90px 25px 30px;
         transition:.4s ease;
         z-index:9999;
 
@@ -483,6 +514,30 @@ header.main-header{
 
     .inline-nav.open{
         right:0;
+    }
+
+    /* CLOSE BUTTON */
+
+    .nav-close{
+        position:absolute;
+        top:20px;
+        right:20px;
+
+        width:38px;
+        height:38px;
+
+        border:none;
+        background:#222;
+        color:#fff;
+
+        border-radius:8px;
+
+        font-size:20px;
+        cursor:pointer;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
     }
 
     .inline-nav ul{
@@ -506,6 +561,9 @@ header.main-header{
         white-space:normal;
         word-break:break-word;
         line-height:1.4;
+
+        padding-bottom:10px;
+        border-bottom:1px solid rgba(255,255,255,.1);
     }
 
     /* HERO SECTION */
@@ -546,13 +604,20 @@ header.main-header{
     /* GALLERY */
 
     .gallery{
-        grid-template-columns:repeat(2,1fr);
-        gap:10px;
+        grid-template-columns:1fr;
+        gap:14px;
         padding:12px;
     }
 
+    .gallery-item{
+        width:100%;
+    }
+
     .gallery-item img{
-        height:280px;
+        width:100%;
+        height:240px;
+        object-fit:cover;
+        border-radius:10px;
     }
 
     .overlay{
@@ -615,7 +680,20 @@ header.main-header{
         font-size:13px;
     }
 }
+       .gallery.one-column{
+        grid-template-columns:1fr;
+    }
 
+    .gallery.two-column{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .gallery.four-column{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+
+    
 </style>
 </head>
 <body>
@@ -634,9 +712,9 @@ header.main-header{
         <nav class="inline-nav" id="inline-nav">
             <ul>
                 <li><a href="#" class="active">HOME</a></li>
-                <li><a href="#">PHOTO GALLERY</a></li>
-                <li><a href="#">2 COLUMN GALLERY</a></li>
-                <li><a href="#">4 COLUMN GALLERY</a></li>
+                <li><a href="{%url 'home'%}">PHOTO GALLERY</a></li>
+                <li><a href="javascript:void(0)" onclick="setColumns(2)">2 COLUMN GALLERY</a></li>
+                <li><a href="javascript:void(0)" onclick="setColumns(4)">4 COLUMN GALLERY</a></li>
                 <li><a href="#">PHOTO DETAILS</a></li>
             </ul>
         </nav>
@@ -865,6 +943,46 @@ lightboxImg.addEventListener('click', () => {
     }
 
 });
+
+
+/* =========================
+   CHANGE GALLERY COLUMNS
+========================= */
+
+function setColumns(cols){
+
+    const gallery = document.querySelector('.gallery');
+
+    /* remove old classes */
+
+    gallery.classList.remove(
+        'two-column',
+        'four-column'
+    );
+
+    /* add new class */
+
+    if(cols === 1){
+
+        gallery.classList.add('one-column');
+
+    }
+
+    else if(cols === 2){
+
+        gallery.classList.add('two-column');
+
+    }
+
+    else if(cols === 4){
+
+        gallery.classList.add('four-column');
+    }
+
+    /* close mobile menu */
+
+    closeNav();
+}
 </script>
 </body>
 </html>
