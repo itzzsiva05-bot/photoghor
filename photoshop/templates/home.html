@@ -241,7 +241,7 @@ header.main-header{
 
 .gallery{
     width:100%;
-    max-width:1200px;
+    max-width:1400px;
     margin:auto;
     padding:20px;
     display:grid;
@@ -264,8 +264,9 @@ header.main-header{
 }
 
 .gallery-item:hover img{
-    transform:scale(1.05);
+    transform:scale(1.12);
 }
+
 
 .overlay{
     position:absolute;
@@ -571,6 +572,7 @@ header.main-header{
         font-size: 20px;   /* small na increase */
         cursor: pointer;
         display: none;
+        
     }
 
     @media (max-width: 768px) {
@@ -586,6 +588,7 @@ header.main-header{
         padding: 10px 18px;
         font-size: 14px;
     }
+
 
 </style>
 </head>
@@ -667,11 +670,19 @@ header.main-header{
     <div class="gallery-item">
 
         <a href="{% url 'photo_detail' photo.id %}">
-            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
-            <div class="overlay"><h3>{{ photo.title }}</h3></div>
+            
+            <img src="{{ photo.image.url }}"
+                 onclick="openImage(this.src)"
+                 alt="{{ photo.title }}">
+
+            <div class="overlay">
+                <h3>{{ photo.title }}</h3>
+            </div>
+
         </a>
 
-        <div class="icon" onclick="openImage('{{ photo.image.url }}')">
+        <div class="icon"
+             onclick="openImage('{{ photo.image.url }}')">
             <i class="fa-solid fa-eye"></i>
         </div>
 
@@ -759,14 +770,23 @@ let currentIndex = 0;
 document.addEventListener('DOMContentLoaded', () => {
     images = Array.from(
         document.querySelectorAll('.gallery-item img')
-    ).map(img => img.src);
+    ).map(img => new URL(img.src, window.location.origin).href);
 });
 
 function openImage(src){
+
+    src = new URL(src, window.location.origin).href;
+
     currentIndex = images.indexOf(src);
-    if(currentIndex === -1) currentIndex = 0;
+
+    if(currentIndex === -1){
+        currentIndex = 0;
+    }
+
     showImage(currentIndex);
+
     document.getElementById('lightbox').classList.add('open');
+
     document.body.style.overflow = 'hidden';
 }
 
@@ -797,6 +817,28 @@ document.addEventListener('keydown', e => {
     if(e.key === 'Escape')     closeImage();
 });
 
+
+
+let zoomLevel = 1;
+
+const lightboxImg = document.getElementById('lightbox-img');
+
+lightboxImg.addEventListener('click', () => {
+
+    if(zoomLevel === 1){
+
+        zoomLevel = 2;
+
+        lightboxImg.style.transform = 'scale(2)';
+
+    }else{
+
+        zoomLevel = 1;
+
+        lightboxImg.style.transform = 'scale(1)';
+    }
+
+});
 </script>
 </body>
 </html>

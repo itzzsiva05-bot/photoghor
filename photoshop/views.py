@@ -113,3 +113,6 @@ def logout_view(request):
     request.session.flush()
 
     return redirect('live_preview')
+
+def gallery(request):
+    return render(request, 'gallery.html')
