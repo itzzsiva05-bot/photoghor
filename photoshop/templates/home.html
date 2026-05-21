@@ -495,9 +495,7 @@ header.main-header{
 }
 
 
-/* =========================
-   MOBILE VIEW FIX
-========================= */
+
 
 @media(max-width:768px){
 
@@ -515,7 +513,7 @@ header.main-header{
         overflow:hidden;
     }
 
-    /* HAMBURGER */
+   
 
     .hamburger{
         display:flex;
@@ -534,7 +532,7 @@ header.main-header{
         transition:.3s;
     }
 
-    /* MOBILE MENU */
+    
 
     .inline-nav{
         position:fixed;
@@ -558,32 +556,7 @@ header.main-header{
         right:0;
     }
 
-    /* CLOSE BUTTON */
-
-.nav-close{
-    position:absolute;
-    top:15px;
-    right:15px;
-
-    width:40px;
-    height:40px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border:none;
-    background:#222;
-    color:#fff;
-
-    font-size:20px;
-    border-radius:8px;
-
-    cursor:pointer;
-}
-.nav-close{
-    display:none;
-}
+   
 
     .inline-nav ul{
         width:100%;
@@ -610,8 +583,29 @@ header.main-header{
         padding-bottom:10px;
         border-bottom:1px solid rgba(255,255,255,.1);
     }
+    .nav-close{
+    position:absolute;
+    top:15px;
+    right:15px;
 
-    /* HERO SECTION */
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:none;
+    background:#222;
+    color:#fff;
+
+    font-size:20px;
+    border-radius:8px;
+
+    cursor:pointer;
+}
+
+
 
     .hero-banner{
         height:220px;
@@ -634,8 +628,7 @@ header.main-header{
         font-size:14px;
     }
 
-    /* CATEGORY BUTTONS */
-
+    
     .menu-section{
         gap:10px;
         padding:20px 15px;
@@ -647,7 +640,7 @@ header.main-header{
     }
 
 
-    /* GALLERY */
+   
 
     .gallery{
         grid-template-columns:1fr;
@@ -680,7 +673,7 @@ header.main-header{
         opacity:1;
     }
 
-    /* LIGHTBOX */
+   
 
     #lightbox-img{
         width:92%;
@@ -719,7 +712,7 @@ header.main-header{
         right:56px;
     }
 
-    /* VIEW MORE BUTTON */
+   
 
     .btn a{
         padding:10px 18px;
@@ -731,7 +724,7 @@ header.main-header{
 @media(max-width:768px){
 
     .gallery.one-column .gallery-item img{
-        height: 280px;   /* mobile big view but not too large */
+        height: 280px;  
     }
 
     .gallery.two-column .gallery-item img{
@@ -748,11 +741,6 @@ header.main-header{
 </style>
 </head>
 <body>
-
-
-<!-- =========================
-     HEADER
-========================= -->
 
 <header class="main-header">
     <div class="container header-content">
@@ -772,15 +760,14 @@ header.main-header{
             </ul>
         </nav>
 
-        <!-- HAMBURGER ☰ -->
+    
         <button class="hamburger" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
         </button>
 
-        <!-- CLOSE ✕ (replaces hamburger when nav is open) -->
-        <button class="nav-close-inline" id="nav-close-inline" aria-label="Close menu">✕</button>
+            <button class="nav-close-inline" id="nav-close-inline" aria-label="Close menu">✕</button>
         
 
     </div>
