@@ -16,7 +16,9 @@ urlpatterns = [
 
      path('logout/',views.logout_view,name='logout'),
 
-    path('Gallery/', views.gallery, name='Gallery')
+    path('Gallery/', views.gallery, name='Gallery'),
+
+    path("gallery/download-all/", views.download_all_images, name="download_all"),
 
 
 

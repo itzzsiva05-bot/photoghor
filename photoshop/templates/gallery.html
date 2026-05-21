@@ -332,6 +332,48 @@ header{
     }
 
 }
+/* TOP BAR */
+.top-bar{
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    padding:100px 25px 10px;
+}
+
+/* BUTTON */
+.download-btn{
+    background:#fff;
+    color:#000;
+    padding:10px 18px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:14px;
+    transition:0.3s;
+}
+
+.download-btn:hover{
+    background:#ffcc00;
+}
+
+/* =========================
+   MOBILE VIEW
+========================= */
+@media(max-width:768px){
+
+    .top-bar{
+        padding:95px 15px 10px;
+        justify-content:center;   /* center on mobile */
+    }
+
+    .download-btn{
+        width:100%;
+        text-align:center;
+        font-size:15px;
+        padding:12px;
+        border-radius:12px;
+    }
+}
 
 </style>
 </head>
@@ -377,6 +419,12 @@ header{
     </button>
 
 </nav>
+
+<div class="top-bar">
+    <a href="{% url 'download_all' %}" class="download-btn">
+        ⬇ Download All Images
+    </a>
+</div>
 
 <!-- GALLERY -->
 

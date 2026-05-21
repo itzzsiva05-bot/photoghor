@@ -132,3 +132,38 @@ def gallery(request):
     return render(request, "gallery.html", {
         'photos': photos
     })
+
+import zipfile
+import os
+
+from django.http import HttpResponse
+from .models import Gallery
+
+
+def download_all_images(request):
+
+    images = Gallery.objects.all()
+
+    response = HttpResponse(content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename="gallery_images.zip"'
+
+    zip_file = zipfile.ZipFile(response, 'w')
+
+    for img in images:
+
+        # CHECK image exists
+        if img.image:
+
+            file_path = img.image.path
+
+            # CHECK file exists in media folder
+            if os.path.exists(file_path):
+
+                zip_file.write(
+                    file_path,
+                    os.path.basename(file_path)
+                )
+
+    zip_file.close()
+
+    return response
