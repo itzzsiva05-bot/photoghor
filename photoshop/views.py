@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Photo, Category
+from .models import Photo, Category 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from .models import Gallery
+
 
 
 
@@ -114,5 +116,9 @@ def logout_view(request):
 
     return redirect('live_preview')
 
-def gallery(request):
-    return render(request, 'gallery.html')
+
+
+
+def gallery_view(request):
+    photos = Gallery.objects.all()
+    return render(request, 'gallery.html', {'photos': photos})

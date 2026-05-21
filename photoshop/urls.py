@@ -16,7 +16,7 @@ urlpatterns = [
 
      path('logout/',views.logout_view,name='logout'),
 
-     path('gallery/', views.gallery, name='gallery'),
+    path('Gallery/', views.gallery_view, name='Gallery')
 
 
 

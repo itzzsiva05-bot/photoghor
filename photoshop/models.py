@@ -31,3 +31,9 @@ class Photo(models.Model):
 
     def __str__(self):
         return self.title
+
+class Gallery(models.Model):
+    image = models.ImageField(upload_to='gallery/')
+
+    def __str__(self):
+        return self.image.name
