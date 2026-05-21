@@ -3,15 +3,19 @@ from .models import Photo, Category
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import Gallery
+from django.contrib.auth.decorators import login_required
+
 
 
 
 
 # ================= INDEX / LOGIN =================
-
 def index(request):
 
     error = ""
+
+    # URL-la irundhu next value edukkum
+    next_url = request.GET.get('next')
 
     if request.method == "POST":
 
@@ -32,6 +36,10 @@ def index(request):
             if user is not None:
 
                 login(request, user)
+
+                # login success na previous requested page open
+                if next_url:
+                    return redirect(next_url)
 
                 return redirect('live_preview')
 
@@ -118,7 +126,6 @@ def logout_view(request):
 
 
 
-
+@login_required(login_url='index')
 def gallery(request):
-    photos = Gallery.objects.all()
-    return render(request, 'gallery.html', {'photos': photos})
+    return render(request, "gallery.html")

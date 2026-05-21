@@ -583,28 +583,42 @@ header.main-header{
         padding-bottom:10px;
         border-bottom:1px solid rgba(255,255,255,.1);
     }
-    .nav-close{
-    position:absolute;
+    .nav-close-inline{
+    display:none;
+    position:fixed;
+
     top:15px;
     right:15px;
 
-    width:40px;
-    height:40px;
+    width:45px;
+    height:45px;
 
-    display:flex;
+    background:#111;
+    border:2px solid #fff;
+    border-radius:8px;
+
+    color:#fff;
+    font-size:28px;
+    font-weight:bold;
+
+    cursor:pointer;
+
     align-items:center;
     justify-content:center;
 
-    border:none;
-    background:#222;
-    color:#fff;
+    z-index:10001;
 
-    font-size:20px;
-    border-radius:8px;
-
-    cursor:pointer;
+    transition:.3s;
 }
 
+.nav-close-inline.visible{
+    display:flex;
+}
+
+.nav-close-inline:hover{
+    background:#fff;
+    color:#000;
+}
 
 
     .hero-banner{
@@ -816,13 +830,12 @@ header.main-header{
     {% for photo in photos %}
     <div class="gallery-item">
 
-        <a href="{% url 'photo_detail' photo.id %}">
+        
             
-            <img src="{{ photo.image.url }}"
-                 onclick="openImage(this.src)"
-                 alt="{{ photo.title }}">
+            <img src="{{ photo.image.url }}"onclick="openImage(this.src)"alt="{{ photo.title }}">
 
             <div class="overlay">
+                <a href="{% url 'photo_detail' photo.id %}"></a>
                 <h3>{{ photo.title }}</h3>
             </div>
 
@@ -864,13 +877,18 @@ header.main-header{
 
 </div>
 
-<div class="btn" >
-    <a href="{% url 'Gallery' %}"> view more</a>
+<div class="btn">
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'Gallery' %}">view more</a>
+    {% else %}
+        <a href="{% url 'index' %}?next={% url 'Gallery' %}">view more</a>
+    {% endif %}
+
 </div>
 
-<!-- =========================
-     SCRIPTS
-========================= -->
+
+
 
 <script>
 
