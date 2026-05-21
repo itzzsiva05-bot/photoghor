@@ -119,6 +119,6 @@ def logout_view(request):
 
 
 
-def gallery_view(request):
+def gallery(request):
     photos = Gallery.objects.all()
     return render(request, 'gallery.html', {'photos': photos})
