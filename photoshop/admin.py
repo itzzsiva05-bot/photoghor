@@ -1,16 +1,18 @@
 from django.contrib import admin
 from django import forms
-from .models import Register, Photo, Category, Gallery
+from .models import Register, Photo, Category, Gallery, PhotoLike
 
+
+# ─── Multi-file upload for Gallery ───────────────────────────────────────────
 
 class MultipleFileInput(forms.FileInput):
-    allow_multiple_selected = True  # Django internal check bypass
+    allow_multiple_selected = True
 
     def __init__(self, attrs=None):
         default_attrs = {'multiple': 'multiple'}
         if attrs:
             default_attrs.update(attrs)
-        super(forms.FileInput, self).__init__(attrs=default_attrs)  # Widget.__init__ direct call
+        super(forms.FileInput, self).__init__(attrs=default_attrs)
 
 
 class MultipleFileField(forms.FileField):
@@ -47,6 +49,46 @@ class GalleryAdmin(admin.ModelAdmin):
             super().save_model(request, obj, form, change)
 
 
+# ─── PhotoLike inline ─────────────────────────────────────────────────────────
+
+class PhotoLikeInline(admin.TabularInline):
+    model = PhotoLike
+    extra = 0
+    readonly_fields = ('user', 'liked_date')
+    can_delete = False
+
+
+# ─── Photo (with likes count + inline) ───────────────────────────────────────
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'image', 'get_likes_count', 'created_at')
+    inlines = [PhotoLikeInline]
+
+    def get_likes_count(self, obj):
+        return obj.photo_likes.count()
+    get_likes_count.short_description = 'Total Likes'
+
+
+# ─── PhotoLike list ───────────────────────────────────────────────────────────
+
+@admin.register(PhotoLike)
+class PhotoLikeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'photo', 'get_user_id', 'get_username', 'liked_date')
+    list_filter = ('photo', 'liked_date')
+    search_fields = ('user__username', 'photo__id')
+    readonly_fields = ('user', 'photo', 'liked_date')
+
+    def get_user_id(self, obj):
+        return obj.user_id
+    get_user_id.short_description = 'User ID'
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.short_description = 'Username'
+
+
+# ─── Simple registrations ─────────────────────────────────────────────────────
+
 admin.site.register(Register)
-admin.site.register(Photo)
 admin.site.register(Category)

@@ -167,3 +167,39 @@ def download_all_images(request):
     zip_file.close()
 
     return response
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from .models import Photo, PhotoLike
+
+@login_required
+@require_POST
+def like_photo(request, photo_id):
+    photo = Photo.objects.get(pk=photo_id)
+    today = timezone.localdate()   # current date only
+
+    existing = PhotoLike.objects.filter(
+        user=request.user,
+        photo=photo,
+        liked_date=today
+    ).first()
+
+    if existing:
+        # Already liked today — unlike (toggle)
+        existing.delete()
+        liked = False
+    else:
+        # First like today — create
+        PhotoLike.objects.create(
+            user=request.user,
+            photo=photo,
+            liked_date=today
+        )
+        liked = True
+
+    return JsonResponse({
+        'liked': liked,
+        'likes_count': photo.likes_count
+    })

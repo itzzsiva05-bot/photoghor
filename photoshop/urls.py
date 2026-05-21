@@ -20,6 +20,8 @@ urlpatterns = [
 
     path("gallery/download-all/", views.download_all_images, name="download_all"),
 
+    path('photo/<int:photo_id>/like/', views.like_photo, name='like_photo'),
+
 
 
    

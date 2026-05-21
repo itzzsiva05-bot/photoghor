@@ -186,6 +186,13 @@ header{
 /* =========================
    GALLERY ITEM
 ========================= */
+.gallery{
+    width:100%;
+    padding:40px 25px 40px;  /* ← 120px → 10px */
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
 
 .gallery-item{
     position:relative;
@@ -213,6 +220,300 @@ header{
 
 .gallery-item:hover img{
     transform:scale(1.05);
+}
+
+/* =========================
+   PER-IMAGE DOWNLOAD BUTTON
+========================= */
+
+.img-download-btn{
+    position:absolute;
+    bottom:10px;
+    right:10px;
+
+    width:36px;
+    height:36px;
+
+    background:rgba(0,0,0,0.65);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+
+    color:#fff;
+    font-size:15px;
+
+    border:1.5px solid rgba(255,255,255,0.25);
+    border-radius:8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+    cursor:pointer;
+
+    opacity:0;
+    transform:translateY(4px);
+    transition:opacity 0.25s ease, transform 0.25s ease, background 0.2s;
+
+    z-index:10;
+}
+
+/* Show on hover (desktop) */
+.gallery-item:hover .img-download-btn{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* Always visible on touch/mobile */
+@media(hover:none){
+    .img-download-btn{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.img-download-btn:hover{
+    background:rgba(255,204,0,0.85);
+    color:#000;
+    border-color:transparent;
+}
+.lightbox-download{
+    position:absolute;
+    top:20px;
+    right:65px;
+
+    width:38px;
+    height:38px;
+
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+
+    color:#fff;
+    font-size:16px;
+
+    border:1.5px solid rgba(255,255,255,0.3);
+    border-radius:8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+    cursor:pointer;
+    transition:0.3s;
+    z-index:5001;
+}
+
+.lightbox-download:hover{
+    background:#ffcc00;
+    color:#000;
+    border-color:transparent;
+}
+/* FOOTER */
+footer{
+    background:#1a1a1a;
+    padding:20px 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.footer-left{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.footer-left a{
+    color:#bfbfbf;
+    text-decoration:none;
+    font-size:14px;
+    transition:0.3s;
+}
+
+.footer-left a:hover{ color:#fff; }
+
+.footer-right{
+    color:#bfbfbf;
+    font-size:14px;
+}
+
+/* SHARE BUTTON */
+.share-btn{
+    background:none;
+    border:1.5px solid rgba(255,255,255,0.25);
+    border-radius:8px;
+    color:#bfbfbf;
+    padding:6px 14px;
+    font-size:14px;
+    cursor:pointer;
+    transition:0.3s;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.share-btn:hover{
+    background:#ffcc00;
+    color:#000;
+    border-color:transparent;
+}
+
+/* SHARE POPUP */
+.share-popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9000;
+}
+
+.share-popup.active{ display:flex; }
+
+.share-box{
+    background:#1d1d1d;
+    border-radius:16px;
+    padding:30px;
+    text-align:center;
+    position:relative;
+    min-width:280px;
+}
+
+.share-box p{
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+.share-icons{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:12px;
+}
+
+.share-icons a,
+.share-icons button{
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.share-icons a:nth-child(1){ background:#25D366; color:#fff; } /* WhatsApp */
+.share-icons a:nth-child(2){ background:#1877F2; color:#fff; } /* Facebook */
+.share-icons a:nth-child(3){ background:#1DA1F2; color:#fff; } /* Twitter  */
+.share-icons button{ background:#444; color:#fff; }            /* Copy link */
+
+.share-icons a:hover,
+.share-icons button:hover{ opacity:0.85; transform:scale(1.08); }
+
+#copy-msg{
+    display:none;
+    color:#ffcc00;
+    font-size:13px;
+    margin-top:6px;
+}
+
+.share-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    background:none;
+    border:none;
+    color:#aaa;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.share-close:hover{ color:#fff; }
+
+
+/* =========================
+   PER-IMAGE LIKE BUTTON
+========================= */
+
+.img-like-btn{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    background:rgba(0,0,0,0.65);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+
+    border:1.5px solid rgba(255,255,255,0.25);
+    border-radius:8px;
+
+    padding:0 10px;
+    height:36px;
+
+    cursor:pointer;
+
+    opacity:0;
+    transform:translateY(4px);
+    transition:opacity 0.25s ease, transform 0.25s ease, background 0.2s;
+
+    z-index:10;
+    user-select:none;
+}
+
+.img-like-btn i{
+    font-size:15px;
+    transition:transform 0.2s ease, color 0.2s;
+}
+
+/* Show on hover (desktop) */
+.gallery-item:hover .img-like-btn{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* Always visible on touch/mobile */
+@media(hover:none){
+    .img-like-btn{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* LIKED state */
+.img-like-btn.liked{
+    background:rgba(220,38,38,0.85);
+    border-color:transparent;
+    color:#fff;
+}
+
+.img-like-btn.liked i{
+    transform:scale(1.25);
+    color:#fff;
+}
+
+.img-like-btn:hover:not(.liked){
+    background:rgba(220,38,38,0.5);
+    border-color:transparent;
 }
 
 /* =========================
@@ -249,8 +550,8 @@ header{
 /* IMAGE */
 
 .lightbox img{
-    max-width:95%;
-    max-height:95vh;
+    max-width:90%;
+    max-height:90vh;
 
     border-radius:12px;
 }
@@ -260,13 +561,38 @@ header{
 .lightbox-close{
     position:absolute;
 
-    top:25px;
-    right:30px;
+    top:20px;
+    right:20px;
 
     font-size:32px;
     color:#fff;
 
     cursor:pointer;
+}
+
+/* NAV BUTTONS */
+.nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:45px;
+    color:#fff;
+    cursor:pointer;
+    user-select:none;
+    padding:10px;
+    transition:0.3s;
+}
+
+.nav:hover{
+    color:#ffcc00;
+}
+
+.prev{
+    left:25px;
+}
+
+.next{
+    right:25px;
 }
 
 /* =========================
@@ -317,6 +643,33 @@ header{
 
 }
 
+@media(max-width:768px){
+
+    .lightbox img{
+        max-width:95%;
+        max-height:80vh;
+    }
+
+    .nav{
+        font-size:35px;
+        padding:5px;
+    }
+
+    .prev{
+        left:10px;
+    }
+
+    .next{
+        right:10px;
+    }
+
+    .lightbox-close{
+        font-size:28px;
+        top:15px;
+        right:15px;
+    }
+}
+
 /* =========================
    SMALL MOBILE
 ========================= */
@@ -332,12 +685,13 @@ header{
     }
 
 }
+
 /* TOP BAR */
 .top-bar{
     width:100%;
     display:flex;
     justify-content:flex-end;
-    padding:100px 25px 10px;
+    padding:90px 25px 0px;
 }
 
 /* BUTTON */
@@ -363,7 +717,7 @@ header{
 
     .top-bar{
         padding:95px 15px 10px;
-        justify-content:center;   /* center on mobile */
+        justify-content:center;
     }
 
     .download-btn{
@@ -372,6 +726,29 @@ header{
         font-size:15px;
         padding:12px;
         border-radius:12px;
+    }
+
+     .lightbox-download{
+        top:15px;
+        right:60px;   /* mobile-ல் close button அருகே */
+        width:34px;
+        height:34px;
+        font-size:14px;
+    }
+
+    .lightbox-close{
+        top:15px;
+        right:15px;
+        font-size:24px;
+    }
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    footer{
+        flex-direction:column;
+        align-items:flex-start;
+        padding:20px 15px;
     }
 }
 
@@ -384,7 +761,7 @@ header{
 <header>
 
     <div class="logo">
-        PHOTOGHOR
+        PHOTO GALLERY
     </div>
 
     <!-- MENU BUTTON -->
@@ -433,116 +810,265 @@ header{
 {% for photo in photos %}
 <div class="gallery-item">
     <img src="{{ photo.image.url }}" onclick="openImage(this.src)" alt="gallery">
+    <!-- LIKE BUTTON (left) -->
+    <button class="img-like-btn"
+            onclick="toggleLike(this, event)"
+            data-photo-id="{{ photo.id }}"
+            title="Like">
+        <i class="fas fa-heart"></i>
+        <span class="like-count">{{ photo.likes_count|default:0 }}</span>
+    </button>
+    <!-- DOWNLOAD BUTTON (right) -->
+    <a href="{{ photo.image.url }}"
+       download
+       class="img-download-btn"
+       title="Download"
+       onclick="event.stopPropagation()">
+        <i class="fas fa-download"></i>
+    </a>
 </div>
 {% endfor %}
+
 </section>
 
 <!-- LIGHTBOX -->
 
 <div class="lightbox" id="lightbox">
 
-    <span class="lightbox-close"
-          onclick="closeImage()">
-
+    <span class="lightbox-close" onclick="closeImage()">
         <i class="fas fa-times"></i>
-
     </span>
+    <a class="lightbox-download" id="lightbox-download" download title="Download">
+        <i class="fas fa-download"></i>
+    </a>
+
+    <span class="nav prev" onclick="prevImage()">&#10094;</span>
 
     <img id="lightbox-img">
 
+    <span class="nav next" onclick="nextImage()">&#10095;</span>
+
 </div>
 
-<!-- JAVASCRIPT -->
+<footer>
+    <div class="footer-left">
+       <!-- இப்படி மாற்றுங்கள் -->
+<a href="https://www.facebook.com" target="_blank">Facebook</a>
+<a href="https://www.twitter.com" target="_blank">Twitter</a>
+<a href="https://plus.google.com" target="_blank">Google+</a>
+<a href="https://www.linkedin.com" target="_blank">Linkedin</a>
+<a href="https://www.behance.net" target="_blank">Behance</a>
+
+        <!-- ← Share button -->
+        <button class="share-btn" onclick="shareGallery()">
+            <i class="fas fa-share-alt"></i> Share
+        </button>
+    </div>
+
+    <div class="footer-right">
+        Copyright &copy; <strong>Photoghor</strong> 2023. All Right Reserved
+    </div>
+</footer>
+
+<!-- Share popup -->
+<div class="share-popup" id="share-popup">
+    <div class="share-box">
+        <p>Share this gallery</p>
+        <div class="share-icons">
+            <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a id="share-facebook" href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a id="share-twitter"  href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            <button onclick="copyLink()"><i class="fas fa-link"></i></button>
+        </div>
+        <span id="copy-msg">Link copied!</span>
+        <button class="share-close" onclick="closeShare()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
 
 <script>
 
-const menuToggle     = document.getElementById('menu-toggle');
-const inlineNav      = document.getElementById('inline-nav');
+const menuToggle = document.getElementById('menu-toggle');
+const inlineNav = document.getElementById('inline-nav');
 const navCloseInline = document.getElementById('nav-close-inline');
 
-/* OPEN MENU */
-
-function openNav(){
-
+menuToggle.addEventListener('click', () => {
     inlineNav.classList.add('open');
-
     navCloseInline.classList.add('visible');
-
-}
-
-/* CLOSE MENU */
-
-function closeNav(){
-
-    inlineNav.classList.remove('open');
-
-    navCloseInline.classList.remove('visible');
-
-}
-
-/* BUTTON EVENTS */
-
-menuToggle.addEventListener('click', openNav);
-
-navCloseInline.addEventListener('click', closeNav);
-
-/* CLOSE WHEN LINK CLICK */
-
-inlineNav.querySelectorAll('a').forEach(a =>
-    a.addEventListener('click', closeNav)
-);
-
-/* ESC CLOSE */
-
-document.addEventListener('keydown', e => {
-
-    if(e.key === 'Escape'){
-
-        closeNav();
-        closeImage();
-
-    }
-
 });
 
-/* =========================
-   IMAGE LIGHTBOX
-========================= */
+navCloseInline.addEventListener('click', () => {
+    inlineNav.classList.remove('open');
+    navCloseInline.classList.remove('visible');
+});
 
-const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightbox-img');
+/* ================= LIKE BUTTON ================= */
 
-/* OPEN IMAGE */
+function toggleLike(btn, e){
+    e.stopPropagation();
+
+    const photoId = btn.dataset.photoId;
+    const countEl = btn.querySelector('.like-count');
+    const isLiked = btn.classList.contains('liked');
+
+    // Toggle UI instantly
+    btn.classList.toggle('liked');
+    let count = parseInt(countEl.textContent) || 0;
+    countEl.textContent = isLiked ? count - 1 : count + 1;
+
+    // Send to Django backend
+    fetch(`/photo/${photoId}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Sync count from server
+        if(data.likes_count !== undefined){
+            countEl.textContent = data.likes_count;
+        }
+        if(data.liked !== undefined){
+            btn.classList.toggle('liked', data.liked);
+        }
+    })
+    .catch(() => {
+        // Revert on error
+        btn.classList.toggle('liked');
+        countEl.textContent = isLiked ? count : count - 1;
+    });
+}
+
+function getCookie(name){
+    let cookieValue = null;
+    if(document.cookie && document.cookie !== ''){
+        document.cookie.split(';').forEach(cookie => {
+            const c = cookie.trim();
+            if(c.startsWith(name + '=')){
+                cookieValue = decodeURIComponent(c.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+/* ================= LIGHTBOX ================= */
+
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const images = document.querySelectorAll(".gallery-item img");
+
+let currentIndex = 0;
 
 function openImage(src){
 
-    lightbox.classList.add('active');
-
+    lightbox.classList.add("active");
     lightboxImg.src = src;
 
+    images.forEach((img, index) => {
+        if(img.src === src){
+            currentIndex = index;
+        }
+    });
 }
+function openImage(src){
+    lightbox.classList.add("active");
+    lightboxImg.src = src;
 
-/* CLOSE IMAGE */
+    const btn = document.getElementById('lightbox-download');
+    btn.href = src;
+    btn.download = src.split('/').pop();  // ← filename எடுக்கும்
+
+    images.forEach((img, index) => {
+        if(img.src === src) currentIndex = index;
+    });
+}
 
 function closeImage(){
-
-    lightbox.classList.remove('active');
-
+    lightbox.classList.remove("active");
 }
 
-/* CLICK OUTSIDE CLOSE */
-
-lightbox.addEventListener('click', e => {
-
-    if(e.target === lightbox){
-
-        closeImage();
-
+function nextImage(){
+    currentIndex++;
+    if(currentIndex >= images.length){
+        currentIndex = 0;
     }
+    lightboxImg.src = images[currentIndex].src;
+}
+
+function prevImage(){
+    currentIndex--;
+    if(currentIndex < 0){
+        currentIndex = images.length - 1;
+    }
+    lightboxImg.src = images[currentIndex].src;
+}
+
+/* KEYBOARD */
+document.addEventListener("keydown", e => {
+
+    if(!lightbox.classList.contains("active")) return;
+
+    if(e.key === "ArrowRight") nextImage();
+    if(e.key === "ArrowLeft") prevImage();
+    if(e.key === "Escape") closeImage();
 
 });
 
+/* OUTSIDE CLICK */
+lightbox.addEventListener("click", e => {
+    if(e.target === lightbox){
+        closeImage();
+    }
+});
+
 </script>
+<script>
+    function shareGallery(){
+    const url  = window.location.href;
+    const title = document.title;
+
+    // Mobile — native share sheet (WhatsApp, Messages, etc.)
+    if(navigator.share){
+        navigator.share({
+            title: title,
+            text:  'Check out this Photo Gallery!',
+            url:   url
+        }).catch(() => {});
+
+    } else {
+        // Desktop — popup show பண்ணுங்கள்
+        document.getElementById('share-whatsapp').href =
+            'https://wa.me/?text=' + encodeURIComponent(url);
+        document.getElementById('share-facebook').href =
+            'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+        document.getElementById('share-twitter').href =
+            'https://twitter.com/intent/tweet?url=' + encodeURIComponent(url);
+        document.getElementById('share-popup').classList.add('active');
+    }
+}
+
+function closeShare(){
+    document.getElementById('share-popup').classList.remove('active');
+    document.getElementById('copy-msg').style.display = 'none';
+}
+
+function copyLink(){
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        const msg = document.getElementById('copy-msg');
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 2000);
+    });
+}
+
+document.getElementById('share-popup').addEventListener('click', function(e){
+    if(e.target === this) closeShare();
+});
+</script>
+
 
 </body>
 </html>
