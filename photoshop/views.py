@@ -128,4 +128,7 @@ def logout_view(request):
 
 @login_required(login_url='index')
 def gallery(request):
-    return render(request, "gallery.html")
+    photos = Gallery.objects.exclude(image='').exclude(image=None)
+    return render(request, "gallery.html", {
+        'photos': photos
+    })

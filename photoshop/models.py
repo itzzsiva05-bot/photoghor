@@ -34,6 +34,6 @@ class Photo(models.Model):
 
 class Gallery(models.Model):
     image = models.ImageField(upload_to='gallery/')
-
+    
     def __str__(self):
-        return self.image.name
+        return f"Gallery {self.id}"
