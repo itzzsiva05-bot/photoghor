@@ -2,195 +2,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Gallery</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- FONT AWESOME -->
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>Photoghor Gallery</title>
 
-    <style>
+<!-- FONT AWESOME -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial,sans-serif;
-        }
+<style>
 
-        body{
-            background:#111;
-            color:white;
-        }
+/* =========================
+   RESET
+========================= */
 
-        /* ================= HEADER ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
 
-        .header{
-            background:#000;
-            padding:15px 20px;
-            position:relative;
-        }
+body{
+    background:#111;
+    color:#fff;
+    overflow-x:hidden;
+}
 
-        .header-content{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-        }
+/* =========================
+   HEADER
+========================= */
 
-        .logo{
-            font-size:28px;
-            font-weight:bold;
-        }
+.header{
+    width:100%;
+    background:#000;
+    padding:20px 40px;
+    position:sticky;
+    top:0;
+    z-index:9999;
+}
 
-        /* ================= HAMBURGER BUTTON ================= */
+.header-content{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
 
-        .menu-btn{
-            font-size:30px;
-            color:white;
-            cursor:pointer;
-        }
+/* =========================
+   LOGO
+========================= */
 
-        /* ================= MENU ================= */
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    letter-spacing:4px;
+}
 
-        .nav-menu{
-            position:absolute;
-            top:70px;
-            right:20px;
+/* =========================
+   MENU BUTTON
+========================= */
 
-            width:220px;
-            background:#222;
+.menu-btn{
+    font-size:30px;
+    color:#fff;
+    cursor:pointer;
+}
 
-            border-radius:10px;
-            padding:20px;
+/* =========================
+   MENU
+========================= */
 
-            list-style:none;
+.nav-menu{
 
-            display:none;
-            flex-direction:column;
-            gap:15px;
-        }
+    display:none;
 
-        .nav-menu.show{
-            display:flex;
-        }
+    position:absolute;
 
-        .nav-menu li a{
-            color:white;
-            text-decoration:none;
-            font-size:18px;
-        }
+    top:80px;
+    right:40px;
 
-        .nav-menu li a:hover{
-            color:orange;
-        }
+    width:320px;
 
-        /* ================= GALLERY ================= */
+    background:#000;
 
-        .gallery{
-            width:90%;
-            margin:40px auto;
+    padding:25px;
 
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:20px;
-        }
+    border-radius:12px;
 
-        .gallery img{
-            width:100%;
-            height:250px;
-            object-fit:cover;
-            border-radius:10px;
-        }
+    list-style:none;
 
-        /* ================= MOBILE ================= */
+    flex-direction:column;
 
-        @media(max-width:768px){
+    gap:25px;
 
-            .gallery{
-                grid-template-columns:repeat(2,1fr);
-            }
+    z-index:9999;
+}
 
-            .gallery img{
-                height:180px;
-            }
+/* SHOW MENU */
 
-        }
+.nav-menu.show{
+    display:flex;
+}
 
-    </style>
+/* MENU LINKS */
+
+.nav-menu li{
+    width:100%;
+}
+
+.nav-menu li a{
+
+    display:block;
+
+    width:100%;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    padding-bottom:15px;
+
+    border-bottom:1px solid rgba(255,255,255,0.1);
+
+    transition:0.3s;
+}
+
+.nav-menu li a:hover{
+    color:#aaa;
+}
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.close-btn{
+
+    position:absolute;
+
+    top:15px;
+    right:15px;
+
+    width:40px;
+    height:40px;
+
+    background:#222;
+
+    border-radius:8px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:22px;
+
+    cursor:pointer;
+}
+
+/* =========================
+   GALLERY
+========================= */
+
+.gallery{
+
+    width:90%;
+
+    margin:40px auto;
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+}
+
+.gallery-item{
+    overflow:hidden;
+    border-radius:12px;
+}
+
+.gallery-item img{
+
+    width:100%;
+
+    height:260px;
+
+    object-fit:cover;
+
+    transition:0.4s;
+
+    display:block;
+}
+
+.gallery-item:hover img{
+    transform:scale(1.1);
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media(max-width:992px){
+
+    .gallery{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+    .header{
+        padding:18px 20px;
+    }
+
+    .logo{
+        font-size:18px;
+        letter-spacing:2px;
+    }
+
+    .nav-menu{
+
+        width:280px;
+
+        right:20px;
+
+        top:75px;
+    }
+
+    .nav-menu li a{
+        font-size:16px;
+    }
+
+    .gallery{
+        grid-template-columns:1fr;
+        gap:15px;
+    }
+
+    .gallery-item img{
+        height:240px;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
 
-    <!-- ================= HEADER ================= -->
+<!-- =========================
+     HEADER
+========================= -->
 
-    <header class="header">
+<header class="header">
 
-        <div class="header-content">
+    <div class="header-content">
 
-            <div class="logo">
-                PHOTO GALLERY
-            </div>
+        <!-- LOGO -->
 
-            <!-- HAMBURGER BUTTON -->
+        <div class="logo">
+            PHOTOGHOR
+        </div>
 
-            <div class="menu-btn" onclick="toggleMenu()">
+        <!-- MENU BUTTON -->
 
-                <i class="fa-solid fa-bars"></i>
+        <div class="menu-btn" onclick="toggleMenu()">
 
-            </div>
+            <i class="fa-solid fa-bars"></i>
 
         </div>
 
-        <!-- MENU OPTIONS -->
+    </div>
 
-        <ul class="nav-menu" id="navMenu">
+    <!-- ================= MENU ================= -->
 
-            <li>
-                <a href="{% url 'index' %}">Home</a>
-            </li>
+    <ul class="nav-menu" id="navMenu">
 
-            <li>
-                <a href="{% url 'home' %}">Gallery</a>
-            </li>
+        <!-- CLOSE BUTTON -->
 
-            <li>
-                <a href="{% url 'register' %}">Register</a>
-            </li>
+        <div class="close-btn" onclick="toggleMenu()">
 
-            <li>
-                <a href="{% url 'logout' %}">Logout</a>
-            </li>
+            <i class="fa-solid fa-xmark"></i>
 
-        </ul>
+        </div>
 
-    </header>
+        <li>
+            <a href="{% url 'index' %}">
+                HOME
+            </a>
+        </li>
 
-    <!-- ================= GALLERY ================= -->
+        <li>
+            <a href="{% url 'home' %}">
+                PHOTO GALLERY
+            </a>
+        </li>
 
-    <section class="gallery">
+        <li>
+            <a href="#">
+                1 COLUMN GALLERY
+            </a>
+        </li>
 
-        {% for photo in photos %}
+        <li>
+            <a href="#">
+                2 COLUMN GALLERY
+            </a>
+        </li>
 
-            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+        <li>
+            <a href="#">
+                4 COLUMN GALLERY
+            </a>
+        </li>
 
-        {% endfor %}
+        <li>
+            <a href="#">
+                PHOTO DETAILS
+            </a>
+        </li>
 
-    </section>
+    </ul>
 
-    <!-- ================= JAVASCRIPT ================= -->
+</header>
 
-    <script>
+<!-- =========================
+     GALLERY
+========================= -->
 
-        function toggleMenu(){
+<section class="gallery">
 
-            document
-            .getElementById("navMenu")
-            .classList
-            .toggle("show");
+    {% for photo in photos %}
 
-        }
+    <div class="gallery-item">
 
-    </script>
+        <img src="{{ photo.image.url }}"
+             alt="{{ photo.title }}">
+
+    </div>
+
+    {% endfor %}
+
+</section>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+function toggleMenu(){
+
+    document
+    .getElementById("navMenu")
+    .classList
+    .toggle("show");
+
+}
+
+</script>
 
 </body>
 </html>
