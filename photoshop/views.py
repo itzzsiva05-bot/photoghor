@@ -1,28 +1,39 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Photo, Category 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from .models import Gallery
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_POST
+from django.utils import timezone
+from django.contrib import messages
+
+from .models import (
+    Photo,
+    Category,
+    Gallery,
+    PhotoLike
+)
+
+import zipfile
+import os
 
 
+# ======================================================
+# INDEX / LOGIN
+# ======================================================
 
-
-
-# ================= INDEX / LOGIN =================
 def index(request):
 
     error = ""
 
-    # URL-la irundhu next value edukkum
-    next_url = request.GET.get('next')
-
     if request.method == "POST":
+
+        # GET NEXT URL FROM HIDDEN INPUT
+        next_url = request.POST.get("next")
 
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        # EMAIL -> USERNAME FETCH
         user_obj = User.objects.filter(email=email).first()
 
         if user_obj:
@@ -35,12 +46,14 @@ def index(request):
 
             if user is not None:
 
-                login(request, user)
+                auth_login(request, user)
 
-                # login success na previous requested page open
+                # PREVIOUS PAGE REDIRECT
                 if next_url:
                     return redirect(next_url)
 
+                # DEFAULT PAGE
+                messages.success(request, "Account Login Successfully!")
                 return redirect('live_preview')
 
         error = "Invalid Email or Password"
@@ -50,9 +63,23 @@ def index(request):
     })
 
 
-# ================= REGISTER =================
+# ======================================================
+# LIVE PREVIEW
+# ======================================================
+
+@login_required(login_url='index')
+def live_preview(request):
+
+    return render(request, 'account/live_preview.html')
+
+
+# ======================================================
+# REGISTER
+# ======================================================
 
 def register(request):
+
+    error = ""
 
     if request.method == "POST":
 
@@ -60,8 +87,25 @@ def register(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        # CREATE DJANGO USER
+        # Check username already exists
+        if User.objects.filter(username=username).exists():
 
+            error = "Username already exists"
+
+            return render(request, 'account/register.html', {
+                'error': error
+            })
+
+        # Check email already exists
+        if User.objects.filter(email=email).exists():
+
+            error = "Email already exists"
+
+            return render(request, 'account/register.html', {
+                'error': error
+            })
+
+        # Create user
         User.objects.create_user(
             username=username,
             email=email,
@@ -70,10 +114,14 @@ def register(request):
 
         return redirect('index')
 
-    return render(request, 'register.html')
+    return render(request, 'account/register.html', {
+        'error': error
+    })
 
 
-# ================= HOME =================
+# ======================================================
+# HOME
+# ======================================================
 
 def home(request):
 
@@ -81,7 +129,7 @@ def home(request):
 
     categories = Category.objects.all()
 
-    if category == None:
+    if category is None:
 
         photos = Photo.objects.all()
 
@@ -96,67 +144,78 @@ def home(request):
         'photos': photos,
     }
 
-    return render(request, 'home.html', context)
+    return render(request, 'account/home.html', context)
 
 
-# ================= PHOTO DETAIL =================
+# ======================================================
+# PHOTO DETAIL
+# ======================================================
 
 def photo_detail(request, id):
 
     photo = get_object_or_404(Photo, id=id)
 
-    return render(request, 'photo_detail.html', {
+    return render(request, 'account/photo_detail.html', {
         'photo': photo
     })
 
 
-# ================= LIVE PREVIEW =================
+# ======================================================
+# LOGOUT
+# ======================================================
 
-def live_preview(request):
-
-    return render(request, 'live_preview.html')
-
-
-# ================= LOGOUT =================
 def logout_view(request):
 
-    request.session.flush()
+    logout(request )
 
-    return redirect('live_preview')
+    return redirect('index')
 
 
+# ======================================================
+# GALLERY
+# ======================================================
 
 @login_required(login_url='index')
 def gallery(request):
-    photos = Gallery.objects.exclude(image='').exclude(image=None)
-    return render(request, "gallery.html", {
+
+    photos = Gallery.objects.exclude(
+        image=''
+    ).exclude(
+        image=None
+    )
+
+    return render(request, "account/gallery.html", {
         'photos': photos
     })
 
-import zipfile
-import os
 
-from django.http import HttpResponse
-from .models import Gallery
+# ======================================================
+# DOWNLOAD ALL IMAGES
+# ======================================================
 
-
+@login_required(login_url='index')
 def download_all_images(request):
 
     images = Gallery.objects.all()
 
-    response = HttpResponse(content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename="gallery_images.zip"'
+    response = HttpResponse(
+        content_type='application/zip'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = 'attachment; filename="gallery_images.zip"'
 
     zip_file = zipfile.ZipFile(response, 'w')
 
     for img in images:
 
-        # CHECK image exists
+        # Check image exists
         if img.image:
 
             file_path = img.image.path
 
-            # CHECK file exists in media folder
+            # Check file exists
             if os.path.exists(file_path):
 
                 zip_file.write(
@@ -168,17 +227,21 @@ def download_all_images(request):
 
     return response
 
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from .models import Photo, PhotoLike
 
-@login_required
+# ======================================================
+# LIKE PHOTO
+# ======================================================
+
+@login_required(login_url='index')
 @require_POST
 def like_photo(request, photo_id):
-    photo = Photo.objects.get(pk=photo_id)
-    today = timezone.localdate()   # current date only
+
+    photo = get_object_or_404(
+        Photo,
+        pk=photo_id
+    )
+
+    today = timezone.localdate()
 
     existing = PhotoLike.objects.filter(
         user=request.user,
@@ -186,17 +249,20 @@ def like_photo(request, photo_id):
         liked_date=today
     ).first()
 
+    # Toggle Like / Unlike
     if existing:
-        # Already liked today — unlike (toggle)
+
         existing.delete()
         liked = False
+
     else:
-        # First like today — create
+
         PhotoLike.objects.create(
             user=request.user,
             photo=photo,
             liked_date=today
         )
+
         liked = True
 
     return JsonResponse({
