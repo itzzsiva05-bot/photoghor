@@ -6,266 +6,89 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.contrib import messages
+from .models import Photo, Category, Gallery, PhotoLike
+import zipfile, os
 
-from .models import (
-    Photo,
-    Category,
-    Gallery,
-    PhotoLike
-)
-
-import zipfile
-import os
-
-
-# ======================================================
-# INDEX / LOGIN
-# ======================================================
 
 def index(request):
-
-    error = ""
-
-    if request.method == "POST":
-
-        # GET NEXT URL FROM HIDDEN INPUT
-        next_url = request.POST.get("next")
-
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        user_obj = User.objects.filter(email=email).first()
-
-        if user_obj:
-
-            user = authenticate(
-                request,
-                username=user_obj.username,
-                password=password
-            )
-
-            if user is not None:
-
-                auth_login(request, user)
-
-                # PREVIOUS PAGE REDIRECT
-                if next_url:
-                    return redirect(next_url)
-
-                # DEFAULT PAGE
-                messages.success(request, "Account Login Successfully!")
-                return redirect('live_preview')
-
-        error = "Invalid Email or Password"
-
-    return render(request, 'index.html', {
-        'error': error
-    })
+    if request.method != "POST":
+        return render(request, 'index.html', {'error': ''})
+    next_url = request.POST.get("next")
+    email    = request.POST.get("email")
+    password = request.POST.get("password")
+    user_obj = User.objects.filter(email=email).first()
+    if user_obj:
+        user = authenticate(request, username=user_obj.username, password=password)
+        if user:
+            auth_login(request, user)
+            return redirect(next_url) if next_url else redirect('live_preview')
+    return render(request, 'index.html', {'error': 'Invalid Email or Password'})
 
 
-# ======================================================
-# LIVE PREVIEW
-# ======================================================
-
-@login_required(login_url='index')
 def live_preview(request):
+    return redirect('account/live_preview')
 
-    return render(request, 'account/live_preview.html')
-
-
-# ======================================================
-# REGISTER
-# ======================================================
 
 def register(request):
-
-    error = ""
-
-    if request.method == "POST":
-
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        # Check username already exists
-        if User.objects.filter(username=username).exists():
-
-            error = "Username already exists"
-
-            return render(request, 'account/register.html', {
-                'error': error
-            })
-
-        # Check email already exists
-        if User.objects.filter(email=email).exists():
-
-            error = "Email already exists"
-
-            return render(request, 'account/register.html', {
-                'error': error
-            })
-
-        # Create user
-        User.objects.create_user(
-            username=username,
-            email=email,
-            password=password
-        )
-
-        return redirect('index')
-
-    return render(request, 'account/register.html', {
-        'error': error
-    })
-
-
-# ======================================================
-# HOME
-# ======================================================
-
-def home(request):
-
-    category = request.GET.get('category')
-
-    categories = Category.objects.all()
-
-    if category is None:
-
-        photos = Photo.objects.all()
-
-    else:
-
-        photos = Photo.objects.filter(
-            category__name=category
-        )
-
-    context = {
-        'categories': categories,
-        'photos': photos,
-    }
-
-    return render(request, 'account/home.html', context)
-
-
-# ======================================================
-# PHOTO DETAIL
-# ======================================================
-
-def photo_detail(request, id):
-
-    photo = get_object_or_404(Photo, id=id)
-
-    return render(request, 'account/photo_detail.html', {
-        'photo': photo
-    })
-
-
-# ======================================================
-# LOGOUT
-# ======================================================
-
-def logout_view(request):
-
-    logout(request )
-
+    if request.method != "POST":
+        return render(request, 'account/register.html', {'error': ''})
+    username = request.POST.get("username")
+    email    = request.POST.get("email")
+    password = request.POST.get("password")
+    if User.objects.filter(username=username).exists():
+        return render(request, 'account/register.html', {'error': 'Username already exists'})
+    if User.objects.filter(email=email).exists():
+        return render(request, 'account/register.html', {'error': 'Email already exists'})
+    User.objects.create_user(username=username, email=email, password=password)
     return redirect('index')
 
 
-# ======================================================
-# GALLERY
-# ======================================================
+def home(request):
+    category   = request.GET.get('category')
+    categories = Category.objects.all()
+    photos     = Photo.objects.filter(category__name=category) if category else Photo.objects.all()
+    return render(request, 'account/home.html', {'categories': categories, 'photos': photos})
 
-@login_required(login_url='index')
+
+def photo_detail(request, id):
+    photo = get_object_or_404(Photo, id=id)
+    return render(request, 'account/photo_detail.html', {'photo': photo})
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('live_preview')
+
+
+@login_required
 def gallery(request):
-
-    photos = Gallery.objects.exclude(
-        image=''
-    ).exclude(
-        image=None
-    )
-
-    return render(request, "account/gallery.html", {
-        'photos': photos
-    })
+    photos = Gallery.objects.exclude(image='').exclude(image=None)
+    return render(request, "account/gallery.html", {'photos': photos})
 
 
-# ======================================================
-# DOWNLOAD ALL IMAGES
-# ======================================================
-
-@login_required(login_url='index')
+@login_required
 def download_all_images(request):
-
-    images = Gallery.objects.all()
-
-    response = HttpResponse(
-        content_type='application/zip'
-    )
-
-    response[
-        'Content-Disposition'
-    ] = 'attachment; filename="gallery_images.zip"'
-
-    zip_file = zipfile.ZipFile(response, 'w')
-
-    for img in images:
-
-        # Check image exists
-        if img.image:
-
-            file_path = img.image.path
-
-            # Check file exists
-            if os.path.exists(file_path):
-
-                zip_file.write(
-                    file_path,
-                    os.path.basename(file_path)
-                )
-
-    zip_file.close()
-
+    images   = Gallery.objects.all()
+    response = HttpResponse(content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename="gallery_images.zip"'
+    with zipfile.ZipFile(response, 'w') as zf:
+        for img in images:
+            if img.image and os.path.exists(img.image.path):
+                zf.write(img.image.path, os.path.basename(img.image.path))
     return response
 
 
-# ======================================================
-# LIKE PHOTO
-# ======================================================
-
-@login_required(login_url='index')
+@login_required
 @require_POST
 def like_photo(request, photo_id):
-
-    photo = get_object_or_404(
-        Photo,
-        pk=photo_id
-    )
-
-    today = timezone.localdate()
-
-    existing = PhotoLike.objects.filter(
-        user=request.user,
-        photo=photo,
-        liked_date=today
-    ).first()
-
-    # Toggle Like / Unlike
+    photo    = get_object_or_404(Photo, pk=photo_id)
+    today    = timezone.localdate()
+    existing = PhotoLike.objects.filter(user=request.user, photo=photo, liked_date=today).first()
     if existing:
-
         existing.delete()
         liked = False
-
     else:
-
-        PhotoLike.objects.create(
-            user=request.user,
-            photo=photo,
-            liked_date=today
-        )
-
+        PhotoLike.objects.create(user=request.user, photo=photo, liked_date=today)
         liked = True
-
-    return JsonResponse({
-        'liked': liked,
-        'likes_count': photo.likes_count
-    })
+    return JsonResponse({'liked': liked, 'likes_count': photo.likes_count})
