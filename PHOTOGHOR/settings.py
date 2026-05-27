@@ -25,19 +25,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # SITES
     'django.contrib.sites',
-
-    # ALLAUTH
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
-    # GOOGLE
     'allauth.socialaccount.providers.google',
-
-    # YOUR APP
     'photoshop',
 ]
 
@@ -55,8 +47,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
-    # ALLAUTH
     'allauth.account.middleware.AccountMiddleware',
 ]
 
@@ -128,9 +118,9 @@ USE_TZ = True
 # =========================================================
 # STATIC & MEDIA FILES
 # =========================================================
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # where your CSS/JS lives
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
