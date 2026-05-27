@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}PHOTOGHOR{% endblock %}</title>
+
+  {# Google Fonts #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'photoshop/css/main.css' %}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% if messages %}
+  <div id="toast-container">
+    {% for message in messages %}
+      <div class="toast toast--{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% block body %}{% endblock %}
+
+<script src="{% static 'photoshop/js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

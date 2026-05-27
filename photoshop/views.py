@@ -49,7 +49,7 @@ def index(request):
 
         error = "Invalid Email or Password"
 
-    return render(request, 'index.html', {
+    return render(request, 'photoshop/index.html', {
         'error': error,
         'next': next_url
     })
@@ -57,7 +57,7 @@ def index(request):
 
 def live_preview(request):
 
-    return render(request, 'live_preview.html')
+    return render(request, 'photoshop/live_preview.html')
 
 
 def custom_logout(request):
@@ -84,12 +84,12 @@ def home(request):
     category   = request.GET.get('category')
     categories = Category.objects.all()
     photos     = Photo.objects.filter(category__name=category) if category else Photo.objects.all()
-    return render(request, 'account/home.html', {'categories': categories, 'photos': photos})
+    return render(request, 'photoshop/home.html', {'categories': categories, 'photos': photos})
 
 
 def photo_detail(request, id):
     photo = get_object_or_404(Photo, id=id)
-    return render(request, 'account/photo_detail.html', {'photo': photo})
+    return render(request, 'photoshop/photo_detail.html', {'photo': photo})
 
 
 
@@ -98,7 +98,7 @@ def photo_detail(request, id):
 @login_required
 def gallery(request):
     photos = Gallery.objects.exclude(image='').exclude(image=None)
-    return render(request, "account/gallery.html", {'photos': photos})
+    return render(request, "photoshop/gallery.html", {'photos': photos})
 
 
 @login_required

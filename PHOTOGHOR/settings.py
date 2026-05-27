@@ -11,7 +11,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # =========================================================
@@ -19,7 +19,6 @@ ALLOWED_HOSTS = []
 # =========================================================
 
 INSTALLED_APPS = [
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +39,6 @@ INSTALLED_APPS = [
 
     # YOUR APP
     'photoshop',
-
 ]
 
 
@@ -49,24 +47,17 @@ INSTALLED_APPS = [
 # =========================================================
 
 MIDDLEWARE = [
-
     'django.middleware.security.SecurityMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
-
     'django.middleware.common.CommonMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
-
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     # ALLAUTH
     'allauth.account.middleware.AccountMiddleware',
-
 ]
 
 
@@ -84,20 +75,14 @@ ROOT_URLCONF = 'PHOTOGHOR.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-
-        'DIRS': [],
-
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
-
         'OPTIONS': {
             'context_processors': [
-
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-
                 'django.contrib.auth.context_processors.auth',
-
                 'django.contrib.messages.context_processors.messages',
-
             ],
         },
     },
@@ -118,7 +103,6 @@ WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
@@ -132,23 +116,25 @@ AUTH_PASSWORD_VALIDATORS = []
 
 
 # =========================================================
-# LANGUAGE
+# LANGUAGE & TIMEZONE
 # =========================================================
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Asia/Kolkata'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 # =========================================================
-# STATIC FILES
+# STATIC & MEDIA FILES
 # =========================================================
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']  # where your CSS/JS lives
 
-STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # =========================================================
@@ -158,68 +144,65 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 # =========================================================
 # AUTH BACKENDS
 # =========================================================
 
 AUTHENTICATION_BACKENDS = [
-
     'django.contrib.auth.backends.ModelBackend',
-
     'allauth.account.auth_backends.AuthenticationBackend',
-
 ]
 
 
 # =========================================================
-# LOGIN REDIRECT
+# LOGIN / LOGOUT REDIRECTS
 # =========================================================
 
 LOGIN_REDIRECT_URL = '/live_preview/'
 LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
 
-SOCIALACCOUNT_LOGIN_ON_GET = True
 
-SOCIALACCOUNT_AUTO_SIGNUP = True
+# =========================================================
+# SITES
+# =========================================================
 
 SITE_ID = 1
 
 
+# =========================================================
+# ALLAUTH SETTINGS
+# =========================================================
+
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
 
 # =========================================================
-# GOOGLE LOGIN
+# GOOGLE OAUTH
 # =========================================================
 
 SOCIALACCOUNT_PROVIDERS = {
-
     'google': {
-
         'APP': {
-
             'client_id': config('GOOGLE_CLIENT_ID'),
-
             'secret': config('GOOGLE_CLIENT_SECRET'),
-
             'key': '',
         },
-
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-
+        'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {
             'access_type': 'online',
         },
     }
 }
 
-# settings.py
 
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_LOGIN_ON_GET = True
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# =========================================================
+# SECURITY
+# =========================================================
+
+SECURE_SSL_REDIRECT = False

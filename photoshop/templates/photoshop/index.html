@@ -1,0 +1,352 @@
+{% extends 'photoshop/base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}PHOTOGHOR — Your Dark Room{% endblock %}
+
+{% block body %}
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#050505;
+    overflow:hidden;
+}
+
+/* =========================
+   MAIN LANDING
+========================= */
+
+.landing{
+    position:relative;
+    width:100%;
+    height:100vh;
+    background:
+        radial-gradient(circle at top left,#1a1a1a 0%,#050505 55%),
+        #050505;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+/* =========================
+   NOISE EFFECT
+========================= */
+
+.landing__noise{
+    position:absolute;
+    inset:0;
+    background-image:url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+    opacity:.06;
+    pointer-events:none;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.landing__header{
+    width:100%;
+    padding:30px 60px;
+    z-index:2;
+}
+
+.logo{
+    font-size:2rem;
+    font-weight:900;
+    letter-spacing:3px;
+    color:#ffffff;
+}
+
+.logo--accent{
+    color:#ffcc00;
+}
+
+/* =========================
+   MAIN SECTION
+========================= */
+
+.landing__main{
+    flex:1;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 8%;
+    gap:60px;
+    z-index:2;
+}
+
+/* =========================
+   LEFT TEXT
+========================= */
+
+.landing__tagline{
+    max-width:600px;
+}
+
+.landing__title{
+    font-size:5rem;
+    line-height:1.05;
+    font-weight:900;
+    margin-bottom:20px;
+    letter-spacing:-2px;
+}
+
+.landing__sub{
+    font-size:1.2rem;
+    color:#b0b0b0;
+    line-height:1.7;
+}
+
+/* =========================
+   AUTH BOX
+========================= */
+
+.landing__auth{
+    width:380px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    padding:40px;
+    border-radius:24px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    box-shadow:
+        0 0 30px rgba(0,0,0,0.5),
+        0 0 60px rgba(255,255,255,0.03);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+    width:100%;
+    padding:16px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:700;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    transition:.35s ease;
+    cursor:pointer;
+    font-size:1rem;
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+}
+
+/* GOOGLE */
+
+.btn--google{
+    background:#ffffff;
+    color:#111;
+}
+
+.btn--google:hover{
+    background:#f1f1f1;
+}
+
+/* OUTLINE */
+
+.btn--outline{
+    border:1px solid rgba(255,255,255,0.2);
+    color:white;
+    background:transparent;
+}
+
+.btn--outline:hover{
+    background:rgba(255,255,255,0.08);
+}
+
+/* GHOST */
+
+.btn--ghost{
+    background:#ffcc00;
+    color:#111;
+}
+
+.btn--ghost:hover{
+    background:#ffd633;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
+.landing__divider{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    color:#777;
+    font-size:.9rem;
+}
+
+.landing__divider::before,
+.landing__divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:rgba(255,255,255,0.1);
+}
+
+/* =========================
+   FILM STRIP
+========================= */
+
+.landing__film-strip{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:70px;
+    background:#0d0d0d;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.film-hole{
+    width:40px;
+    height:24px;
+    border-radius:4px;
+    background:#1f1f1f;
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1000px){
+
+    .landing__main{
+        flex-direction:column;
+        justify-content:center;
+        text-align:center;
+        padding:40px 25px 100px;
+    }
+
+    .landing__title{
+        font-size:3.2rem;
+    }
+
+    .landing__auth{
+        width:100%;
+        max-width:400px;
+    }
+
+    .landing__header{
+        padding:25px;
+        text-align:center;
+    }
+}
+
+@media(max-width:500px){
+
+    .landing__title{
+        font-size:2.5rem;
+    }
+
+    .landing__sub{
+        font-size:1rem;
+    }
+
+    .landing__auth{
+        padding:25px;
+    }
+
+    .btn{
+        padding:14px;
+        font-size:.95rem;
+    }
+}
+</style>
+
+<div class="landing">
+
+    <!-- Noise -->
+    <div class="landing__noise"></div>
+
+    <!-- Header -->
+    <header class="landing__header">
+        <span class="logo">
+            PHOTO<span class="logo--accent">GHOR</span>
+        </span>
+    </header>
+
+    <!-- Main -->
+    <main class="landing__main">
+
+        <!-- Left -->
+        <div class="landing__tagline">
+            <h1 class="landing__title">
+                Your photos.<br>
+                Your dark room.
+            </h1>
+
+            <p class="landing__sub">
+                Upload. Edit. Preview — live.<br>
+                A cinematic workspace for creators and photographers.
+            </p>
+        </div>
+
+        <!-- Right -->
+        <div class="landing__auth">
+
+            <!-- Google -->
+            <a href="{% provider_login_url 'google' %}" class="btn btn--google">
+
+                <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+                    <path d="M43.6 20.5H42V20H24v8h11.3C33.65 32.09 29.24 35 24 35c-6.08 0-11-4.92-11-11s4.92-11 11-11c2.8 0 5.35 1.05 7.28 2.76l5.66-5.66C33.53 7.19 29 5 24 5 13.51 5 5 13.51 5 24s8.51 19 19 19 19-8.51 19-19c0-1.18-.13-2.35-.4-3.5z" fill="#FFC107"/>
+                    <path d="M6.31 14.69l6.57 4.82C14.65 16.11 19.04 13 24 13c2.8 0 5.35 1.05 7.28 2.76l5.66-5.66C33.53 7.19 29 5 24 5 16.32 5 9.66 8.94 6.31 14.69z" fill="#FF3D00"/>
+                    <path d="M24 43c4.88 0 9.32-1.87 12.67-4.92l-5.85-4.95A11.91 11.91 0 0 1 24 35c-5.22 0-9.63-2.89-11.29-7H6.36C9.67 39.08 16.31 43 24 43z" fill="#4CAF50"/>
+                    <path d="M43.6 20.5H42V20H24v8h11.3a12.04 12.04 0 0 1-4.08 5.59l5.85 4.95C36.97 39.09 43 35 43 24c0-1.18-.13-2.35-.4-3.5z" fill="#1976D2"/>
+                </svg>
+
+                Continue with Google
+            </a>
+
+            <!-- Divider -->
+            <div class="landing__divider">
+                <span>or</span>
+            </div>
+
+            <!-- Email Login -->
+            <a href="{% url 'account_login' %}" class="btn btn--outline">
+                Sign in with Email
+            </a>
+
+            <!-- Signup -->
+            <a href="{% url 'account_signup' %}" class="btn btn--ghost">
+                Create account
+            </a>
+
+        </div>
+
+    </main>
+
+    <!-- Film Strip -->
+    <div class="landing__film-strip">
+
+        {% for i in "1234567890123456" %}
+            <div class="film-hole"></div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
