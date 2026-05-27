@@ -7,7 +7,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photoghor Live Preview</title>
+    <title>Chadura Tech Live Preview</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -666,7 +666,6 @@
 
 <body>
 
-    <!-- ===== HEADER ===== -->
     <header class="header">
 
         <a href="#" class="logo">
@@ -683,7 +682,6 @@
 
             {% if user.is_authenticated %}
 
-                <!-- EMAIL BADGE -->
                 <div class="user-email-badge">
                     <div class="email-avatar">
                         {{ user.email|slice:":2" }}
@@ -691,7 +689,6 @@
                     <span class="email-text">{{ user.email }}</span>
                 </div>
 
-                <!-- LOGOUT -->
                 <a href="{% url 'custom_logout' %}" class="auth-btn logout-btn">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     Logout
@@ -715,12 +712,10 @@
 
     </header>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <div class="page-wrapper">
 
         <div class="main-card">
 
-            <!-- HERO IMAGE -->
             <div class="hero-wrap" onclick="openImage(this.querySelector('img').src)">
 
                 <img class="hero-img"
@@ -744,7 +739,6 @@
 
             </div>
 
-            <!-- CARD FOOTER -->
             <div class="card-footer">
 
                 <div class="meta-info">
@@ -773,7 +767,6 @@
 
             </div>
 
-            <!-- SHARE PANEL -->
             <div class="share-panel" id="sharePanel">
                 <div class="share-inner">
                     <span class="share-label">Share via</span>
@@ -808,13 +801,11 @@
 
     </div>
 
-    <!-- ===== LIGHTBOX ===== -->
     <div class="lightbox" id="lightbox">
         <button class="lb-close" onclick="closeImage()">✕</button>
         <img id="lightbox-img" src="" alt="Preview">
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
 
         /* ---- SHARE TOGGLE ---- */
@@ -827,7 +818,7 @@
             } else {
                 if (navigator.share) {
                     navigator.share({
-                        title: "Photoghor Live Preview",
+                        title: "Chadura Tech Live Preview",
                         text: "Check this page",
                         url: window.location.href
                     });

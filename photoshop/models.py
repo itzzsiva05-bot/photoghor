@@ -57,3 +57,36 @@ class PhotoLike(models.Model):
 
     def __str__(self):
         return f"User {self.user_id} liked Photo {self.photo_id} on {self.liked_date}"
+    
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+class UserProfile(models.Model):
+    """
+    Extends standard auth framework to preserve specific asset meta data 
+    and custom UI property flags.
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar_letters = models.CharField(max_length=2, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Profile: {self.user.username}"
+
+# AUTOMATIC PROFILE GENERATION SIGNALS
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    profile = instance.profile
+    if instance.email:
+        profile.avatar_letters = instance.email[:2].upper()
+    else:
+        profile.avatar_letters = instance.username[:2].upper()
+    profile.save()

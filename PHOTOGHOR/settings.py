@@ -1,125 +1,225 @@
+# =========================================================
+# settings.py
+# =========================================================
+
 from pathlib import Path
-import os
-import sys
-from decouple import config, Csv
-from dotenv import load_dotenv
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+SECRET_KEY = config('SECRET_KEY')
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-key')
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
-#FIXED: Hardcoded to guarantee it works
-ALLOWED_HOSTS = ['photoghor.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = []
 
-print("ALLOWED_HOSTS =", ALLOWED_HOSTS, file=sys.stderr)
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://photoghor.onrender.com',
-]
+# =========================================================
+# INSTALLED APPS
+# =========================================================
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # SITES
     'django.contrib.sites',
+
+    # ALLAUTH
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
+    # GOOGLE
     'allauth.socialaccount.providers.google',
+
+    # YOUR APP
     'photoshop',
+
 ]
 
+
+# =========================================================
+# MIDDLEWARE
+# =========================================================
+
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
+
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
+
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # ALLAUTH
     'allauth.account.middleware.AccountMiddleware',
+
 ]
+
+
+# =========================================================
+# ROOT URL
+# =========================================================
 
 ROOT_URLCONF = 'PHOTOGHOR.urls'
 
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [os.path.join(BASE_DIR, 'templates')],
-    'APP_DIRS': True,
-    'OPTIONS': {'context_processors': [
-        'django.template.context_processors.request',
-        'django.contrib.auth.context_processors.auth',
-        'django.contrib.messages.context_processors.messages',
-    ]},
-}]
+
+# =========================================================
+# TEMPLATES
+# =========================================================
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+
+        'DIRS': [],
+
+        'APP_DIRS': True,
+
+        'OPTIONS': {
+            'context_processors': [
+
+                'django.template.context_processors.request',
+
+                'django.contrib.auth.context_processors.auth',
+
+                'django.contrib.messages.context_processors.messages',
+
+            ],
+        },
+    },
+]
+
+
+# =========================================================
+# WSGI
+# =========================================================
 
 WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 
-DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3'}}
 
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
-]
+# =========================================================
+# DATABASE
+# =========================================================
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# =========================================================
+# PASSWORD VALIDATORS
+# =========================================================
+
+AUTH_PASSWORD_VALIDATORS = []
+
+
+# =========================================================
+# LANGUAGE
+# =========================================================
 
 LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'Asia/Kolkata'
+
 USE_I18N = True
+
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# =========================================================
+# STATIC FILES
+# =========================================================
+
+STATIC_URL = 'static/'
+
+
+# =========================================================
+# DEFAULT AUTO FIELD
+# =========================================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SITE_ID = 1
+
+
+# =========================================================
+# AUTH BACKENDS
+# =========================================================
 
 AUTHENTICATION_BACKENDS = [
+
     'django.contrib.auth.backends.ModelBackend',
+
     'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
 
-LOGIN_REDIRECT_URL = '/live-preview/'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = 'index'
 
-ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+# =========================================================
+# LOGIN REDIRECT
+# =========================================================
+
+LOGIN_REDIRECT_URL = '/live_preview/'
+LOGOUT_REDIRECT_URL = '/'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
-SOCIALACCOUNT_PROVIDERS = {'google': {
-    'APP': {
-        'client_id': config('GOOGLE_CLIENT_ID', default=''),
-        'secret': config('GOOGLE_CLIENT_SECRET', default=''),
-        'key': '',
-    },
-    'SCOPE': ['profile', 'email'],
-    'AUTH_PARAMS': {'access_type': 'online'},
-}}
+SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+
+
+# =========================================================
+# GOOGLE LOGIN
+# =========================================================
+
+SOCIALACCOUNT_PROVIDERS = {
+
+    'google': {
+
+        'APP': {
+
+            'client_id': config('GOOGLE_CLIENT_ID'),
+
+            'secret': config('GOOGLE_CLIENT_SECRET'),
+
+            'key': '',
+        },
+
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+    }
+}
+
+# settings.py
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'

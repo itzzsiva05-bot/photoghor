@@ -10,24 +10,61 @@ from .models import Photo, Category, Gallery, PhotoLike
 import zipfile, os
 
 
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib import messages
+
+
 def index(request):
-    if request.method != "POST":
-        return render(request, 'index.html', {'error': ''})
-    next_url = request.POST.get("next")
-    email    = request.POST.get("email")
-    password = request.POST.get("password")
-    user_obj = User.objects.filter(email=email).first()
-    if user_obj:
-        user = authenticate(request, username=user_obj.username, password=password)
-        if user:
-            auth_login(request, user)
-            return redirect(next_url) if next_url else redirect('live_preview')
-    return render(request, 'index.html', {'error': 'Invalid Email or Password'})
+
+    error = ""
+
+    next_url = request.GET.get('next')
+
+    if request.method == "POST":
+
+        next_url = request.POST.get('next')
+
+        email = request.POST.get("email")
+
+        password = request.POST.get("password")
+
+        user_obj = User.objects.filter(email=email).first()
+
+        if user_obj:
+
+            user = authenticate(
+                request,
+                username=user_obj.username,
+                password=password
+            )
+
+            if user:
+
+                auth_login(request, user)
+
+                return redirect('live_preview')
+
+        error = "Invalid Email or Password"
+
+    return render(request, 'index.html', {
+        'error': error,
+        'next': next_url
+    })
 
 
 def live_preview(request):
-    return redirect('account/live_preview')
 
+    return render(request, 'live_preview.html')
+
+
+def custom_logout(request):
+
+    logout(request)
+
+    return redirect('live_preview')
 
 def register(request):
     if request.method != "POST":
@@ -55,10 +92,7 @@ def photo_detail(request, id):
     return render(request, 'account/photo_detail.html', {'photo': photo})
 
 
-@login_required
-def logout_view(request):
-    logout(request)
-    return redirect('live_preview')
+
 
 
 @login_required
