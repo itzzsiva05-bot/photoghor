@@ -1,18 +1,19 @@
 # =========================================================
-# settings.py
+# settings.py  –  PHOTOGHOR
 # =========================================================
 
 from pathlib import Path
 from decouple import config
 import dj_database_url
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://photoghor.onrender.com/']
 
 
 # =========================================================
@@ -27,10 +28,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    # third-party
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    # local
     'photoshop',
 ]
 
@@ -93,7 +96,10 @@ WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+        default=config(
+            'DATABASE_URL',
+            default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
+        )
     )
 }
 
@@ -102,7 +108,9 @@ DATABASES = {
 # PASSWORD VALIDATORS
 # =========================================================
 
-AUTH_PASSWORD_VALIDATORS = []
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+]
 
 
 # =========================================================
@@ -110,18 +118,19 @@ AUTH_PASSWORD_VALIDATORS = []
 # =========================================================
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'
-USE_I18N = True
-USE_TZ = True
+TIME_ZONE     = 'Asia/Kolkata'
+USE_I18N      = True
+USE_TZ        = True
 
 
 # =========================================================
 # STATIC & MEDIA FILES
 # =========================================================
 
-STATIC_URL = '/static/'
+STATIC_URL      = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT     = BASE_DIR / 'staticfiles'
+
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -131,7 +140,7 @@ STORAGES = {
     },
 }
 
-MEDIA_URL = '/media/'
+MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
@@ -147,18 +156,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # =========================================================
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',           # username/password
+    'allauth.account.auth_backends.AuthenticationBackend', # google oauth
 ]
 
 
 # =========================================================
 # LOGIN / LOGOUT REDIRECTS
+# FIX: LOGIN_URL → '/' (உங்க custom login page)
 # =========================================================
 
-LOGIN_REDIRECT_URL = '/live_preview/'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL          = '/'              # custom login (index view)
+LOGIN_REDIRECT_URL = '/live_preview/' # after login → live_preview
+LOGOUT_REDIRECT_URL = '/'            # after logout → login page
 
 
 # =========================================================
@@ -172,12 +182,15 @@ SITE_ID = 1
 # ALLAUTH SETTINGS
 # =========================================================
 
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_UNIQUE_EMAIL    = True
+ACCOUNT_LOGIN_METHODS   = {'email'}
+ACCOUNT_SIGNUP_FIELDS   = ['email*', 'password1*', 'password2*']
 
-SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_AUTO_SIGNUP  = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Google OAuth redirect after login → live_preview
+SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
 
 
 # =========================================================
@@ -188,8 +201,8 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
             'client_id': config('GOOGLE_CLIENT_ID'),
-            'secret': config('GOOGLE_CLIENT_SECRET'),
-            'key': '',
+            'secret'   : config('GOOGLE_CLIENT_SECRET'),
+            'key'      : '',
         },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {
@@ -198,9 +211,16 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # =========================================================
-# SECURITY
+# SECURITY (Production-ல மட்டும் True பண்ணுங்க)
 # =========================================================
 
 SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+
+  
