@@ -800,10 +800,10 @@ header.main-header{
     <div class="banner-container">
         <h1 class="banner-title">PHOTO GALLERY</h1>
         <nav class="breadcrumbs">
-            <a href="{% url 'index' %}">HOME</a>
+        <a href="{% url 'index' %}">HOME</a>
             <span>/</span>
-            <a href="{%url 'home'%}">PHOTO GALLERY</a>
-        </nav>
+        <a href="{% url 'home' %}">PHOTO GALLERY</a>
+</nav>
     </div>
 </header>
 
@@ -829,33 +829,33 @@ header.main-header{
 <!-- =========================
      GALLERY
 ========================= -->
+<!-- =========================
+     GALLERY
+========================= -->
 
-<section class="gallery">
+<section class="gallery" id="gallery">   {# ← இந்த tag வேணும் #}
 
     {% for photo in photos %}
     <div class="gallery-item">
 
-        
-            
-            <img src="{{ photo.image.url }}"onclick="openImage(this.src)"alt="{{ photo.title }}">
-
-            <div class="overlay">
-                <a href="{% url 'photo_detail' photo.id %}"></a>
-                <h3>{{ photo.title }}</h3>
-            </div>
-
+        <a href="{% url 'photo_detail' photo.id %}">
+            <img src="{{ photo.image.url }}"
+                 onclick="openImage(this.src); return false;"
+                 alt="{{ photo.title }}">
         </a>
 
-        <div class="icon"
-             onclick="openImage('{{ photo.image.url }}')">
+        <div class="overlay" onclick="openImage('{{ photo.image.url }}')">
+            <h3>{{ photo.title }}</h3>
+        </div>
+
+        <div class="icon" onclick="openImage('{{ photo.image.url }}')">
             <i class="fa-solid fa-eye"></i>
         </div>
 
     </div>
     {% endfor %}
 
-</section>
-
+</section>   {# ← close tag வேணும் #}
 <!-- =========================
      LIGHTBOX
 ========================= -->
