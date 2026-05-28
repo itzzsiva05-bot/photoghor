@@ -48,7 +48,7 @@ def index(request):
 # ─────────────────────────────────────────
 # LIVE PREVIEW VIEW
 # ─────────────────────────────────────────
-@login_required(login_url='index')
+
 def live_preview(request):
     """
     Main preview page — only logged-in users can access.
@@ -64,12 +64,10 @@ def live_preview(request):
 # ─────────────────────────────────────────
 # LOGOUT VIEW
 # ─────────────────────────────────────────
+
 def custom_logout(request):
-    """
-    Logs the user out and redirects to login page.
-    """
     logout(request)
-    return redirect('index')
+    return redirect('live_preview')
 
 
 # ─────────────────────────────────────────

@@ -172,7 +172,7 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_URL          = '/'              # custom login (index view)
 LOGIN_REDIRECT_URL = '/live_preview/' # after login → live_preview
-LOGOUT_REDIRECT_URL = '/'            # after logout → login page
+LOGOUT_REDIRECT_URL = '/live_preview'            # after logout → login page
 
 
 # =========================================================
