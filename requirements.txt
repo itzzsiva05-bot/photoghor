@@ -40,10 +40,10 @@ rich==15.0.0
 setuptools==82.0.1
 six==1.17.0
 sqlparse==0.5.5
-tensorflow==2.21.0
 termcolor==3.3.0
 typing_extensions==4.15.0
 urllib3==2.7.0
 wheel==0.47.0
 whitenoise==6.12.0
 wrapt==2.2.1
+
