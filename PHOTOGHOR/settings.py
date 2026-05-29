@@ -1,24 +1,16 @@
-# =========================================================
-# settings.py  –  PHOTOGHOR
-# =========================================================
-
 from pathlib import Path
 from decouple import config
 import dj_database_url
 import os
+import cloudinary
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
-
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-
-
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'photoghor.onrender.com']
-
 CSRF_TRUSTED_ORIGINS = ['https://photoghor.onrender.com']
-
 
 # =========================================================
 # INSTALLED APPS
@@ -32,19 +24,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    # third-party
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-
     'cloudinary_storage',
     'cloudinary',
-
-    # local
     'photoshop',
 ]
-import cloudinary
 
 cloudinary.config(
     cloud_name=config('CLOUDINARY_CLOUD_NAME'),
@@ -57,6 +44,7 @@ CLOUDINARY_STORAGE = {
     'API_KEY': config('CLOUDINARY_API_KEY'),
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
+
 # =========================================================
 # MIDDLEWARE
 # =========================================================
@@ -73,13 +61,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-
-# =========================================================
-# ROOT URL
-# =========================================================
-
 ROOT_URLCONF = 'PHOTOGHOR.urls'
-
 
 # =========================================================
 # TEMPLATES
@@ -101,16 +83,10 @@ TEMPLATES = [
     },
 ]
 
-
-# =========================================================
-# WSGI
-# =========================================================
-
 WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 
-
 # =========================================================
-# DATABASE
+# DATABASE  ✅ Fixed — removed invalid 'timeout' OPTIONS
 # =========================================================
 
 DATABASES = {
@@ -122,11 +98,9 @@ DATABASES = {
             ),
             conn_max_age=0,
         ),
-        'OPTIONS': {
-            'timeout': 20,
-        }
     }
 }
+
 # =========================================================
 # PASSWORD VALIDATORS
 # =========================================================
@@ -134,7 +108,6 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
 ]
-
 
 # =========================================================
 # LANGUAGE & TIMEZONE
@@ -145,14 +118,13 @@ TIME_ZONE     = 'Asia/Kolkata'
 USE_I18N      = True
 USE_TZ        = True
 
-
 # =========================================================
 # STATIC & MEDIA FILES
 # =========================================================
 
-STATIC_URL      = '/static/'
+STATIC_URL       = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT     = BASE_DIR / 'staticfiles'
+STATIC_ROOT      = BASE_DIR / 'staticfiles'
 
 STORAGES = {
     "default": {
@@ -163,58 +135,36 @@ STORAGES = {
     },
 }
 
-MEDIA_URL = '/media/'
+MEDIA_URL  = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# =========================================================
-# DEFAULT AUTO FIELD
-# =========================================================
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 # =========================================================
 # AUTH BACKENDS
 # =========================================================
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',           # username/password
-    'allauth.account.auth_backends.AuthenticationBackend', # google oauth
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
-# =========================================================
-# LOGIN / LOGOUT REDIRECTS
-# FIX: LOGIN_URL → '/' (உங்க custom login page)
-# =========================================================
-
-LOGIN_URL          = '/'              # custom login (index view)
-LOGIN_REDIRECT_URL = '/live_preview/' # after login → live_preview
-LOGOUT_REDIRECT_URL = '/live_preview'            # after logout → login page
-
-
-# =========================================================
-# SITES
-# =========================================================
+LOGIN_URL           = '/'
+LOGIN_REDIRECT_URL  = '/live_preview/'
+LOGOUT_REDIRECT_URL = '/live_preview'
 
 SITE_ID = 1
-
 
 # =========================================================
 # ALLAUTH SETTINGS
 # =========================================================
 
-ACCOUNT_UNIQUE_EMAIL    = True
-ACCOUNT_LOGIN_METHODS   = {'email'}
-ACCOUNT_SIGNUP_FIELDS   = ['email*', 'password1*', 'password2*']
-
+ACCOUNT_UNIQUE_EMAIL       = True
+ACCOUNT_LOGIN_METHODS      = {'email'}
+ACCOUNT_SIGNUP_FIELDS      = ['email*', 'password1*', 'password2*']
 SOCIALACCOUNT_AUTO_SIGNUP  = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
-
-# Google OAuth redirect after login → live_preview
-SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
-
+SOCIALACCOUNT_ADAPTER      = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
 
 # =========================================================
 # GOOGLE OAUTH
@@ -238,12 +188,10 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # =========================================================
-# SECURITY (Production-ல மட்டும் True பண்ணுங்க)
+# SECURITY
 # =========================================================
 
-SECURE_SSL_REDIRECT = False
-SECURE_HSTS_SECONDS = 0
+SECURE_SSL_REDIRECT            = False
+SECURE_HSTS_SECONDS            = 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-SECURE_HSTS_PRELOAD = False
-
-  
+SECURE_HSTS_PRELOAD            = False
