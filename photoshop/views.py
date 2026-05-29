@@ -151,20 +151,20 @@ def gallery(request):
 # ─────────────────────────────────────────
 @login_required(login_url='index')
 def download_all_images(request):
-    """
-    Downloads all gallery images as a ZIP file.
-    """
+    import requests as req
     images   = Gallery.objects.all()
     response = HttpResponse(content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="gallery_images.zip"'
 
     with zipfile.ZipFile(response, 'w') as zf:
         for img in images:
-            if img.image and os.path.exists(img.image.path):
-                zf.write(img.image.path, os.path.basename(img.image.path))
+            if img.image:
+                url = img.image.url          # ✅ Cloudinary URL
+                r = req.get(url)
+                if r.status_code == 200:
+                    zf.writestr(os.path.basename(img.image.name), r.content)
 
     return response
-
 
 # ─────────────────────────────────────────
 # LIKE / UNLIKE PHOTO (AJAX)
