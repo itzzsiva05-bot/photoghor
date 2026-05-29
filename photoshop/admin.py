@@ -123,3 +123,5 @@ class UserProfileAdmin(admin.ModelAdmin):
         'avatar_letters',
         'created_at'
     ]
+
+    
