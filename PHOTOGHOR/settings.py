@@ -45,12 +45,18 @@ INSTALLED_APPS = [
     'photoshop',
 ]
 import cloudinary
+
 cloudinary.config(
-    cloud_name = config('CLOUDINARY_CLOUD_NAME'),
-    api_key    = config('CLOUDINARY_API_KEY'),
-    api_secret = config('CLOUDINARY_API_SECRET'),
+    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET'),
 )
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+}
 # =========================================================
 # MIDDLEWARE
 # =========================================================
@@ -108,12 +114,18 @@ WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 # =========================================================
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config(
-            'DATABASE_URL',
-            default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
-        )
-    )
+    'default': {
+        **dj_database_url.config(
+            default=config(
+                'DATABASE_URL',
+                default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
+            ),
+            conn_max_age=0,
+        ),
+        'OPTIONS': {
+            'timeout': 20,
+        }
+    }
 }
 
 

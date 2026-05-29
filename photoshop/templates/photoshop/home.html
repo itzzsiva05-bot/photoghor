@@ -1,4 +1,3 @@
-
 {% load static %}
 
 <!DOCTYPE html>
@@ -69,11 +68,11 @@ header.main-header{
 }
 
 /* =========================
-   INLINE NAV  (hidden by default, shown on click)
+   INLINE NAV
 ========================= */
 
 .inline-nav{
-    display:none;          /* hidden until JS adds .open */
+    display:none;
     flex:1;
     justify-content:flex-end;
 }
@@ -105,7 +104,7 @@ header.main-header{
 }
 
 /* =========================
-   HAMBURGER  (☰)
+   HAMBURGER
 ========================= */
 
 .hamburger{
@@ -127,38 +126,26 @@ header.main-header{
     display:block;
 }
 
-/* Hide hamburger when nav is open — show close btn instead */
 .hamburger.hidden{
     display:none;
 }
 
-
-/* CLOSE BUTTON  (✕) in header */
-
 .nav-close-inline{
     display:none;
     position:absolute;
-
     top:50%;
     right:0px;
-
     transform:translateY(-50%);
-
     width:42px;
     height:42px;
-
     background:#222;
     border:none;
     border-radius:10px;
-
     color:#fff;
     font-size:22px;
-
     cursor:pointer;
-
     align-items:center;
     justify-content:center;
-
     transition:.3s;
 }
 
@@ -170,6 +157,7 @@ header.main-header{
     background:#333;
     color:#e0b04f;
 }
+
 /* =========================
    HERO
 ========================= */
@@ -282,7 +270,6 @@ header.main-header{
     transform:scale(1.12);
 }
 
-
 .overlay{
     position:absolute;
     inset:0;
@@ -328,6 +315,25 @@ header.main-header{
 .icon:hover{
     background:#00f0ff;
     color:#000;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.no-photos{
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    font-size: 16px;
+}
+
+.no-photos i{
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: #ccc;
+    display: block;
 }
 
 /* =========================
@@ -420,18 +426,9 @@ header.main-header{
 .lb-arrow.right{ right:20px; }
 
 /* =========================
-   TABLET
+   BUTTON
 ========================= */
 
-@media(max-width:992px){
-    .gallery{ grid-template-columns:repeat(2,1fr); }
-}
-/* MENU DEFAULT (Desktop) */
-.menu {
-    display: flex;
-    gap: 20px;
-    font-size: 18px;
-}
 .btn {
     text-align: center;
     margin-top: 20px;
@@ -449,62 +446,52 @@ header.main-header{
     border-radius: 4px;
     transition: 0.3s;
 }
-
-/* hover */
 .btn a:hover {
     background: #000;
     border-color: #fff;
 }
-/* DEFAULT IMAGE STYLE */
-.gallery-item img{
-    width: 100%;
-    display: block;
-    object-fit: cover;
-    transition: 0.3s;
-}
 
 /* =========================
-   1 COLUMN (FULL VIEW)
+   COLUMN MODES
 ========================= */
+
 .gallery.one-column{
     grid-template-columns: 1fr;
 }
-
 .gallery.one-column .gallery-item img{
-    height: 500px;   /* desktop big view */
+    height: 500px;
 }
 
-/* =========================
-   2 COLUMN
-========================= */
 .gallery.two-column{
     grid-template-columns: repeat(2, 1fr);
 }
-
 .gallery.two-column .gallery-item img{
     height: 320px;
 }
 
-/* =========================
-   4 COLUMN
-========================= */
 .gallery.four-column{
     grid-template-columns: repeat(4, 1fr);
 }
-
 .gallery.four-column .gallery-item img{
     height: 240px;
 }
 
+/* =========================
+   TABLET
+========================= */
 
+@media(max-width:992px){
+    .gallery{ grid-template-columns:repeat(2,1fr); }
+}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:768px){
 
-    /* HEADER */
-
     .header-content{
         height:70px;
-        
         overflow:hidden;
     }
 
@@ -514,8 +501,6 @@ header.main-header{
         max-width:160px;
         overflow:hidden;
     }
-
-   
 
     .hamburger{
         display:flex;
@@ -534,8 +519,6 @@ header.main-header{
         transition:.3s;
     }
 
-    
-
     .inline-nav{
         position:fixed;
         top:0;
@@ -547,18 +530,14 @@ header.main-header{
         padding:90px 25px 30px;
         transition:.4s ease;
         z-index:9999;
-
         display:flex;
         justify-content:flex-start;
-
         overflow-y:auto;
     }
 
     .inline-nav.open{
         right:0;
     }
-
-   
 
     .inline-nav ul{
         width:100%;
@@ -577,52 +556,41 @@ header.main-header{
         color:#fff;
         display:block;
         width:100%;
-
         white-space:normal;
         word-break:break-word;
         line-height:1.4;
-
         padding-bottom:10px;
         border-bottom:1px solid rgba(255,255,255,.1);
     }
+
     .nav-close-inline{
-    display:none;
-    position:fixed;
+        display:none;
+        position:fixed;
+        top:35px;
+        right:15px;
+        width:45px;
+        height:45px;
+        background:#111;
+        border:2px solid #fff;
+        border-radius:8px;
+        color:#fff;
+        font-size:20px;
+        font-weight:bold;
+        cursor:pointer;
+        align-items:center;
+        justify-content:center;
+        z-index:10001;
+        transition:.3s;
+    }
 
-    top:35px;
-    right:15px;
+    .nav-close-inline.visible{
+        display:flex;
+    }
 
-    width:45px;
-    height:45px;
-
-    background:#111;
-    border:2px solid #fff;
-    border-radius:8px;
-    border-bottom: 15px;
-
-    color:#fff;
-    font-size:20px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    align-items:center;
-    justify-content:center;
-
-    z-index:10001;
-
-    transition:.3s;
-}
-
-.nav-close-inline.visible{
-    display:flex;
-}
-
-.nav-close-inline:hover{
-    background:#fff;
-    color:#000;
-}
-
+    .nav-close-inline:hover{
+        background:#fff;
+        color:#000;
+    }
 
     .hero-banner{
         height:220px;
@@ -645,7 +613,6 @@ header.main-header{
         font-size:14px;
     }
 
-    
     .menu-section{
         gap:10px;
         padding:20px 15px;
@@ -655,9 +622,6 @@ header.main-header{
         font-size:10px;
         padding:10px 15px;
     }
-
-
-   
 
     .gallery{
         grid-template-columns:1fr;
@@ -690,9 +654,7 @@ header.main-header{
         opacity:1;
     }
 
-   
-
-     #lightbox-img{
+    #lightbox-img{
         width:100%;
         max-width:100%;
         max-height:95vh;
@@ -705,19 +667,13 @@ header.main-header{
         font-size:24px;
         background:rgba(0,0,0,.6);
         border-radius:50%;
-
         display:flex;
         align-items:center;
         justify-content:center;
     }
 
-    .lb-arrow.left{
-        left:10px;
-    }
-
-    .lb-arrow.right{
-        right:10px;
-    }
+    .lb-arrow.left{ left:10px; }
+    .lb-arrow.right{ right:10px; }
 
     .lb-close{
         width:36px;
@@ -731,89 +687,60 @@ header.main-header{
         right:56px;
     }
 
-   
-
     .btn a{
         padding:10px 18px;
         font-size:13px;
     }
-}
-  
 
-@media(max-width:768px){
-
-    .gallery.one-column .gallery-item img{
-        height: 280px;  
-    }
-
-    .gallery.two-column .gallery-item img{
-        height: 220px;
-    }
-
-    .gallery.four-column .gallery-item img{
-        height: 120px;
-    }
-
+    .gallery.one-column .gallery-item img{ height: 280px; }
+    .gallery.two-column .gallery-item img{ height: 220px; }
+    .gallery.four-column .gallery-item img{ height: 120px; }
 }
 
-    
 </style>
 </head>
 <body>
 
+<!-- ========================= HEADER ========================= -->
 <header class="main-header">
     <div class="container header-content">
 
-              <div class="logo">PHOTOGHOR</div>
+        <div class="logo">PHOTOGHOR</div>
 
-                     
         <nav class="inline-nav" id="inline-nav">
-            
             <ul>
-                <li><a href="#" class="active">HOME</a></li>
-                <li><a href="{%url 'home'%}">PHOTO GALLERY</a></li>
+                <li><a href="{% url 'home' %}" class="active">HOME</a></li>
+                <li><a href="{% url 'home' %}">PHOTO GALLERY</a></li>
                 <li><a href="javascript:void(0)" onclick="setColumns(1)">1 COLUMN GALLERY</a></li>
                 <li><a href="javascript:void(0)" onclick="setColumns(2)">2 COLUMN GALLERY</a></li>
                 <li><a href="javascript:void(0)" onclick="setColumns(4)">4 COLUMN GALLERY</a></li>
-                <li><a href="#">PHOTO DETAILS</a></li>
             </ul>
         </nav>
 
-    
         <button class="hamburger" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
         </button>
 
-            <button class="nav-close-inline" id="nav-close-inline" aria-label="Close menu">✕</button>
-        
+        <button class="nav-close-inline" id="nav-close-inline" aria-label="Close menu">✕</button>
 
     </div>
 </header>
 
-<!-- =========================
-     HERO
-========================= -->
-
+<!-- ========================= HERO ========================= -->
 <header class="hero-banner">
     <div class="banner-container">
         <h1 class="banner-title">PHOTO GALLERY</h1>
         <nav class="breadcrumbs">
-        <a href="{% url 'index' %}">HOME</a>
-            <span>/</span>
-        <a href="{% url 'home' %}">PHOTO GALLERY</a>
-</nav>
+            <a href="{% url 'index' %}">HOME</a>
+            <span> / </span>
+            <a href="{% url 'home' %}">PHOTO GALLERY</a>
+        </nav>
     </div>
 </header>
 
-<!-- =========================
-     CATEGORY
-========================= -->
-
-
-
-
+<!-- ========================= CATEGORY FILTER ========================= -->
 <div class="menu-section">
 
     <a href="{% url 'home' %}"
@@ -826,43 +753,44 @@ header.main-header{
     </a>
     {% endfor %}
 
-
 </div>
 
-<!-- =========================
-     GALLERY
-========================= -->
-<!-- =========================
-     GALLERY
-========================= -->
+<!-- ========================= GALLERY ========================= -->
+<section class="gallery" id="gallery">
 
-<section class="gallery" id="gallery">   {# ← இந்த tag வேணும் #}
+    {% if photos %}
+        {% for photo in photos %}
+            {% if photo.image %}
+            <div class="gallery-item">
 
-    {% for photo in photos %}
-    <div class="gallery-item">
+                <a href="{% url 'photo_detail' photo.id %}">
+                    <img src="{{ photo.image.url }}"
+                         onclick="openImage(this.src); return false;"
+                         alt="{{ photo.title }}"
+                         loading="lazy">
+                </a>
 
-        <a href="{% url 'photo_detail' photo.id %}">
-            <img src="{{ photo.image.url }}"
-                 onclick="openImage(this.src); return false;"
-                 alt="{{ photo.title }}">
-        </a>
+                <div class="overlay" onclick="openImage('{{ photo.image.url }}')">
+                    <h3>{{ photo.title }}</h3>
+                </div>
 
-        <div class="overlay" onclick="openImage('{{ photo.image.url }}')">
-            <h3>{{ photo.title }}</h3>
+                <div class="icon" onclick="openImage('{{ photo.image.url }}')">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="no-photos">
+            <i class="fa-solid fa-images"></i>
+            <p>No photos found.</p>
         </div>
+    {% endif %}
 
-        <div class="icon" onclick="openImage('{{ photo.image.url }}')">
-            <i class="fa-solid fa-eye"></i>
-        </div>
+</section>
 
-    </div>
-    {% endfor %}
-
-</section>   {# ← close tag வேணும் #}
-<!-- =========================
-     LIGHTBOX
-========================= -->
-
+<!-- ========================= LIGHTBOX ========================= -->
 <div class="lightbox" id="lightbox">
 
     <div id="lb-counter"></div>
@@ -885,30 +813,23 @@ header.main-header{
 
 </div>
 
+<!-- ========================= VIEW MORE BUTTON ========================= -->
 <div class="btn">
-
     {% if user.is_authenticated %}
-        <a href="{% url 'Gallery' %}">view more</a>
+        <a href="{% url 'Gallery' %}">View More</a>
     {% else %}
-        <a href="{% url 'index' %}?next={% url 'Gallery' %}">view more</a>
+        <a href="{% url 'index' %}?next={% url 'Gallery' %}">View More</a>
     {% endif %}
-
 </div>
 
-
-
-
+<!-- ========================= JAVASCRIPT ========================= -->
 <script>
 
-/* =========================
-   HAMBURGER → INLINE NAV TOGGLE
-========================= */
+/* ── HAMBURGER NAV ── */
 
 const menuToggle     = document.getElementById('menu-toggle');
 const inlineNav      = document.getElementById('inline-nav');
 const navCloseInline = document.getElementById('nav-close-inline');
-
-
 
 function openNav(){
     inlineNav.classList.add('open');
@@ -926,18 +847,11 @@ function closeNav(){
 
 menuToggle.addEventListener('click', openNav);
 navCloseInline.addEventListener('click', closeNav);
-
-/* Close when a nav link is clicked */
 inlineNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeNav(); });
 
-/* Close on Escape */
-document.addEventListener('keydown', e => {
-    if(e.key === 'Escape') closeNav();
-});
 
-/* =========================
-   LIGHTBOX
-========================= */
+/* ── LIGHTBOX ── */
 
 let images = [];
 let currentIndex = 0;
@@ -949,19 +863,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function openImage(src){
-
     src = new URL(src, window.location.origin).href;
-
     currentIndex = images.indexOf(src);
-
-    if(currentIndex === -1){
-        currentIndex = 0;
-    }
-
+    if(currentIndex === -1) currentIndex = 0;
     showImage(currentIndex);
-
     document.getElementById('lightbox').classList.add('open');
-
     document.body.style.overflow = 'hidden';
 }
 
@@ -992,69 +898,26 @@ document.addEventListener('keydown', e => {
     if(e.key === 'Escape')     closeImage();
 });
 
-
-
+/* Zoom on click */
 let zoomLevel = 1;
-
 const lightboxImg = document.getElementById('lightbox-img');
-
 lightboxImg.addEventListener('click', () => {
-
-    if(zoomLevel === 1){
-
-        zoomLevel = 2;
-
-        lightboxImg.style.transform = 'scale(2)';
-
-    }else{
-
-        zoomLevel = 1;
-
-        lightboxImg.style.transform = 'scale(1)';
-    }
-
+    zoomLevel = zoomLevel === 1 ? 2 : 1;
+    lightboxImg.style.transform = `scale(${zoomLevel})`;
 });
 
 
-/* =========================
-   CHANGE GALLERY COLUMNS
-========================= */
+/* ── COLUMN LAYOUT ── */
 
 function setColumns(cols){
-
     const gallery = document.querySelector('.gallery');
-
-    /* remove old classes */
-
-    gallery.classList.remove(
-        'one-column',
-        'two-column',
-        'four-column'
-    );
-
-    /* add new class */
-
-    if(cols === 1){
-
-        gallery.classList.add('one-column');
-
-    }
-
-    else if(cols === 2){
-
-        gallery.classList.add('two-column');
-
-    }
-
-    else if(cols === 4){
-
-        gallery.classList.add('four-column');
-    }
-
-    /* close mobile menu */
-
+    gallery.classList.remove('one-column','two-column','four-column');
+    if(cols === 1) gallery.classList.add('one-column');
+    else if(cols === 2) gallery.classList.add('two-column');
+    else if(cols === 4) gallery.classList.add('four-column');
     closeNav();
 }
+
 </script>
 </body>
 </html>
