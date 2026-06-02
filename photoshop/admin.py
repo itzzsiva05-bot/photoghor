@@ -89,10 +89,6 @@ class PhotoLikeAdmin(admin.ModelAdmin):
     list_filter  = ('liked_date',)
 
 
-@admin.register(Register)
-class RegisterAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email')
-
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
