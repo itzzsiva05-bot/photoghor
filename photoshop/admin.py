@@ -5,8 +5,12 @@ from django.contrib import admin
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
-from .models import Gallery, Photo, Category, PhotoLike, Register, UserProfile
+from .models import Gallery, Photo, Category, PhotoLike, Register, UserProfile 
 
+
+from .models import Contact
+
+admin.site.register(Contact)
 
 def compress_image(image_file, max_mb=9):
     img = Image.open(image_file)

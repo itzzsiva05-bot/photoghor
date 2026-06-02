@@ -819,7 +819,7 @@ header.main-header{
             <div class="gallery-item">
 
                 <img src="{{ photo.image.url }}"
-                     alt="{% if type == 'photo' %}{{ photo.title }}{% else %}Gallery Image{% endif %}"
+                     alt="{% if type == 'photo' %}{{ photo.title }}{% else %}{% endif %}"
                      loading="lazy"
                      style="cursor:default;">
 

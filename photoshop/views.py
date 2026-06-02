@@ -134,3 +134,22 @@ def like_photo(request, photo_id):
 
 def profile(request):
     return render(request, "photoshop/profile.html")
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Contact
+
+def contact(request):
+    if request.method == "POST":
+        Contact.objects.create(
+            name=request.POST.get('name'),
+            email=request.POST.get('email'),
+            subject=request.POST.get('subject'),
+            message=request.POST.get('message')
+        )
+        messages.success(request, "Message sent successfully!")
+        return redirect('contact')
+
+    return render(request, 'photoshop/contact.html')
