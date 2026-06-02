@@ -1,0 +1,991 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoghor - Photography Portfolio Template</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2 family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* -------------------------------------
+           00. GLOBAL RESET & BASE STYLES
+        ------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* -------------------------------------
+           01. STICKY UI INDICATORS (Left & Right)
+        ------------------------------------- */
+        .side-label {
+            position: fixed;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #bfa37a;
+            text-transform: uppercase;
+            z-index: 90;
+            transition: all 0.4s ease;
+        }
+        .side-label::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background-color: #bfa37a;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .right-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 90;
+        }
+        .right-dots a {
+            width: 8px;
+            height: 8px;
+            border: 1px solid #bfa37a;
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .right-dots a.active {
+            background-color: #bfa37a;
+            box-shadow: 0 0 5px rgba(191, 163, 122, 0.5);
+        }
+
+        /* -------------------------------------
+           02. NAVIGATION HEADER & SLIDE-IN MENU
+        ------------------------------------- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 35px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.4s ease;
+        }
+        header.opaque-bg {
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 20px 80px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-transform: uppercase;
+            transition: color 0.4s ease;
+            z-index: 160;
+        }
+        
+        /* ஆரம்பத்தில் மெனு மறைந்திருக்க வேண்டும் (Hidden by Default) */
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 40px;
+            opacity: 0;
+            transform: translateX(80px);
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 150;
+        }
+
+        /* மெனு பட்டனை கிளிக் செய்தவுடன் நேர்த்தியாக Slide-In ஆகும் */
+        header.overlay-open .nav-links {
+            opacity: 1;
+            transform: translateX(0);
+            visibility: visible;
+        }
+
+        .nav-item {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+        .nav-item:hover, .nav-item.active-link {
+            color: #bfa37a;
+        }
+
+        /* பக்கங்களை ஸ்க்ரோல் செய்யும்போது மெனுவின் நிறம் மாறுவதற்கு */
+        header.light-nav:not(.overlay-open) .logo {
+            color: #000000;
+        }
+        header.light-nav .nav-item {
+            color: #333333;
+        }
+        header.light-nav .nav-item:hover, header.light-nav .nav-item.active-link {
+            color: #bfa37a;
+        }
+        
+        /* Hamburger Hamburger Icon CSS */
+        .menu-toggle {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 160;
+            width: 28px;
+            height: 18px;
+            justify-content: space-between;
+        }
+        .menu-toggle span {
+            width: 28px;
+            height: 2px;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        header.light-nav:not(.overlay-open) .menu-toggle span {
+            background-color: #000000;
+        }
+        
+        /* கிளிக் செய்தவுடன் மூன்று கோடுகள் 'X' (Close) ஐகானாக மாறும் */
+        header.overlay-open .menu-toggle span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+            background-color: #ffffff !important;
+        }
+        header.overlay-open .menu-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        header.overlay-open .menu-toggle span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+            background-color: #ffffff !important;
+        }
+
+        /* -------------------------------------
+           03. SECTION STRUCTURING & BACKGROUNDS
+        ------------------------------------- */
+        section {
+            padding: 120px 10% 120px 15%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .subtitle {
+            color: #bfa37a;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        /* -------------------------------------
+           1. HERO WELCOME SECTION WITH FADE SLIDER
+        ------------------------------------- */
+        #welcome {
+            padding: 0;
+            background: #000000;
+            overflow: hidden;
+        }
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+        .slide.active-slide {
+            opacity: 1;
+        }
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2));
+        }
+        .hero-content {
+            position: relative;
+            z-index: 5;
+            max-width: 650px;
+            margin-left: 15%;
+            color: #ffffff;
+            margin-top: 0; 
+
+        }
+        .hero-content h1 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+        
+        .hero-content p {
+            font-size: 14px;
+            color: #dddddd;
+            margin-bottom: 35px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+        
+        .social-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .social-links::before {
+            content: '';
+            display: inline-block;
+            width: 40px;
+            height: 1px;
+            background-color: #ffffff;
+            margin-right: 5px;
+        }
+        .social-links a {
+            color: #ffffff;
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #bfa37a;
+        }
+        
+        .hero-counter {
+            position: absolute;
+            bottom: 60px;
+            right: 10%;
+            font-size: 14px;
+            letter-spacing: 2px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 5;
+        }
+        .hero-counter span.active-num {
+            color: #bfa37a;
+            font-weight: 700;
+        }
+
+        /* -------------------------------------
+           2. ABOUT US SECTION
+        ------------------------------------- */
+        #about {
+            background-color: #ffffff;
+        }
+        .about-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            width: 100%;
+        }
+        .about-text {
+            flex: 1.1;
+        }
+        .about-text h2 {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 30px;
+            color: #111111;
+        }
+        .about-text p {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+        .about-img {
+            flex: 0.9;
+            position: relative;
+        }
+        .about-img img {
+    width: 130%;
+    max-width: 600px; /* Increased from 450px to 600px */
+    display: block;
+    border: 15px solid #fcfcfc;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+}
+        /* -------------------------------------
+           3. PORTFOLIOS FEATURE SECTION
+        ------------------------------------- */
+        #portfolios {
+            background-color: #ffffff;
+            padding-bottom: 40px;
+        }
+        .portfolio-grid {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            width: 100%;
+        }
+        .portfolio-img {
+            flex: 1.2;
+        }
+        .portfolio-img img {
+            width: 100%;
+            display: block;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.06);
+        }
+        .portfolio-details {
+            flex: 0.8;
+        }
+        .portfolio-details h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            color: #111111;
+            line-height: 1.3;
+        }
+        .view-details-btn {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #111111;
+            text-decoration: none;
+            border-bottom: 2px solid #bfa37a;
+            padding-bottom: 6px;
+            display: inline-block;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .view-details-btn:hover {
+            color: #bfa37a;
+            border-bottom-color: #111111;
+        }
+
+        /* 4. GALLERY PREVIEW */
+        .gallery-preview-section {
+            background: #ffffff;
+            padding: 20px 10% 100px 15%;
+        }
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 35px;
+        }
+        .gallery-header h3 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #222222;
+            font-weight: 700;
+        }
+        .slider-controls {
+            display: flex;
+            gap: 12px;
+        }
+        .slider-btn {
+            border: 1px solid #e0e0e0;
+            background: none;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: #444444;
+            transition: all 0.3s ease;
+        }
+        .slider-btn:hover {
+            border-color: #111111;
+            background-color: #111111;
+            color: #ffffff;
+        }
+        .gallery-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+        .gallery-pagination {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #aaaaaa;
+            letter-spacing: 1px;
+        }
+        .gallery-pagination span.highlight {
+            color: #bfa37a;
+            font-weight: 700;
+        }
+
+        /* -------------------------------------
+           4. TESTIMONIALS SECTION
+        ------------------------------------- */
+        #testimonials {
+            background: #fafafa;
+        }
+        .testimonial-container {
+            width: 100%;
+        }
+        .testimonial-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+        .testimonial-header h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #111111;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        .testimonial-card {
+            background: #ffffff;
+            padding: 50px 40px;
+            border: 1px solid #eeeeee;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.01);
+        }
+        .plus-icon-tl, .plus-icon-tr {
+            position: absolute;
+            color: #bfa37a;
+            font-size: 14px;
+            font-weight: 300;
+        }
+        .plus-icon-tl { top: 20px; left: 20px; }
+        .plus-icon-tr { top: 20px; right: 20px; }
+        
+        .client-avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 25px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .testimonial-card p {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* -------------------------------------
+           5. CONTACT FORM & INFO SECTION
+        ------------------------------------- */
+        #contact {
+            background-color: #ffffff;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 90px;
+            width: 100%;
+        }
+        .contact-form-side h2, .contact-info-side h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #111111;
+        }
+        .contact-form-side p, .contact-info-side p {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 45px;
+            line-height: 1.6;
+        }
+        .form-group-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+        .form-group-full {
+            margin-bottom: 45px;
+        }
+        .form-control {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #cccccc;
+            padding: 12px 0;
+            font-size: 14px;
+            outline: none;
+            background: transparent;
+            transition: border-bottom-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-bottom-color: #111111;
+        }
+        .submit-btn {
+            background-color: #4a4a4a;
+            color: #ffffff;
+            border: none;
+            padding: 16px 45px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn:hover {
+            background-color: #111111;
+        }
+
+        .info-block {
+            margin-bottom: 35px;
+        }
+        .info-block h4 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            color: #111111;
+        }
+        .info-block p {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        /* -------------------------------------
+           04. MINIMAL FOOTER STYLING
+        ------------------------------------- */
+        footer {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            padding: 50px 10% 50px 15%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .footer-socials a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-right: 30px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .footer-socials a:hover {
+            color: #bfa37a;
+        }
+        .copyright {
+            color: #888888;
+            letter-spacing: 0.5px;
+        }
+        .copyright span {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* -------------------------------------
+           05. RESPONSIVE MEDIAS BREAKPOINTS
+        ------------------------------------- */
+        @media (max-width: 1200px) {
+            header, header.opaque-bg { padding: 25px 40px; }
+            .nav-links { gap: 25px; margin-right: 25px; }
+            section { padding: 100px 5% 100px 10%; }
+            .gallery-preview-section { padding: 20px 5% 80px 10%; }
+            footer { padding: 40px 5% 40px 10%; }
+            .side-label { left: 15px; }
+        }
+
+        @media (max-width: 992px) {
+            .side-label, .right-dots { display: none; }
+            .about-container, .portfolio-grid, .contact-container {
+                flex-direction: column;
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+            .about-img img { max-width: 100%; }
+            .testimonial-grid { grid-template-columns: 1fr; }
+            .gallery-row { grid-template-columns: repeat(2, 1fr); }
+            
+            /* Mobile & Tablets இல் கிளிக் செய்யும் போது முழு திரையையும் மறைக்கும் மெனு overlay */
+            header.overlay-open .nav-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(11, 11, 11, 0.98);
+                flex-direction: column;
+                justify-content: center;
+                gap: 30px;
+                margin: 0;
+            }
+            header.overlay-open .nav-item {
+                font-size: 20px;
+                color: #ffffff;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header, header.opaque-bg { padding: 20px 25px; }
+            section { padding: 90px 20px; }
+            .gallery-preview-section { padding: 10px 20px 60px 20px; }
+            .hero-content { margin-left: 0; padding: 0 10px; }
+            .hero-content h1 { font-size: 38px; }
+            .about-text h2, .portfolio-details h2, .testimonial-header h2, .contact-form-side h2, .contact-info-side h2 { font-size: 30px; }
+            .gallery-row { grid-template-columns: 1fr; }
+            .form-group-row { grid-template-columns: 1fr; gap: 35px; }
+            footer { flex-direction: column; gap: 20px; text-align: center; }
+            .footer-socials a { margin: 0 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="side-label" id="vertical-label">Welcome</div>
+
+    <div class="right-dots">
+        <a href="#welcome" class="active" title="Welcome"></a>
+        <a href="#about" title="About"></a>
+        <a href="#portfolios" title="Portfolios"></a>
+        <a href="#testimonials" title="Testimonials"></a>
+        <a href="#contact" title="Contact"></a>
+    </div>
+
+    <header id="main-header">
+        <div class="logo">Photoghor</div>
+        
+        <nav class="nav-links">
+            <a href="#welcome" class="nav-item active-link">Welcome</a>
+            <a href="#about" class="nav-item">About</a>
+            <a href="#portfolios" class="nav-item">Portfolios</a>
+            <a href="#testimonials" class="nav-item">Testimonials</a>
+            <a href="#contact" class="nav-item">Contact</a>
+        </nav>
+        
+        <div class="menu-toggle" id="menu-trigger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <section id="welcome">
+        <div class="hero-slider">
+            <div class="slide active-slide" style="background-image: url('://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1920&q=80')"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1920&q=80')"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1493863641943-9b68992a8d07?auto=format&fit=crop&w=1920&q=80')"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1>Stay With Your<br>Dream & Passion</h1>
+            <p>Photography is about capturing souls not smiles</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-pinterest-p"></i></a>
+            </div>
+        </div>
+
+        <div class="hero-counter">
+            <span class="active-num" id="slide-index-counter">01</span> / 02 / 03
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="about-container">
+            <div class="about-text">
+                <div class="subtitle">Hellow Friends</div>
+                <h2>I am Makx Rosi,<br>Photographer based<br>in london</h2>
+                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed using.</p>
+                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+            </div>
+            <div class="about-img">
+                <img src="{%static 'images/a.JPG'%}" alt="Makx Rosi Portrait">
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolios">
+        <div class="portfolio-grid">
+            <div class="portfolio-img">
+                <img src="https://images.unsplash.com/photo-1516624683217-bf02fc6b6b7c?auto=format&fit=crop&w=1000&q=80" alt="Sleeping Child Portfolio Art">
+            </div>
+            <div class="portfolio-details">
+                <div class="subtitle">Photography</div>
+                <h2>Beautiful girl sleeping on home</h2>
+                <a href="#" class="view-details-btn">Image Details</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="gallery-preview-section">
+        <div class="gallery-header">
+            <h3>Full Gallery</h3>
+            <div class="slider-controls">
+                <button class="slider-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        <div class="gallery-row">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=500&q=80" alt="Gallery Work 01">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1516624683217-bf02fc6b6b7c?auto=format&fit=crop&w=500&q=80" alt="Gallery Work 02">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=500&q=80" alt="Gallery Work 03">
+            </div>
+        </div>
+        <div class="gallery-pagination">
+            01 / <span class="highlight">02</span> / 03 / 04 / 05
+        </div>
+    </div>
+
+    <section id="testimonials">
+        <div class="testimonial-container">
+            <div class="testimonial-header">
+                <div>
+                    <div class="subtitle">Testimonials</div>
+                    <h2>What We Found</h2>
+                    <p style="color:#666666; font-size:14px; margin-top:12px;">It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="slider-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <span class="plus-icon-tl">+</span>
+                    <span class="plus-icon-tr">+</span>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 1">
+                    <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
+                </div>
+                <div class="testimonial-card">
+                    <span class="plus-icon-tl">+</span>
+                    <span class="plus-icon-tr">+</span>
+                    <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 2">
+                    <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-container">
+            <div class="contact-form-side">
+                <div class="subtitle">Contact</div>
+                <h2>Contact Form</h2>
+                <p>It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
+                
+                <form action="#" onsubmit="event.preventDefault(); alert('Your message has been sent!');">
+                    <div class="form-group-row">
+                        <input type="text" class="form-control" placeholder="Name*" required>
+                        <input type="email" class="form-control" placeholder="Email*" required>
+                    </div>
+                    <div class="form-group-full">
+                        <input type="text" class="form-control" placeholder="Subject*" required>
+                    </div>
+                    <div class="form-group-full">
+                        <input type="text" class="form-control" placeholder="Message" style="margin-bottom: 15px;">
+                    </div>
+                    <button type="submit" class="submit-btn">Submit</button>
+                </form>
+            </div>
+            
+            <div class="contact-info-side">
+                <h2>Quick Contact</h2>
+                <p>It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
+                
+                <div class="info-block">
+                    <h4>Phone Number</h4>
+                    <p>+88012659845 / +88012659864</p>
+                </div>
+                <div class="info-block">
+                    <h4>E-mail Address</h4>
+                    <p>photoghor@gmail.com /<br>servphotogr@gmail.com</p>
+                </div>
+                <div class="info-block">
+                    <h4>Our Address</h4>
+                    <p>32/3 north south road, Wilont passage<br>Mirshora, New Wrork</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-socials">
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">Google+</a>
+            <a href="#">Linkedin</a>
+            <a href="#">Behance</a>
+        </div>
+        <div class="copyright">
+            Copyright © <span>Photoghor</span> 2026. All Right Reserved
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. மெனு கிளிக் செயல்பாடுகள் (Menu Interaction Engine) ---
+        const menuTrigger = document.getElementById('menu-trigger');
+        const mainHeader = document.getElementById('main-header');
+        const navItems = document.querySelectorAll('.nav-item');
+        const dots = document.querySelectorAll('.right-dots a');
+
+        // Hamburger ஐ கிளிக் செய்யும் போது மெனுவை ஸ்லைடு செய்து காட்டும் / மறைக்கும்
+        menuTrigger.addEventListener('click', () => {
+            mainHeader.classList.toggle('overlay-open');
+        });
+
+        // மெனுவில் உள்ள வார்த்தைகளையோ அல்லது புள்ளிகளையோ கிளிக் செய்யும் போது சீராக நகரும் (Smooth Scrolling)
+        const bindSmoothScroll = (elements) => {
+            elements.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    mainHeader.classList.remove('overlay-open'); // கிளிக் செய்ததும் மெனு மூடிக்கொள்ளும்
+                    
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        };
+        bindSmoothScroll(navItems);
+        bindSmoothScroll(dots);
+
+        // --- 2. தானியங்கி பின்னணி பட மாற்றம் (Hero Slider Engine) ---
+        const welcomeSlides = document.querySelectorAll('.slide');
+        const counterContainer = document.getElementById('slide-index-counter');
+        let currentSlideIndex = 0;
+        const loopLimit = welcomeSlides.length;
+
+        function runImageTransitions() {
+            welcomeSlides[currentSlideIndex].classList.remove('active-slide');
+            currentSlideIndex = (currentSlideIndex + 1) % loopLimit;
+            welcomeSlides[currentSlideIndex].classList.add('active-slide');
+            
+            if (counterContainer) {
+                counterContainer.textContent = `0${currentSlideIndex + 1}`;
+            }
+        }
+        // ஒவ்வொரு 4.5 விநாடிக்கும் படம் மாறும்
+        setInterval(runImageTransitions, 4500);
+
+        // --- 3. பக்கத்தின் நிலையை கண்டறிந்து செயல்படும் பொறிமுறை (ScrollSpy Engine) ---
+        const sections = document.querySelectorAll('section');
+        const sideLabel = document.getElementById('vertical-label');
+        
+        const sectionNames = {
+            "welcome": "Welcome",
+            "about": "About",
+            "portfolios": "Portfolios",
+            "testimonials": "Testimonials",
+            "contact": "Contact"
+        };
+
+        window.addEventListener('scroll', () => {
+            let currentSectionId = "welcome";
+            const scrollThreshold = window.scrollY + 200;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollThreshold >= sectionTop && scrollThreshold < (sectionTop + sectionHeight)) {
+                    currentSectionId = section.getAttribute('id');
+                }
+            });
+
+            // இடது பக்கத்தில் உள்ள செங்குத்து உரையை மாற்றியமைக்கும் (Dynamic Rotating Side Text)
+            if (sideLabel && sectionNames[currentSectionId]) {
+                sideLabel.textContent = sectionNames[currentSectionId];
+            }
+
+            // தற்போதைய பக்கத்திற்கு ஏற்ப வலது பக்க புள்ளிகளை மாற்றும் (Active Dot Highlight)
+            dots.forEach(dot => {
+                if (dot.getAttribute('href') === `#${currentSectionId}`) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            // தற்போதைய பக்கத்திற்கு ஏற்ப மெனு வார்த்தைகளை ஹைலைட் செய்யும் (Active Link Highlight)
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === `#${currentSectionId}`) {
+                    item.classList.add('active-link');
+                } else {
+                    item.classList.remove('active-link');
+                }
+            });
+
+            // முதல் பகுதியில் இருக்கும்போது கருப்பு பின்னணிக்கும், மற்ற பகுதிகளுக்கு வெள்ளை பின்னணிக்கும் லோகோ மற்றும் மெனுவின் நிறத்தை மாற்றும் (Smart Header Color Adaption)
+            if (currentSectionId === 'welcome') {
+                mainHeader.classList.remove('light-nav', 'opaque-bg');
+            } else {
+                mainHeader.classList.add('light-nav', 'opaque-bg');
+            }
+        });
+    </script>
+</body>
+</html>

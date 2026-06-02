@@ -37,12 +37,19 @@ class Photo(models.Model):
         return self.title
 
 
+# models.py
 class Gallery(models.Model):
-    image = models.ImageField(upload_to='gallery/')
+    image    = models.ImageField(upload_to='gallery/')
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='gallery_photos'
+    )
 
     def __str__(self):
         return f"Gallery {self.id}"
-
 
 class PhotoLike(models.Model):
     user       = models.ForeignKey(User,  on_delete=models.CASCADE,

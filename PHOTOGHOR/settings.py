@@ -89,17 +89,23 @@ WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 # DATABASE  ✅ Fixed — removed invalid 'timeout' OPTIONS
 # =========================================================
 
-DATABASES = {
-    'default': {
-        **dj_database_url.config(
-            default=config(
-                'DATABASE_URL',
-                default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
-            ),
-            conn_max_age=0,
-        ),
+import os
+
+if os.environ.get('DJANGO_ENV') == 'production':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            # ... your Render config
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # =========================================================
 # PASSWORD VALIDATORS

@@ -20,5 +20,7 @@ urlpatterns = [
 
     path('live_preview/', views.live_preview, name='live_preview'),
 
-     path('logout/', views.custom_logout, name='custom_logout'),
+    path('logout/', views.custom_logout, name='custom_logout'),
+
+    path('profile/', views.profile, name='profile'),
 ]
