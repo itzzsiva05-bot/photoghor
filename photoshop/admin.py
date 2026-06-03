@@ -18,8 +18,6 @@ def compress_image(image_file, max_mb=9):
     """
     Re-encode *image_file* as a progressive JPEG, reducing quality in steps
     until the result fits within *max_mb* megabytes (or quality reaches 10).
-
-    Returns an InMemoryUploadedFile ready to be assigned to an ImageField.
     """
     img = Image.open(image_file)
     if img.mode in ("RGBA", "P", "LA"):
@@ -32,7 +30,6 @@ def compress_image(image_file, max_mb=9):
         output.seek(0)
         output.truncate()
         img.save(output, format="JPEG", quality=quality, optimize=True)
-        # seek to end to read the real byte count, then rewind
         size = output.seek(0, 2)
         output.seek(0)
         if size <= max_mb * 1024 * 1024 or quality <= 10:

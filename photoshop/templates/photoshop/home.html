@@ -350,7 +350,11 @@ header.main-header{
     position:relative;
     overflow:hidden;
     border-radius:12px;
-    /* Hide items with broken/missing images via JS */
+}
+
+/* Hidden elements system architecture backup override */
+.gallery-item.hidden-item {
+    display: none !important;
 }
 
 .gallery-item img{
@@ -641,6 +645,7 @@ header.main-header{
     border:2px solid #000;
     border-radius:4px;
     transition:.3s;
+    cursor:pointer;
 }
 
 .btn a:hover{
@@ -737,7 +742,6 @@ header.main-header{
 </head>
 <body>
 
-<!-- ========================= HEADER ========================= -->
 <header class="main-header">
     <div class="container header-content">
 
@@ -769,7 +773,6 @@ header.main-header{
     </div>
 </header>
 
-<!-- MOBILE DROPDOWN -->
 <nav class="mobile-dropdown" id="mobileDropdown" aria-label="Mobile navigation">
     <a href="{% url 'profile' %}">
         <i class="fa-solid fa-house"></i> Home
@@ -789,7 +792,6 @@ header.main-header{
     </a>
 </nav>
 
-<!-- ========================= HERO ========================= -->
 <header class="hero-banner">
     <div class="banner-container">
         <h1 class="banner-title">PHOTO GALLERY</h1>
@@ -801,7 +803,6 @@ header.main-header{
     </div>
 </header>
 
-<!-- ========================= CATEGORY FILTER ========================= -->
 <div class="menu-section">
     <a href="{% url 'home' %}" class="{% if not request.GET.category %}active{% endif %}">ALL</a>
     {% for category in categories %}
@@ -812,7 +813,6 @@ header.main-header{
     {% endfor %}
 </div>
 
-<!-- ========================= GALLERY ========================= -->
 <section class="gallery" id="gallery">
 
     {% if photos %}
@@ -821,22 +821,18 @@ header.main-header{
             {% if photo.image %}
             <div class="gallery-item">
 
-                {# ── FIX 1: onerror hides the card if Cloudinary URL is broken ── #}
                 <img src="{{ photo.image.url }}"
                      alt="{% if type == 'photo' %}{{ photo.title }}{% else %}Gallery Image{% endif %}"
-                     loading="lazy"
-                     onerror="this.closest('.gallery-item').style.display='none'">
+                     loading="lazy">
 
                 <div class="overlay">
                     <div class="overlay-content">
 
                         {% if type == 'photo' %}
-                            {# ── Photo: link to detail page with real title ── #}
                             <a href="{% url 'photo_detail' photo.id %}" class="overlay-title">
                                 {{ photo.title }}
                             </a>
                         {% else %}
-                            {# ── FIX 2: Gallery items have no detail page — removed hardcoded id=1 ── #}
                             <span class="overlay-title">GALLERY</span>
                         {% endif %}
 
@@ -845,7 +841,6 @@ header.main-header{
                     </div>
                 </div>
 
-                {# ── Eye icon opens lightbox ── #}
                 <button class="icon"
                         onclick="openImage('{{ photo.image.url }}'); event.stopPropagation();"
                         title="Preview">
@@ -865,7 +860,6 @@ header.main-header{
 
 </section>
 
-<!-- ========================= LIGHTBOX ========================= -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
 
     <div class="lb-topbar">
@@ -881,7 +875,6 @@ header.main-header{
             </button>
 
             {% if user.is_authenticated %}
-            {# ── FIX 3: download href is set dynamically by showImage() ── #}
             <a id="lb-download" class="lb-btn" href="#" download title="Download">
                 <i class="fa-solid fa-download"></i>
             </a>
@@ -902,16 +895,10 @@ header.main-header{
 
 </div>
 
-<!-- ========================= VIEW MORE ========================= -->
-<div class="btn">
-    {% if user.is_authenticated %}
-        <a href="{% url 'Gallery' %}">View More</a>
-    {% else %}
-        <a href="{% url 'index' %}?next={% url 'Gallery' %}">View More</a>
-    {% endif %}
+<div class="btn" id="viewMoreWrapper" style="display: none !important;">
+    <a href="javascript:void(0)" id="viewMoreBtn" onclick="loadMoreRows()">View More</a>
 </div>
 
-<!-- ========================= JAVASCRIPT ========================= -->
 <script>
 
 /* ── HELPERS ── */
@@ -990,17 +977,13 @@ let images       = [];
 let currentIndex = 0;
 let zoomLevel    = 1;
 
-document.addEventListener('DOMContentLoaded', function(){
-    /*
-     * FIX 4: Collect only visible img src values — cards hidden by onerror
-     * will have display:none so their images are excluded from the slideshow.
-     */
+function updateLightboxImages() {
     images = Array.from(
-        document.querySelectorAll('.gallery-item:not([style*="display:none"]) img')
+        document.querySelectorAll('.gallery-item:not([style*="display:none"]):not(.hidden-item) img')
     ).map(function(img){
         return new URL(img.src, window.location.origin).href;
     });
-});
+}
 
 function openImage(src){
     src = new URL(src, window.location.origin).href;
@@ -1013,6 +996,7 @@ function openImage(src){
 }
 
 function showImage(index){
+    if (images.length === 0) return;
     const img     = document.getElementById('lightbox-img');
     const counter = document.getElementById('lb-counter');
     const dl      = document.getElementById('lb-download');
@@ -1032,6 +1016,7 @@ function showImage(index){
 }
 
 function changeImage(direction){
+    if (images.length === 0) return;
     currentIndex = (currentIndex + direction + images.length) % images.length;
     showImage(currentIndex);
 }
@@ -1063,6 +1048,8 @@ function setColumns(cols){
     if(cols === 1)      gallery.classList.add('one-column');
     else if(cols === 2) gallery.classList.add('two-column');
     else if(cols === 3) gallery.classList.add('three-column');
+    
+    initPagination();
 }
 
 /* ── MOBILE ACTIVE OVERLAY ── */
@@ -1102,6 +1089,79 @@ document.getElementById('lightbox').addEventListener('touchend', function(e){
         changeImage(diff > 0 ? 1 : -1);
     }
 }, { passive: true });
+
+
+/* ── DYNAMIC VIEW MORE 3 ROWS LOGIC ── */
+
+let itemsPerRow = 4; 
+
+function getColumnsCount() {
+    const gallery = document.querySelector('.gallery');
+    if (!gallery) return 4;
+    if (gallery.classList.contains('one-column')) return 1;
+    if (gallery.classList.contains('two-column')) return 2;
+    if (gallery.classList.contains('three-column')) return 3;
+    
+    if (window.innerWidth <= 768) return 1;  
+    if (window.innerWidth <= 992) return 2;  
+    return 4;                                
+}
+
+function initPagination() {
+    const items = document.querySelectorAll('.gallery-item');
+    if(items.length === 0) return;
+
+    itemsPerRow = getColumnsCount();
+    const initialVisibleCount = itemsPerRow * 3; 
+
+    items.forEach((item, index) => {
+        if (index >= initialVisibleCount) {
+            item.classList.add('hidden-item');
+        } else {
+            item.classList.remove('hidden-item');
+        }
+    });
+
+    toggleViewMoreButtonVisibility();
+    updateLightboxImages();
+}
+
+function loadMoreRows() {
+    itemsPerRow = getColumnsCount();
+    const photosToLoad = itemsPerRow * 3; 
+    
+    const hiddenItems = document.querySelectorAll('.gallery-item.hidden-item');
+    
+    for (let i = 0; i < photosToLoad && i < hiddenItems.length; i++) {
+        hiddenItems[i].classList.remove('hidden-item');
+    }
+
+    updateLightboxImages();
+    toggleViewMoreButtonVisibility();
+}
+
+function toggleViewMoreButtonVisibility() {
+    const wrapper = document.getElementById('viewMoreWrapper');
+    const remainingHidden = document.querySelectorAll('.gallery-item.hidden-item').length;
+    
+    if (wrapper) {
+        if (remainingHidden > 0) {
+            wrapper.style.setProperty('display', 'block', 'important'); 
+        } else {
+            wrapper.style.setProperty('display', 'none', 'important');
+        }
+    }
+}
+
+// Fixed timeout callback sequence for preventing image loop breakdowns
+document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(initPagination, 250);
+});
+
+window.addEventListener('resize', function() {
+    itemsPerRow = getColumnsCount();
+    toggleViewMoreButtonVisibility();
+});
 
 </script>
 </body>

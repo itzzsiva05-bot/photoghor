@@ -63,30 +63,34 @@ def live_preview(request):
     })
 
 
+from .models import Category as DB_Category, Photo as DB_Photo, Gallery as DB_Gallery
+
 def home(request):
-    category   = request.GET.get('category')
-    categories = Category.objects.all()
+    selected_category = request.GET.get('category')
+    categories_list = DB_Category.objects.all()
 
-    if category:
-        photos  = list(Photo.objects.filter(
-                    category__name=category
-                  ).exclude(image='').exclude(image=None))
-        gallery = list(Gallery.objects.filter(
-                    category__name=category
-                  ).exclude(image='').exclude(image=None))
+    if selected_category:
+        # Inga namma DB_Photo matrum DB_Gallery use panrom
+        photo_query = list(DB_Photo.objects.filter(
+                        category__name=selected_category
+                     ).exclude(image='').exclude(image=None))
+        
+        gallery_query = list(DB_Gallery.objects.filter(
+                        category__name=selected_category
+                     ).exclude(image='').exclude(image=None))
     else:
-        photos  = list(Photo.objects.exclude(image='').exclude(image=None))
-        gallery = list(Gallery.objects.exclude(image='').exclude(image=None))
+        photo_query = list(DB_Photo.objects.exclude(image='').exclude(image=None))
+        gallery_query = list(DB_Gallery.objects.exclude(image='').exclude(image=None))
 
-    # Tag each object so the template knows which model it came from
-    all_photos = (
-        [{'type': 'photo',   'obj': p} for p in photos] +
-        [{'type': 'gallery', 'obj': g} for g in gallery]
+    # All photos bundle dynamic tag injection
+    all_combined_photos = (
+        [{'type': 'photo',   'obj': p} for p in photo_query] +
+        [{'type': 'gallery', 'obj': g} for g in gallery_query]
     )
 
     return render(request, 'photoshop/home.html', {
-        'categories': categories,
-        'photos':     all_photos,
+        'categories': categories_list,
+        'photos':     all_combined_photos,
     })
 
 
@@ -159,3 +163,10 @@ def contact(request):
         return redirect('contact')
 
     return render(request, 'photoshop/contact.html')
+
+@login_required
+def Gallery(request):
+    photos = Gallery.objects.all()
+    return render(request, "photoshop/gallery.html", {
+        "photos": photos
+    })
