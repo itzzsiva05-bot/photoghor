@@ -624,7 +624,7 @@ header.main-header{
 .lb-arrow.right{ right:20px; }
 
 /* =========================
-   PAGINATION CONTROL ACTION WRAPPER
+   PAGINATION CONTROL ACTION BUTTON WRAPPER
 ========================= */
 
 .btn{
@@ -652,7 +652,7 @@ header.main-header{
     border-color:#fff;
 }
 
-/* Alternate Style for Reload Button */
+/* Alternate Style for Reload Button Mode */
 .btn a.reload-mode-btn {
     background: #e0b04f;
     color: #111;
@@ -832,9 +832,10 @@ header.main-header{
             {% if photo.image %}
             <div class="gallery-item">
 
-                <img src="{{ photo.image.url }}"
-                     alt="{% if type == 'photo' %}{{ photo.title }}{% else %}Gallery Image{% endif %}"
-                     loading="lazy">
+              <img src="{% if photo.image %}{{ photo.image.url }}{% elif photo.photo %}{{ photo.photo.url }}{% else %}https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1000&auto=format&fit=crop{% endif %}"
+                alt="{% if type == 'photo' %}{{ photo.title }}{% else %}Gallery Image{% endif %}"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1000&auto=format&fit=crop';">
 
                 <div class="overlay">
                     <div class="overlay-content">
@@ -1102,11 +1103,12 @@ document.getElementById('lightbox').addEventListener('touchend', function(e){
 }, { passive: true });
 
 
-/* ========================================================
-   ── 3 ROWS ENGINE CONTROL CENTER (3 -> 6 -> 9 -> RELOAD) ──
-   ======================================================== */
+/* ====================================================================
+   ── NEW DYNAMIC ENGINE CONTROL CENTER (1st Row -> +3 Rows Progressive) ──
+   ==================================================================== */
 
-let currentVisibleRows = 3; // Starting state always 3 Rows
+// Engine State Tracker: 1 means initial opening state displays only 1 row
+let currentVisibleRows = 1; 
 
 function getColumnsCount() {
     const gallery = document.querySelector('.gallery');
@@ -1115,10 +1117,10 @@ function getColumnsCount() {
     if (gallery.classList.contains('two-column')) return 2;
     if (gallery.classList.contains('three-column')) return 3;
     
-    // Default Media Query Layout Grid Detectors
-    if (window.innerWidth <= 768) return 1;  // Mobile 1 Col
-    if (window.innerWidth <= 992) return 2;  // Tablet 2 Col
-    return 4;                                // Desktop 4 Col
+    // Default Grid Auto-Detectors
+    if (window.innerWidth <= 768) return 1;  // Mobile Grid
+    if (window.innerWidth <= 992) return 2;  // Tablet Grid
+    return 4;                                // Standard Desktop Layout
 }
 
 function initPagination() {
@@ -1126,6 +1128,7 @@ function initPagination() {
     if(items.length === 0) return;
 
     const itemsPerRow = getColumnsCount();
+    // Rule: Multiply items count by tracking state
     const initialVisibleCount = itemsPerRow * currentVisibleRows; 
 
     items.forEach((item, index) => {
@@ -1143,14 +1146,18 @@ function initPagination() {
 function handlePaginationClick() {
     const btn = document.getElementById('actionControlBtn');
     
-    // Conditional State Check: If button turned into Reload mode
+    // Dynamic Trigger Check for Reload Pipeline Mode
     if (btn.classList.contains('reload-mode-btn')) {
-        window.location.reload(); // Refresh trigger
+        window.location.reload(); 
         return;
     }
 
-    // Progression: 3 -> 6 -> 9 Rows matching calculation
-    currentVisibleRows += 3; 
+    // Progression Matrix Rule: If click event matches, add exactly +3 rows next
+    if (currentVisibleRows === 1) {
+        currentVisibleRows = 4; // 1 Row + 3 Rows = 4 Rows total visibility
+    } else {
+        currentVisibleRows += 3; // Step loops afterwards: 4 -> 7 -> 10 Rows
+    }
     
     const itemsPerRow = getColumnsCount();
     const targetVisibleCount = itemsPerRow * currentVisibleRows;
@@ -1173,12 +1180,11 @@ function updateButtonState() {
     const totalItems = document.querySelectorAll('.gallery-item').length;
     const hiddenItemsCount = document.querySelectorAll('.gallery-item.hidden-item').length;
     const itemsPerRow = getColumnsCount();
-    const minimumRequiredFor3Rows = itemsPerRow * 3;
+    const minimumRequiredFor1Row = itemsPerRow * 1;
 
-    // RULE: Database la total items-ae 3 rows-ah vida kammiya irundhalo 
-    // ALLA extra items ellamae complete-ah click panni screen-la loading toggle mudinjidhuna:
-    if (totalItems <= minimumRequiredFor3Rows || hiddenItemsCount === 0) {
-        btn.textContent = "view more";
+    // Evaluator: If total items fall below or equal to 1st row capacity, or all items rendered
+    if (totalItems <= minimumRequiredFor1Row || hiddenItemsCount === 0) {
+        btn.textContent = "Reload Page";
         btn.classList.add('reload-mode-btn');
     } else {
         btn.textContent = "View More";
@@ -1186,7 +1192,6 @@ function updateButtonState() {
     }
 }
 
-// Fixed DOM attachment workflow pipeline
 document.addEventListener('DOMContentLoaded', function(){
     setTimeout(initPagination, 200);
 });
