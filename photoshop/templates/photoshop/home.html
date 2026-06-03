@@ -352,7 +352,6 @@ header.main-header{
     border-radius:12px;
 }
 
-/* Hidden elements system architecture backup override */
 .gallery-item.hidden-item {
     display: none !important;
 }
@@ -625,7 +624,7 @@ header.main-header{
 .lb-arrow.right{ right:20px; }
 
 /* =========================
-   VIEW MORE BUTTON
+   PAGINATION CONTROL ACTION WRAPPER
 ========================= */
 
 .btn{
@@ -636,7 +635,7 @@ header.main-header{
 
 .btn a{
     display:inline-block;
-    padding:12px 25px;
+    padding:12px 30px;
     background:#555;
     color:#fff;
     text-decoration:none;
@@ -651,6 +650,18 @@ header.main-header{
 .btn a:hover{
     background:#000;
     border-color:#fff;
+}
+
+/* Alternate Style for Reload Button */
+.btn a.reload-mode-btn {
+    background: #e0b04f;
+    color: #111;
+    border-color: #111;
+}
+.btn a.reload-mode-btn:hover {
+    background: #111;
+    color: #e0b04f;
+    border-color: #e0b04f;
 }
 
 /* =========================
@@ -895,8 +906,8 @@ header.main-header{
 
 </div>
 
-<div class="btn" id="viewMoreWrapper" style="display: none !important;">
-    <a href="javascript:void(0)" id="viewMoreBtn" onclick="loadMoreRows()">View More</a>
+<div class="btn" id="paginationWrapper" style="display: block !important;">
+    <a href="javascript:void(0)" id="actionControlBtn" onclick="handlePaginationClick()">View More</a>
 </div>
 
 <script>
@@ -1091,9 +1102,11 @@ document.getElementById('lightbox').addEventListener('touchend', function(e){
 }, { passive: true });
 
 
-/* ── DYNAMIC VIEW MORE 3 ROWS LOGIC ── */
+/* ========================================================
+   ── 3 ROWS ENGINE CONTROL CENTER (3 -> 6 -> 9 -> RELOAD) ──
+   ======================================================== */
 
-let itemsPerRow = 4; 
+let currentVisibleRows = 3; // Starting state always 3 Rows
 
 function getColumnsCount() {
     const gallery = document.querySelector('.gallery');
@@ -1102,17 +1115,18 @@ function getColumnsCount() {
     if (gallery.classList.contains('two-column')) return 2;
     if (gallery.classList.contains('three-column')) return 3;
     
-    if (window.innerWidth <= 768) return 1;  
-    if (window.innerWidth <= 992) return 2;  
-    return 4;                                
+    // Default Media Query Layout Grid Detectors
+    if (window.innerWidth <= 768) return 1;  // Mobile 1 Col
+    if (window.innerWidth <= 992) return 2;  // Tablet 2 Col
+    return 4;                                // Desktop 4 Col
 }
 
 function initPagination() {
     const items = document.querySelectorAll('.gallery-item');
     if(items.length === 0) return;
 
-    itemsPerRow = getColumnsCount();
-    const initialVisibleCount = itemsPerRow * 3; 
+    const itemsPerRow = getColumnsCount();
+    const initialVisibleCount = itemsPerRow * currentVisibleRows; 
 
     items.forEach((item, index) => {
         if (index >= initialVisibleCount) {
@@ -1122,45 +1136,63 @@ function initPagination() {
         }
     });
 
-    toggleViewMoreButtonVisibility();
+    updateButtonState();
     updateLightboxImages();
 }
 
-function loadMoreRows() {
-    itemsPerRow = getColumnsCount();
-    const photosToLoad = itemsPerRow * 3; 
+function handlePaginationClick() {
+    const btn = document.getElementById('actionControlBtn');
     
-    const hiddenItems = document.querySelectorAll('.gallery-item.hidden-item');
-    
-    for (let i = 0; i < photosToLoad && i < hiddenItems.length; i++) {
-        hiddenItems[i].classList.remove('hidden-item');
+    // Conditional State Check: If button turned into Reload mode
+    if (btn.classList.contains('reload-mode-btn')) {
+        window.location.reload(); // Refresh trigger
+        return;
     }
 
-    updateLightboxImages();
-    toggleViewMoreButtonVisibility();
-}
-
-function toggleViewMoreButtonVisibility() {
-    const wrapper = document.getElementById('viewMoreWrapper');
-    const remainingHidden = document.querySelectorAll('.gallery-item.hidden-item').length;
+    // Progression: 3 -> 6 -> 9 Rows matching calculation
+    currentVisibleRows += 3; 
     
-    if (wrapper) {
-        if (remainingHidden > 0) {
-            wrapper.style.setProperty('display', 'block', 'important'); 
-        } else {
-            wrapper.style.setProperty('display', 'none', 'important');
+    const itemsPerRow = getColumnsCount();
+    const targetVisibleCount = itemsPerRow * currentVisibleRows;
+    const items = document.querySelectorAll('.gallery-item');
+
+    items.forEach((item, index) => {
+        if (index < targetVisibleCount) {
+            item.classList.remove('hidden-item');
         }
+    });
+
+    updateLightboxImages();
+    updateButtonState();
+}
+
+function updateButtonState() {
+    const btn = document.getElementById('actionControlBtn');
+    if (!btn) return;
+
+    const totalItems = document.querySelectorAll('.gallery-item').length;
+    const hiddenItemsCount = document.querySelectorAll('.gallery-item.hidden-item').length;
+    const itemsPerRow = getColumnsCount();
+    const minimumRequiredFor3Rows = itemsPerRow * 3;
+
+    // RULE: Database la total items-ae 3 rows-ah vida kammiya irundhalo 
+    // ALLA extra items ellamae complete-ah click panni screen-la loading toggle mudinjidhuna:
+    if (totalItems <= minimumRequiredFor3Rows || hiddenItemsCount === 0) {
+        btn.textContent = "view more";
+        btn.classList.add('reload-mode-btn');
+    } else {
+        btn.textContent = "View More";
+        btn.classList.remove('reload-mode-btn');
     }
 }
 
-// Fixed timeout callback sequence for preventing image loop breakdowns
+// Fixed DOM attachment workflow pipeline
 document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(initPagination, 250);
+    setTimeout(initPagination, 200);
 });
 
 window.addEventListener('resize', function() {
-    itemsPerRow = getColumnsCount();
-    toggleViewMoreButtonVisibility();
+    initPagination();
 });
 
 </script>
