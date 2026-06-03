@@ -1,15 +1,14 @@
 from pathlib import Path
 from decouple import config
-import dj_database_url
 import os
 import cloudinary
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG      = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'photoghor.onrender.com']
+ALLOWED_HOSTS        = ['127.0.0.1', 'localhost', 'photoghor.onrender.com']
 CSRF_TRUSTED_ORIGINS = ['https://photoghor.onrender.com', 'http://127.0.0.1:8000']
 
 # =========================================================
@@ -22,7 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
+    'cloudinary_storage',          # must be BEFORE staticfiles
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'allauth',
@@ -33,25 +32,29 @@ INSTALLED_APPS = [
     'photoshop',
 ]
 
+# =========================================================
+# CLOUDINARY  (configure once, here)
+# =========================================================
+
 cloudinary.config(
     cloud_name=config('CLOUDINARY_CLOUD_NAME'),
-    api_key=config('CLOUDINARY_API_KEY'),
+    api_key   =config('CLOUDINARY_API_KEY'),
     api_secret=config('CLOUDINARY_API_SECRET'),
 )
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_KEY'   : config('CLOUDINARY_API_KEY'),
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
 
 # =========================================================
-# MIDDLEWARE
+# MIDDLEWARE  (defined ONCE)
 # =========================================================
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # right after SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,24 +89,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 
 # =========================================================
-# DATABASE  ✅ Fixed — removed invalid 'timeout' OPTIONS
+# DATABASE
 # =========================================================
 
-import os
-
 if os.environ.get('DJANGO_ENV') == 'production':
+    import dj_database_url
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME'),
-            # ... your Render config
-        }
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+        )
     }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME'  : BASE_DIR / 'db.sqlite3',
         }
     }
 
@@ -127,25 +128,25 @@ USE_TZ        = True
 # =========================================================
 # STATIC & MEDIA FILES
 # =========================================================
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATIC_URL = '/static/'
+
+STATIC_URL       = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT      = BASE_DIR / 'staticfiles'
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+# Single STORAGES dict (Django 4.2+) — replaces DEFAULT_FILE_STORAGE &
+# STATICFILES_STORAGE.  Do NOT also set those old keys; it causes conflicts.
 STORAGES = {
     "default": {
+        # All ImageField / FileField uploads go to Cloudinary
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
+        # Static files served via WhiteNoise (CSS, JS, etc.)
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
+# MEDIA_ROOT is only used for local dev fallback; Cloudinary ignores it.
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -188,18 +189,16 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret'   : config('GOOGLE_CLIENT_SECRET'),
             'key'      : '',
         },
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
+        'SCOPE'      : ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
     }
 }
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL      = 'http'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # =========================================================
-# SECURITY
+# SECURITY  (tighten these when you add HTTPS)
 # =========================================================
 
 SECURE_SSL_REDIRECT            = False

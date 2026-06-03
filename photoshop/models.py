@@ -1,10 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Register(models.Model):
+    """Legacy model — prefer Django's built-in User for authentication."""
     username = models.CharField(max_length=100)
     email    = models.EmailField()
+    # WARNING: Do NOT store real passwords here; use Django's User model instead.
     password = models.CharField(max_length=100)
 
     def __str__(self):
@@ -31,13 +35,16 @@ class Photo(models.Model):
 
     @property
     def likes_count(self):
+        """
+        Avoid calling this in list views — use an annotated queryset instead:
+            Photo.objects.annotate(likes_count=Count('photo_likes'))
+        """
         return self.photo_likes.count()
 
     def __str__(self):
         return self.title
 
 
-# models.py
 class Gallery(models.Model):
     image    = models.ImageField(upload_to='gallery/')
     category = models.ForeignKey(
@@ -50,6 +57,7 @@ class Gallery(models.Model):
 
     def __str__(self):
         return f"Gallery {self.id}"
+
 
 class PhotoLike(models.Model):
     user       = models.ForeignKey(User,  on_delete=models.CASCADE,
@@ -64,45 +72,41 @@ class PhotoLike(models.Model):
 
     def __str__(self):
         return f"User {self.user_id} liked Photo {self.photo_id} on {self.liked_date}"
-    
 
-from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 class UserProfile(models.Model):
     """
-    Extends standard auth framework to preserve specific asset meta data 
-    and custom UI property flags.
+    Extends the standard auth User to store avatar initials and creation timestamp.
+    Created/updated automatically via post_save signal on User.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user           = models.OneToOneField(User, on_delete=models.CASCADE,
+                                          related_name='profile')
     avatar_letters = models.CharField(max_length=2, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at     = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Profile: {self.user.username}"
 
-# AUTOMATIC PROFILE GENERATION SIGNALS
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
+
+# ---------------------------------------------------------------------------
+# Signals — consolidated into a single handler to avoid redundant DB writes
+# ---------------------------------------------------------------------------
 
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    profile = instance.profile
-    if instance.email:
-        profile.avatar_letters = instance.email[:2].upper()
-    else:
-        profile.avatar_letters = instance.username[:2].upper()
+def sync_user_profile(sender, instance, **kwargs):
+    """
+    Create the UserProfile row on first save; update avatar_letters on every save.
+    Using get_or_create guards against missing profiles (e.g. from fixtures).
+    """
+    profile, _ = UserProfile.objects.get_or_create(user=instance)
+    source = instance.email if instance.email else instance.username
+    profile.avatar_letters = source[:2].upper()
     profile.save()
 
-    from django.db import models
 
 class Contact(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
+    name    = models.CharField(max_length=100)
+    email   = models.EmailField()
     subject = models.CharField(max_length=200)
     message = models.TextField()
 

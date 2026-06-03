@@ -1,59 +1,74 @@
-from PIL import Image
 import io
+import os
+
+from PIL import Image
+from django.contrib import admin, messages
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.contrib import admin
-from django.urls import reverse
 from django.shortcuts import redirect
-from django.contrib import messages
-from .models import Gallery, Photo, Category, PhotoLike, Register, UserProfile 
+from django.urls import reverse
+
+from .models import Category, Contact, Gallery, Photo, PhotoLike, Register, UserProfile
 
 
-from .models import Contact
-
-admin.site.register(Contact)
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
 def compress_image(image_file, max_mb=9):
+    """
+    Re-encode *image_file* as a progressive JPEG, reducing quality in steps
+    until the result fits within *max_mb* megabytes (or quality reaches 10).
+
+    Returns an InMemoryUploadedFile ready to be assigned to an ImageField.
+    """
     img = Image.open(image_file)
     if img.mode in ("RGBA", "P", "LA"):
         img = img.convert("RGB")
 
-    output = io.BytesIO()
+    output  = io.BytesIO()
     quality = 85
-    size = 0
 
     while True:
         output.seek(0)
         output.truncate()
         img.save(output, format="JPEG", quality=quality, optimize=True)
-        size = output.tell()          # capture size BEFORE seek
+        # seek to end to read the real byte count, then rewind
+        size = output.seek(0, 2)
+        output.seek(0)
         if size <= max_mb * 1024 * 1024 or quality <= 10:
             break
         quality -= 10
 
-    output.seek(0)
     filename = image_file.name.rsplit('.', 1)[0] + '.jpg'
     return InMemoryUploadedFile(
-        output, 'ImageField', filename,
-        'image/jpeg', size, None      # use captured size, not output.tell()
+        output, 'ImageField', filename, 'image/jpeg', size, None
     )
 
 
-@admin.register(Gallery)   # ← this line was missing
+# ---------------------------------------------------------------------------
+# Admin registrations
+# ---------------------------------------------------------------------------
+
+admin.site.register(Contact)
+admin.site.register(Register)
+
+
+@admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ['id', 'image', 'category']
     list_filter  = ['category']
-    fields       = ['image', 'category']   
+    fields       = ['image', 'category']
 
     def add_view(self, request, form_url='', extra_context=None):
         if request.method == 'POST':
             files       = request.FILES.getlist('image')
-            category_id = request.POST.get('category') or None   # ← grab category from form
+            category_id = request.POST.get('category') or None
             if files:
                 for f in files:
                     f.seek(0)
                     compressed = compress_image(f)
-                    Gallery.objects.create(image=compressed, category_id=category_id)  # ← save category
-                messages.success(request, f'{len(files)} images uploaded!')
+                    Gallery.objects.create(image=compressed, category_id=category_id)
+                messages.success(request, f'{len(files)} image(s) uploaded successfully.')
                 return redirect(reverse('admin:photoshop_gallery_changelist'))
         return super().add_view(request, form_url, extra_context)
 
@@ -64,6 +79,7 @@ class GalleryAdmin(admin.ModelAdmin):
 
     class Media:
         js = ('admin/js/gallery_multiple.js',)
+
 
 @admin.register(Photo)
 class PhotoAdmin(admin.ModelAdmin):
@@ -87,7 +103,6 @@ class CategoryAdmin(admin.ModelAdmin):
 class PhotoLikeAdmin(admin.ModelAdmin):
     list_display = ('user', 'photo', 'liked_date')
     list_filter  = ('liked_date',)
-
 
 
 @admin.register(UserProfile)
