@@ -99,14 +99,6 @@ def profile(request):
     return render(request, "photoshop/profile.html")
 
 
-# ---------------------------------------------------------------------------
-# Authenticated views
-# ---------------------------------------------------------------------------
-
-@login_required(login_url='index')
-def gallery(request):
-    photos = Gallery.objects.exclude(image='').exclude(image=None)
-    return render(request, "photoshop/gallery.html", {'photos': photos})
 
 
 @login_required(login_url='index')
