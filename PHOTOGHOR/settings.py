@@ -133,15 +133,13 @@ STATIC_URL       = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
 STATIC_ROOT      = BASE_DIR / 'staticfiles'
 
-# Single STORAGES dict (Django 4.2+) — replaces DEFAULT_FILE_STORAGE &
-# STATICFILES_STORAGE.  Do NOT also set those old keys; it causes conflicts.
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
+
 STORAGES = {
     "default": {
-        # All ImageField / FileField uploads go to Cloudinary
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        # Static files served via WhiteNoise (CSS, JS, etc.)
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }

@@ -237,7 +237,7 @@ header.main-header{
 }
 
 /* =========================
-   RESPONSIVE
+   RESPONSIVE NAV
 ========================= */
 
 @media(min-width:769px){
@@ -350,6 +350,7 @@ header.main-header{
     position:relative;
     overflow:hidden;
     border-radius:12px;
+    /* Hide items with broken/missing images via JS */
 }
 
 .gallery-item img{
@@ -444,6 +445,7 @@ header.main-header{
     transition:.3s;
     z-index:5;
     text-decoration:none;
+    border:none;
 }
 
 .gallery-item:hover .icon{
@@ -611,6 +613,8 @@ header.main-header{
     cursor:pointer;
     user-select:none;
     z-index:10;
+    background:none;
+    border:none;
 }
 
 .lb-arrow.left { left:20px; }
@@ -744,11 +748,10 @@ header.main-header{
             <nav class="desktop-nav-bar" id="desktopNavBar">
                 <ul>
                     <li><a href="{% url 'profile' %}">Home</a></li>
-                     
-                    <li><a href="{% url 'home' %}">Photo Gallery</a></li>
-                    <li><a href="javascript:void(0)" onclick="setColumns(1); closeDesktopNav()">1 Column Gallery</a></li>
-                    <li><a href="javascript:void(0)" onclick="setColumns(2); closeDesktopNav()">2 Column Gallery</a></li>
-                    <li><a href="javascript:void(0)" onclick="setColumns(3); closeDesktopNav()">3 Column Gallery</a></li>
+                    <li><a href="{% url 'home' %}" class="active">Photo Gallery</a></li>
+                    <li><a href="javascript:void(0)" onclick="setColumns(1); closeDesktopNav()">1 Column</a></li>
+                    <li><a href="javascript:void(0)" onclick="setColumns(2); closeDesktopNav()">2 Column</a></li>
+                    <li><a href="javascript:void(0)" onclick="setColumns(3); closeDesktopNav()">3 Column</a></li>
                 </ul>
             </nav>
 
@@ -768,10 +771,10 @@ header.main-header{
 
 <!-- MOBILE DROPDOWN -->
 <nav class="mobile-dropdown" id="mobileDropdown" aria-label="Mobile navigation">
-    <a href="{% url 'profile' %}" class="active">
+    <a href="{% url 'profile' %}">
         <i class="fa-solid fa-house"></i> Home
     </a>
-    <a href="{% url 'home' %}">
+    <a href="{% url 'home' %}" class="active">
         <i class="fa-solid fa-images"></i> Photo Gallery
     </a>
     <div class="drop-divider"></div>
@@ -818,36 +821,36 @@ header.main-header{
             {% if photo.image %}
             <div class="gallery-item">
 
+                {# ── FIX 1: onerror hides the card if Cloudinary URL is broken ── #}
                 <img src="{{ photo.image.url }}"
-                     alt="{% if type == 'photo' %}{{ photo.title }}{% else %}{% endif %}"
+                     alt="{% if type == 'photo' %}{{ photo.title }}{% else %}Gallery Image{% endif %}"
                      loading="lazy"
-                     style="cursor:default;">
+                     onerror="this.closest('.gallery-item').style.display='none'">
 
                 <div class="overlay">
                     <div class="overlay-content">
 
                         {% if type == 'photo' %}
-                            {# ── Photo object: clickable title → detail page ── #}
+                            {# ── Photo: link to detail page with real title ── #}
                             <a href="{% url 'photo_detail' photo.id %}" class="overlay-title">
                                 {{ photo.title }}
                             </a>
                         {% else %}
-                            {# ── Gallery object: no detail page, open image in lightbox ── #}
-                            <span class="overlay-title">
-                                <a href="{% url 'photo_detail' 1 %}"
-                                style="color:inherit;text-decoration:none;">
-                                    AWESOME RACING CAR
-                                </a></span>
-
+                            {# ── FIX 2: Gallery items have no detail page — removed hardcoded id=1 ── #}
+                            <span class="overlay-title">GALLERY</span>
                         {% endif %}
 
                         <a href="{% url 'home' %}" class="overlay-portfolio">PORTFOLIO</a>
+
                     </div>
                 </div>
 
-                <div class="icon" onclick="openImage('{{ photo.image.url }}'); event.stopPropagation();">
+                {# ── Eye icon opens lightbox ── #}
+                <button class="icon"
+                        onclick="openImage('{{ photo.image.url }}'); event.stopPropagation();"
+                        title="Preview">
                     <i class="fa-solid fa-eye"></i>
-                </div>
+                </button>
 
             </div>
             {% endif %}
@@ -863,7 +866,7 @@ header.main-header{
 </section>
 
 <!-- ========================= LIGHTBOX ========================= -->
-<div class="lightbox" id="lightbox">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
 
     <div class="lb-topbar">
         <div id="lb-counter"></div>
@@ -878,6 +881,7 @@ header.main-header{
             </button>
 
             {% if user.is_authenticated %}
+            {# ── FIX 3: download href is set dynamically by showImage() ── #}
             <a id="lb-download" class="lb-btn" href="#" download title="Download">
                 <i class="fa-solid fa-download"></i>
             </a>
@@ -892,9 +896,9 @@ header.main-header{
         </div>
     </div>
 
-    <span class="lb-arrow left" onclick="changeImage(-1)">&#8592;</span>
+    <button class="lb-arrow left" onclick="changeImage(-1)" aria-label="Previous">&#8592;</button>
     <img id="lightbox-img" src="" alt="Preview" onclick="toggleZoom()">
-    <span class="lb-arrow right" onclick="changeImage(1)">&#8594;</span>
+    <button class="lb-arrow right" onclick="changeImage(1)" aria-label="Next">&#8594;</button>
 
 </div>
 
@@ -910,36 +914,40 @@ header.main-header{
 <!-- ========================= JAVASCRIPT ========================= -->
 <script>
 
+/* ── HELPERS ── */
+
 function isDesktop(){
     return window.innerWidth >= 769;
 }
 
-const menuBtn       = document.getElementById('menuBtn');
-const desktopNavBar = document.getElementById('desktopNavBar');
-const mobileDropdown= document.getElementById('mobileDropdown');
+/* ── MENU ── */
+
+const menuBtn        = document.getElementById('menuBtn');
+const desktopNavBar  = document.getElementById('desktopNavBar');
+const mobileDropdown = document.getElementById('mobileDropdown');
 
 function openDesktopNav(){
     desktopNavBar.classList.add('open');
     menuBtn.classList.add('open');
-    menuBtn.setAttribute('aria-expanded','true');
+    menuBtn.setAttribute('aria-expanded', 'true');
 }
 
 function closeDesktopNav(){
     desktopNavBar.classList.remove('open');
     menuBtn.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded','false');
+    menuBtn.setAttribute('aria-expanded', 'false');
 }
 
 function openMobileDropdown(){
     mobileDropdown.classList.add('open');
     menuBtn.classList.add('open');
-    menuBtn.setAttribute('aria-expanded','true');
+    menuBtn.setAttribute('aria-expanded', 'true');
 }
 
 function closeMobileDropdown(){
     mobileDropdown.classList.remove('open');
     menuBtn.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded','false');
+    menuBtn.setAttribute('aria-expanded', 'false');
 }
 
 menuBtn.addEventListener('click', function(e){
@@ -978,14 +986,20 @@ document.addEventListener('keydown', function(e){
 
 /* ── LIGHTBOX ── */
 
-let images = [];
+let images       = [];
 let currentIndex = 0;
-let zoomLevel = 1;
+let zoomLevel    = 1;
 
 document.addEventListener('DOMContentLoaded', function(){
+    /*
+     * FIX 4: Collect only visible img src values — cards hidden by onerror
+     * will have display:none so their images are excluded from the slideshow.
+     */
     images = Array.from(
-        document.querySelectorAll('.gallery-item img')
-    ).map(function(img){ return new URL(img.src, window.location.origin).href; });
+        document.querySelectorAll('.gallery-item:not([style*="display:none"]) img')
+    ).map(function(img){
+        return new URL(img.src, window.location.origin).href;
+    });
 });
 
 function openImage(src){
@@ -1002,15 +1016,18 @@ function showImage(index){
     const img     = document.getElementById('lightbox-img');
     const counter = document.getElementById('lb-counter');
     const dl      = document.getElementById('lb-download');
+
     img.src = images[index];
     img.style.transform = 'scale(1)';
     img.classList.remove('zoomed');
     zoomLevel = 1;
+
     if(dl){
         dl.href = images[index];
         const parts = images[index].split('/');
         dl.download = parts[parts.length - 1] || 'photo';
     }
+
     counter.textContent = (index + 1) + ' / ' + images.length;
 }
 
@@ -1028,7 +1045,7 @@ function closeImage(){
     zoomLevel = 1;
 }
 
-function zoomIn(){ zoomLevel = Math.min(zoomLevel + 0.5, 3); applyZoom(); }
+function zoomIn(){  zoomLevel = Math.min(zoomLevel + 0.5, 3); applyZoom(); }
 function zoomOut(){ zoomLevel = Math.max(zoomLevel - 0.5, 1); applyZoom(); }
 function toggleZoom(){ zoomLevel = zoomLevel === 1 ? 2 : 1; applyZoom(); }
 
@@ -1042,19 +1059,19 @@ function applyZoom(){
 
 function setColumns(cols){
     const gallery = document.querySelector('.gallery');
-    gallery.classList.remove('one-column','two-column','three-column');
-    if(cols === 1) gallery.classList.add('one-column');
+    gallery.classList.remove('one-column', 'two-column', 'three-column');
+    if(cols === 1)      gallery.classList.add('one-column');
     else if(cols === 2) gallery.classList.add('two-column');
     else if(cols === 3) gallery.classList.add('three-column');
 }
 
 /* ── MOBILE ACTIVE OVERLAY ── */
 
-document.querySelectorAll('.gallery-item').forEach(item => {
+document.querySelectorAll('.gallery-item').forEach(function(item){
     item.addEventListener('click', function(e){
         if(window.innerWidth <= 768){
-            if(e.target.closest('a')) return;
-            document.querySelectorAll('.gallery-item').forEach(box => {
+            if(e.target.closest('a') || e.target.closest('button')) return;
+            document.querySelectorAll('.gallery-item').forEach(function(box){
                 if(box !== item) box.classList.remove('active');
             });
             this.classList.toggle('active');
@@ -1065,11 +1082,26 @@ document.querySelectorAll('.gallery-item').forEach(item => {
 
 document.addEventListener('click', function(){
     if(window.innerWidth <= 768){
-        document.querySelectorAll('.gallery-item').forEach(item => {
+        document.querySelectorAll('.gallery-item').forEach(function(item){
             item.classList.remove('active');
         });
     }
 });
+
+/* ── SWIPE SUPPORT FOR LIGHTBOX (mobile) ── */
+
+let touchStartX = 0;
+
+document.getElementById('lightbox').addEventListener('touchstart', function(e){
+    touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+
+document.getElementById('lightbox').addEventListener('touchend', function(e){
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if(Math.abs(diff) > 50){
+        changeImage(diff > 0 ? 1 : -1);
+    }
+}, { passive: true });
 
 </script>
 </body>
