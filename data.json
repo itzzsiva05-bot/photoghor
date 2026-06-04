@@ -1,5 +1,64 @@
 [
 {
+  "model": "photoshop.register",
+  "pk": 1,
+  "fields": {
+    "username": "charm",
+    "email": "itzzsiva05@gmail.com",
+    "password": "123"
+  }
+},
+{
+  "model": "photoshop.register",
+  "pk": 2,
+  "fields": {
+    "username": "siva",
+    "email": "siva@gmail.com",
+    "password": "123"
+  }
+},
+{
+  "model": "photoshop.register",
+  "pk": 3,
+  "fields": {
+    "username": "charm",
+    "email": "charm@gmail.com",
+    "password": "123"
+  }
+},
+{
+  "model": "photoshop.category",
+  "pk": 1,
+  "fields": {
+    "name": "GRAPHIC"
+  }
+},
+{
+  "model": "photoshop.category",
+  "pk": 2,
+  "fields": {
+    "name": "PHOTOSHOP"
+  }
+},
+{
+  "model": "photoshop.category",
+  "pk": 3,
+  "fields": {
+    "name": "DESGIN"
+  }
+},
+{
+  "model": "photoshop.photo",
+  "pk": 1,
+  "fields": {
+    "category": 1,
+    "title": "AWESOME RACING CAR",
+    "image": "image/upload/media/photos/a_lpspy9",
+    "description": "Bangalore trip..!!",
+    "created_at": "2026-05-29T07:36:12.390Z"
+  }
+},
+{
   "model": "photoshop.gallery",
   "pk": 10,
   "fields": {
@@ -48,35 +107,66 @@
   }
 },
 {
-  "model": "photoshop.photo",
+  "model": "photoshop.userprofile",
   "pk": 1,
   "fields": {
-    "category": 1,
-    "title": "AWESOME RACING CAR",
-    "image": "image/upload/media/photos/a_lpspy9",
-    "description": "Bangalore trip..!!",
-    "created_at": "2026-05-29T07:36:12.390Z"
+    "user": 1,
+    "avatar_letters": "C",
+    "created_at": "2026-05-27T08:14:56.285Z"
   }
 },
 {
-  "model": "photoshop.category",
-  "pk": 1,
-  "fields": {
-    "name": "GRAPHIC"
-  }
-},
-{
-  "model": "photoshop.category",
+  "model": "photoshop.userprofile",
   "pk": 2,
   "fields": {
-    "name": "PHOTOSHOP"
+    "user": 2,
+    "avatar_letters": "",
+    "created_at": "2026-05-27T08:14:56.289Z"
   }
 },
 {
-  "model": "photoshop.category",
+  "model": "photoshop.userprofile",
   "pk": 3,
   "fields": {
-    "name": "DESGIN"
+    "user": 3,
+    "avatar_letters": "IT",
+    "created_at": "2026-05-27T08:14:56.292Z"
+  }
+},
+{
+  "model": "photoshop.userprofile",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "avatar_letters": "SI",
+    "created_at": "2026-05-27T08:14:56.295Z"
+  }
+},
+{
+  "model": "photoshop.userprofile",
+  "pk": 5,
+  "fields": {
+    "user": 5,
+    "avatar_letters": "SI",
+    "created_at": "2026-05-27T08:28:15.850Z"
+  }
+},
+{
+  "model": "photoshop.userprofile",
+  "pk": 6,
+  "fields": {
+    "user": 6,
+    "avatar_letters": "YO",
+    "created_at": "2026-05-29T06:31:13.129Z"
+  }
+},
+{
+  "model": "photoshop.userprofile",
+  "pk": 7,
+  "fields": {
+    "user": 7,
+    "avatar_letters": "YU",
+    "created_at": "2026-06-02T06:35:56.108Z"
   }
 }
 ]
