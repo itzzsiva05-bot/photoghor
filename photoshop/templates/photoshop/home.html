@@ -832,7 +832,7 @@ header.main-header{
 
             {# ── IMAGE URL FIX: CloudinaryField returns a string, not a FileField object ── #}
             {# Use `photo.image.url` first; if blank fall back to building the URL manually  #}
-            {% with img_url="https://res.cloudinary.com/drjhngqp0/image/upload/"|add:photo.image %}
+            {% with img_url=photo.image.url|default:photo.image %}
 
             <div class="gallery-item">
 
