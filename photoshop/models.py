@@ -22,6 +22,8 @@ class Category(models.Model):
         return self.name
 
 
+from cloudinary.models import CloudinaryField  # இதை top-ல் add பண்ணுங்கள்
+
 class Photo(models.Model):
     category    = models.ForeignKey(
                     Category,
@@ -29,16 +31,12 @@ class Photo(models.Model):
                     null=True, blank=True
                   )
     title       = models.CharField(max_length=100)
-    image       = models.ImageField(upload_to='photos/')
+    image       = CloudinaryField('image')  # ImageField → CloudinaryField
     description = models.TextField()
     created_at  = models.DateTimeField(auto_now_add=True, null=True)
 
     @property
     def likes_count(self):
-        """
-        Avoid calling this in list views — use an annotated queryset instead:
-            Photo.objects.annotate(likes_count=Count('photo_likes'))
-        """
         return self.photo_likes.count()
 
     def __str__(self):
@@ -46,7 +44,7 @@ class Photo(models.Model):
 
 
 class Gallery(models.Model):
-    image    = models.ImageField(upload_to='gallery/')
+    image    = CloudinaryField('image')  # இதுவும் மாத்துங்கள்
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -57,7 +55,6 @@ class Gallery(models.Model):
 
     def __str__(self):
         return f"Gallery {self.id}"
-
 
 class PhotoLike(models.Model):
     user       = models.ForeignKey(User,  on_delete=models.CASCADE,
