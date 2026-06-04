@@ -1,5 +1,131 @@
 [
 {
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$DfkSg5FNnu5pnBJp7tHQS6$YuWzQ8k5mVJfPDK7ekz1okKwx996MBtd21SN4GI1vcA=",
+    "last_login": "2026-06-04T04:26:59.083Z",
+    "is_superuser": true,
+    "username": "c",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-14T08:02:53.336Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$zDhorQCYTWWNW6KAiSWkX7$qySORPy2KRjfqbpS0IdceyxuLkCfVhjcFO56ZBpG7Oo=",
+    "last_login": "2026-05-22T04:51:24Z",
+    "is_superuser": false,
+    "username": "charm",
+    "first_name": "charm",
+    "last_name": "siva",
+    "email": "charm@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-19T08:01:52Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$2Pc7SmqLtIlUeYjTlY2cni$J9nlF/shIjpY/SJxb+wX25c0oOV5g7H/bzmKTrqcRw4=",
+    "last_login": "2026-06-03T04:46:20.847Z",
+    "is_superuser": false,
+    "username": "itzz",
+    "first_name": "Itzz",
+    "last_name": "Siva",
+    "email": "itzzsiva05@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-23T06:35:17.131Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 4,
+  "fields": {
+    "password": "!2tSy0mkcGow3RZSwKdvMv1P9nSFRXCQYkAR398SO",
+    "last_login": "2026-05-29T08:30:02.506Z",
+    "is_superuser": false,
+    "username": "venkat",
+    "first_name": "Venkat",
+    "last_name": "Siva",
+    "email": "sivavenkat140@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-25T06:39:19.556Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Ns4mikDPZn88l07utbGlEu$WpWAXZWYhJGZemlgIBW1A8zIi2TPS+Mm3AX3Wzhmm78=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "siva",
+    "first_name": "",
+    "last_name": "",
+    "email": "siva@gamail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-27T08:28:15.500Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$xSk7flfqoDa65TnZcfpfxq$4OeGieKXt2jxhs7t6oZYlNXGCDN3ZKI2bE1KK++XNSc=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "your@email.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-29T06:31:12.745Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 7,
+  "fields": {
+    "password": "!LGWtXFY3Ng13KkbuBFSPHyVgOmhcmsvZ1vrv6uDL",
+    "last_login": "2026-06-02T06:35:56.136Z",
+    "is_superuser": false,
+    "username": "shizuka",
+    "first_name": "Shizuka",
+    "last_name": "Yumiko",
+    "email": "yumikoshizuka13@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-02T06:35:56.096Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
   "model": "photoshop.register",
   "pk": 1,
   "fields": {
