@@ -1,3 +1,4 @@
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -9,10 +10,8 @@
 
 <title>{{ photo.title }} | Photoghor</title>
 
-<!-- GOOGLE FONTS -->
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- FONT AWESOME -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -46,7 +45,7 @@ nav{
 
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:space-between; /* லோகோ மற்றும் மெனு பகுதியை இரு முனைகளுக்கும் தள்ளும் */
 
     padding:0 50px;
 
@@ -68,17 +67,64 @@ nav{
     font-family:'Barlow Condensed',sans-serif;
 }
 
-.hamburger{
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-    cursor:pointer;
+/* புதிய மெனு கண்டெய்னர் - இது ஆப்ஷன்களையும் பட்டனையும் ஒன்றாக சேர்க்கும் */
+.menu-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* ஆப்ஷன்களுக்கும் பட்டனுக்கும் இடையே உள்ள சிறிய இடைவெளி */
 }
 
-.hamburger span{
-    width:26px;
-    height:2px;
-    background:#fff;
+/* NAVIGATION LINKS STYLING */
+.nav-links {
+    list-style: none;
+    display: none; /* ஆரம்பத்தில் மறைந்திருக்கும் */
+    gap: 15px; /* ஒவ்வொரு ஆப்ஷனுக்கும் இடையே உள்ள இடைவெளி */
+    align-items: center;
+}
+
+.nav-links.show {
+    display: flex; 
+}
+
+.nav-links a {
+    color: #999;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-family: 'Barlow Condensed', sans-serif;
+    white-space: nowrap; /* டெக்ஸ்ட் அடுத்த வரிக்கு உடையாமல் தடுக்க */
+}
+
+.nav-links a.active, .nav-links a:hover {
+    color: #fff;
+    background-color: #222;
+}
+
+/* GOLDEN MENU BUTTON STYLING */
+.menu-btn {
+    background: transparent;
+    border: 2px solid #444;
+    color: #cca353; 
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.menu-btn:focus {
+    outline: none;
+    border-color: #666;
 }
 
 /* ================= HERO ================= */
@@ -329,12 +375,27 @@ footer{
     color:#fff;
 }
 
-/* ================= MOBILE ================= */
+/* ================= MOBILE & RESPONSIVE ================= */
 
 @media(max-width:900px){
 
     nav{
         padding:0 25px;
+    }
+
+    /* மொபைல் திரையில் ஆப்ஷன்கள் வழக்கம் போல் முழு அகலத்திற்கு வர */
+    .nav-links.show {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: #111;
+        padding: 20px;
+        border-bottom: 1px solid #222;
+        gap: 15px;
+        align-items: flex-start;
     }
 
     .hero{
@@ -377,6 +438,10 @@ footer{
     nav{
         height:65px;
         padding:0 15px;
+    }
+
+    .nav-links.show {
+        top: 65px;
     }
 
     .logo{
@@ -443,23 +508,27 @@ footer{
 
 <body>
 
-<!-- ================= NAVBAR ================= -->
-
 <nav>
 
     <a href="{% url 'home' %}" class="logo">
         Photoghor
     </a>
 
-    <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="menu-container">
+        
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{% url 'profile' %}">HOME</a></li>
+            <li><a href="{% url 'home'%}" class="active">PHOTO GALLERY</a></li>
+        </ul>
+
+        <button class="menu-btn" id="menuBtn">
+            <span id="menuIcon"><i class="fas fa-bars"></i></span>
+            <span>MENU</span>
+        </button>
+
     </div>
 
 </nav>
-
-<!-- ================= HERO ================= -->
 
 <section class="hero">
 
@@ -487,19 +556,13 @@ footer{
 
 </section>
 
-<!-- ================= PHOTO ================= -->
-
 <div class="photo-wrap">
 
     <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
 
 </div>
 
-<!-- ================= INFO ================= -->
-
 <div class="info-section">
-
-    <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
@@ -559,8 +622,6 @@ footer{
 
     </aside>
 
-    <!-- CONTENT -->
-
     <article class="photo-info">
 
         <h2>
@@ -575,8 +636,6 @@ footer{
             {{ photo.description }}
         </p>
 
-        <!-- ================= SHARE ================= -->
-
         <div class="share-row">
 
             <span class="share-label">
@@ -585,7 +644,6 @@ footer{
 
             <div class="share-icons">
 
-                <!-- FACEBOOK -->
                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
                    target="_blank">
 
@@ -593,7 +651,6 @@ footer{
 
                 </a>
 
-                <!-- TWITTER -->
                 <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ photo.title }}"
                    target="_blank">
 
@@ -601,7 +658,6 @@ footer{
 
                 </a>
 
-                <!-- WHATSAPP -->
                 <a href="https://web.whatsapp.com/send?text={{ request.build_absolute_uri }}"
                    target="_blank">
 
@@ -609,7 +665,6 @@ footer{
 
                 </a>
 
-                <!-- LINKEDIN -->
                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}"
                    target="_blank">
 
@@ -617,7 +672,6 @@ footer{
 
                 </a>
 
-                <!-- COPY LINK -->
                 <a href="javascript:void(0);" onclick="copyLink()">
 
                     <i class="fas fa-link"></i>
@@ -631,8 +685,6 @@ footer{
     </article>
 
 </div>
-
-<!-- ================= FOOTER ================= -->
 
 <footer>
 
@@ -662,17 +714,28 @@ footer{
 
 </footer>
 
-<!-- ================= SCRIPT ================= -->
-
 <script>
 
+// COPY LINK LOGIC
 function copyLink(){
-
     navigator.clipboard.writeText(window.location.href);
-
     alert("Link Copied!");
-
 }
+
+// NAVBAR TOGGLE LOGIC
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+const menuIcon = document.getElementById('menuIcon');
+
+menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('show');
+    
+    if (navLinks.classList.contains('show')) {
+        menuIcon.innerHTML = '<i class="fas fa-xmark"></i>';
+    } else {
+        menuIcon.innerHTML = '<i class="fas fa-bars"></i>';
+    }
+});
 
 </script>
 

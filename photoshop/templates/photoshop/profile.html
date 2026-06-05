@@ -10,7 +10,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2 family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* -------------------------------------
@@ -111,8 +111,11 @@
             transition: color 0.4s ease;
             z-index: 160;
         }
+
+        header.overlay-open .logo {
+            color: #ffffff !important;
+        }
         
-        /* ஆரம்பத்தில் மெனு மறைந்திருக்க வேண்டும் (Hidden by Default) */
         .nav-links {
             display: flex;
             gap: 40px;
@@ -126,7 +129,6 @@
             z-index: 150;
         }
 
-        /* மெனு பட்டனை கிளிக் செய்தவுடன் நேர்த்தியாக Slide-In ஆகும் */
         header.overlay-open .nav-links {
             opacity: 1;
             transform: translateX(0);
@@ -146,7 +148,6 @@
             color: #bfa37a;
         }
 
-        /* பக்கங்களை ஸ்க்ரோல் செய்யும்போது மெனுவின் நிறம் மாறுவதற்கு */
         header.light-nav:not(.overlay-open) .logo {
             color: #000000;
         }
@@ -157,7 +158,6 @@
             color: #bfa37a;
         }
         
-        /* Hamburger Hamburger Icon CSS */
         .menu-toggle {
             cursor: pointer;
             display: flex;
@@ -179,7 +179,6 @@
             background-color: #000000;
         }
         
-        /* கிளிக் செய்தவுடன் மூன்று கோடுகள் 'X' (Close) ஐகானாக மாறும் */
         header.overlay-open .menu-toggle span:nth-child(1) {
             transform: translateY(8px) rotate(45deg);
             background-color: #ffffff !important;
@@ -256,8 +255,7 @@
             max-width: 650px;
             margin-left: 15%;
             color: #ffffff;
-            margin-top: 0; 
-
+            margin-top: 0;
         }
         .hero-content h1 {
             font-size: 56px;
@@ -266,7 +264,6 @@
             margin-bottom: 25px;
             letter-spacing: 1px;
         }
-        
         .hero-content p {
             font-size: 14px;
             color: #dddddd;
@@ -274,7 +271,6 @@
             letter-spacing: 1px;
             font-weight: 300;
         }
-        
         .social-links {
             display: flex;
             align-items: center;
@@ -298,7 +294,6 @@
         .social-links a:hover {
             color: #bfa37a;
         }
-        
         .hero-counter {
             position: absolute;
             bottom: 60px;
@@ -348,12 +343,13 @@
             position: relative;
         }
         .about-img img {
-    width: 130%;
-    max-width: 600px; /* Increased from 450px to 600px */
-    display: block;
-    border: 15px solid #fcfcfc;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-}
+            width: 100%;
+            max-width: 600px;
+            display: block;
+            border: 15px solid #fcfcfc;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+        }
+
         /* -------------------------------------
            3. PORTFOLIOS FEATURE SECTION
         ------------------------------------- */
@@ -466,10 +462,11 @@
         }
 
         /* -------------------------------------
-           4. TESTIMONIALS SECTION
+           4. TESTIMONIALS SLIDER SECTION
         ------------------------------------- */
         #testimonials {
             background: #fafafa;
+            overflow: hidden;
         }
         .testimonial-container {
             width: 100%;
@@ -485,18 +482,30 @@
             font-weight: 700;
             color: #111111;
         }
+        
+        .testimonial-slider-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
         .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px;
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
         }
         .testimonial-card {
+            flex: 0 0 50%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .testimonial-card-inner {
             background: #ffffff;
             padding: 50px 40px;
             border: 1px solid #eeeeee;
             position: relative;
             text-align: center;
             box-shadow: 0 5px 25px rgba(0,0,0,0.01);
+            height: 100%;
         }
         .plus-icon-tl, .plus-icon-tr {
             position: absolute;
@@ -506,7 +515,6 @@
         }
         .plus-icon-tl { top: 20px; left: 20px; }
         .plus-icon-tr { top: 20px; right: 20px; }
-        
         .client-avatar {
             width: 65px;
             height: 65px;
@@ -515,6 +523,20 @@
             margin-bottom: 25px;
             border: 2px solid #ffffff;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .testimonial-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 5px;
+        }
+        .testimonial-card h5 {
+            font-size: 12px;
+            font-weight: 500;
+            color: #bfa37a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
         }
         .testimonial-card p {
             font-size: 14px;
@@ -585,7 +607,6 @@
         .submit-btn:hover {
             background-color: #111111;
         }
-
         .info-block {
             margin-bottom: 35px;
         }
@@ -636,7 +657,7 @@
         }
 
         /* -------------------------------------
-           05. RESPONSIVE MEDIAS BREAKPOINTS
+           05. RESPONSIVE MEDIA BREAKPOINTS
         ------------------------------------- */
         @media (max-width: 1200px) {
             header, header.opaque-bg { padding: 25px 40px; }
@@ -649,16 +670,20 @@
 
         @media (max-width: 992px) {
             .side-label, .right-dots { display: none; }
-            .about-container, .portfolio-grid, .contact-container {
+
+            .about-container, .portfolio-grid {
                 flex-direction: column;
+                gap: 50px;
+            }
+            .contact-container {
                 grid-template-columns: 1fr;
                 gap: 50px;
             }
+
             .about-img img { max-width: 100%; }
-            .testimonial-grid { grid-template-columns: 1fr; }
+            .testimonial-card { flex: 0 0 100%; }
             .gallery-row { grid-template-columns: repeat(2, 1fr); }
-            
-            /* Mobile & Tablets இல் கிளிக் செய்யும் போது முழு திரையையும் மறைக்கும் மெனு overlay */
+
             header.overlay-open .nav-links {
                 position: fixed;
                 top: 0;
@@ -683,11 +708,18 @@
             .gallery-preview-section { padding: 10px 20px 60px 20px; }
             .hero-content { margin-left: 0; padding: 0 10px; }
             .hero-content h1 { font-size: 38px; }
-            .about-text h2, .portfolio-details h2, .testimonial-header h2, .contact-form-side h2, .contact-info-side h2 { font-size: 30px; }
+            .about-text h2,
+            .portfolio-details h2,
+            .testimonial-header h2,
+            .contact-form-side h2,
+            .contact-info-side h2 { font-size: 30px; }
             .gallery-row { grid-template-columns: 1fr; }
             .form-group-row { grid-template-columns: 1fr; gap: 35px; }
             footer { flex-direction: column; gap: 20px; text-align: center; }
             .footer-socials a { margin: 0 10px; }
+            .testimonial-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .testimonial-card-inner { padding: 35px 25px; }
+            .hero-counter { bottom: 30px; right: 5%; }
         }
     </style>
 </head>
@@ -721,6 +753,7 @@
         </div>
     </header>
 
+    <!-- SECTION 1: HERO -->
     <section id="welcome">
         <div class="hero-slider">
             <div class="slide active-slide" style="background-image: url('https://htmldemo.net/photoghor/photoghor/img/portfolio/portfolio-image-13.jpg')"></div>
@@ -745,6 +778,7 @@
         </div>
     </section>
 
+    <!-- SECTION 2: ABOUT -->
     <section id="about">
         <div class="about-container">
             <div class="about-text">
@@ -759,6 +793,7 @@
         </div>
     </section>
 
+    <!-- SECTION 3: PORTFOLIOS -->
     <section id="portfolios">
         <div class="portfolio-grid">
             <div class="portfolio-img">
@@ -772,6 +807,7 @@
         </div>
     </section>
 
+    <!-- GALLERY PREVIEW -->
     <div class="gallery-preview-section">
         <div class="gallery-header">
             <h3>Full Gallery</h3>
@@ -796,6 +832,7 @@
         </div>
     </div>
 
+    <!-- SECTION 4: TESTIMONIALS -->
     <section id="testimonials">
         <div class="testimonial-container">
             <div class="testimonial-header">
@@ -805,27 +842,69 @@
                     <p style="color:#666666; font-size:14px; margin-top:12px;">It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
                 </div>
                 <div class="slider-controls">
-                    <button class="slider-btn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="slider-btn"><i class="fas fa-chevron-right"></i></button>
+                    <button class="slider-btn" id="testi-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="slider-btn" id="testi-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <span class="plus-icon-tl">+</span>
-                    <span class="plus-icon-tr">+</span>
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 1">
-                    <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
-                </div>
-                <div class="testimonial-card">
-                    <span class="plus-icon-tl">+</span>
-                    <span class="plus-icon-tr">+</span>
-                    <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 2">
-                    <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
+            
+            <div class="testimonial-slider-wrapper">
+                <div class="testimonial-grid" id="testimonial-track">
+                    <!-- Profile 1 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-card-inner">
+                            <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 1">
+                            <h4>John Doe</h4>
+                            <h5>Creative Director</h5>
+                            <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
+                        </div>
+                    </div>
+                    <!-- Profile 2 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-card-inner">
+                            <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
+                            <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 2">
+                            <h4>Alex Morgan</h4>
+                            <h5>Lead Photographer</h5>
+                            <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
+                        </div>
+                    </div>
+                    <!-- Profile 3 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-card-inner">
+                            <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 3">
+                            <h4>Sarah Jenkins</h4>
+                            <h5>Fashion Model</h5>
+                            <p>Fantastic response time and breathtaking portfolios! Their focus on visual balance and aesthetic storytelling changed our entire campaign style.</p>
+                        </div>
+                    </div>
+                    <!-- Profile 4 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-card-inner">
+                            <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 4">
+                            <h4>Robert Dow</h4>
+                            <h5>Visual Artist</h5>
+                            <p>The perspective shifts are mindblowing. Working together on editorial projects gave us unique visual layouts that our clients absolutely loved.</p>
+                        </div>
+                    </div>
+                    <!-- Profile 5 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-card-inner">
+                            <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="client-avatar" alt="Reviewer 5">
+                            <h4>Emily Watson</h4>
+                            <h5>Brand Designer</h5>
+                            <p>Pure artistry! Every snapshot feels crisp, premium, and captures raw emotion perfectly. Highly recommend their professional portfolio services.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- SECTION 5: CONTACT -->
     <section id="contact">
         <div class="contact-container">
             <div class="contact-form-side">
@@ -877,35 +956,30 @@
             <a href="#">Behance</a>
         </div>
         <div class="copyright">
-            Copyright © <span>Photoghor</span> 2026. All Right Reserved
+            Copyright &copy; <span>Photoghor</span> 2026. All Right Reserved
         </div>
     </footer>
 
     <script>
-        // --- 1. மெனு கிளிக் செயல்பாடுகள் (Menu Interaction Engine) ---
+        // --- 1. Menu Interaction ---
         const menuTrigger = document.getElementById('menu-trigger');
         const mainHeader = document.getElementById('main-header');
         const navItems = document.querySelectorAll('.nav-item');
         const dots = document.querySelectorAll('.right-dots a');
 
-        // Hamburger ஐ கிளிக் செய்யும் போது மெனுவை ஸ்லைடு செய்து காட்டும் / மறைக்கும்
         menuTrigger.addEventListener('click', () => {
             mainHeader.classList.toggle('overlay-open');
         });
 
-        // மெனுவில் உள்ள வார்த்தைகளையோ அல்லது புள்ளிகளையோ கிளிக் செய்யும் போது சீராக நகரும் (Smooth Scrolling)
         const bindSmoothScroll = (elements) => {
             elements.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    mainHeader.classList.remove('overlay-open'); // கிளிக் செய்ததும் மெனு மூடிக்கொள்ளும்
-                    
+                    mainHeader.classList.remove('overlay-open');
                     const targetId = link.getAttribute('href');
                     const targetSection = document.querySelector(targetId);
                     if (targetSection) {
-                        targetSection.scrollIntoView({
-                            behavior: 'smooth'
-                        });
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
                     }
                 });
             });
@@ -913,7 +987,7 @@
         bindSmoothScroll(navItems);
         bindSmoothScroll(dots);
 
-        // --- 2. தானியங்கி பின்னணி பட மாற்றம் (Hero Slider Engine) ---
+        // --- 2. Hero Slider ---
         const welcomeSlides = document.querySelectorAll('.slide');
         const counterContainer = document.getElementById('slide-index-counter');
         let currentSlideIndex = 0;
@@ -923,69 +997,56 @@
             welcomeSlides[currentSlideIndex].classList.remove('active-slide');
             currentSlideIndex = (currentSlideIndex + 1) % loopLimit;
             welcomeSlides[currentSlideIndex].classList.add('active-slide');
-            
             if (counterContainer) {
                 counterContainer.textContent = `0${currentSlideIndex + 1}`;
             }
         }
-        // ஒவ்வொரு 4.5 விநாடிக்கும் படம் மாறும்
-        setInterval(runImageTransitions, 4500);
+        setInterval(runImageTransitions, 4000);
 
-        // --- 3. பக்கத்தின் நிலையை கண்டறிந்து செயல்படும் பொறிமுறை (ScrollSpy Engine) ---
-        const sections = document.querySelectorAll('section');
-        const sideLabel = document.getElementById('vertical-label');
+        // --- 3. Testimonials Slider Functional ---
+        const track = document.getElementById('testimonial-track');
+        const nextBtn = document.getElementById('testi-next');
+        const prevBtn = document.getElementById('testi-prev');
+        const cards = document.querySelectorAll('.testimonial-card');
         
-        const sectionNames = {
-            "welcome": "Welcome",
-            "about": "About",
-            "portfolios": "Portfolios",
-            "testimonials": "Testimonials",
-            "contact": "Contact"
-        };
-
-        window.addEventListener('scroll', () => {
-            let currentSectionId = "welcome";
-            const scrollThreshold = window.scrollY + 200;
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                
-                if (scrollThreshold >= sectionTop && scrollThreshold < (sectionTop + sectionHeight)) {
-                    currentSectionId = section.getAttribute('id');
-                }
-            });
-
-            // இடது பக்கத்தில் உள்ள செங்குத்து உரையை மாற்றியமைக்கும் (Dynamic Rotating Side Text)
-            if (sideLabel && sectionNames[currentSectionId]) {
-                sideLabel.textContent = sectionNames[currentSectionId];
+        let currentIndex = 0;
+        
+        function updateSlider() {
+            let step = 50; 
+            let maxIndex = cards.length - 2; 
+            
+            if (window.innerWidth <= 992) {
+                step = 100; 
+                maxIndex = cards.length - 1; 
             }
+            
+            if (currentIndex > maxIndex) currentIndex = maxIndex;
+            if (currentIndex < 0) currentIndex = 0;
+            
+            track.style.transform = `translateX(-${currentIndex * step}%)`;
+        }
 
-            // தற்போதைய பக்கத்திற்கு ஏற்ப வலது பக்க புள்ளிகளை மாற்றும் (Active Dot Highlight)
-            dots.forEach(dot => {
-                if (dot.getAttribute('href') === `#${currentSectionId}`) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-
-            // தற்போதைய பக்கத்திற்கு ஏற்ப மெனு வார்த்தைகளை ஹைலைட் செய்யும் (Active Link Highlight)
-            navItems.forEach(item => {
-                if (item.getAttribute('href') === `#${currentSectionId}`) {
-                    item.classList.add('active-link');
-                } else {
-                    item.classList.remove('active-link');
-                }
-            });
-
-            // முதல் பகுதியில் இருக்கும்போது கருப்பு பின்னணிக்கும், மற்ற பகுதிகளுக்கு வெள்ளை பின்னணிக்கும் லோகோ மற்றும் மெனுவின் நிறத்தை மாற்றும் (Smart Header Color Adaption)
-            if (currentSectionId === 'welcome') {
-                mainHeader.classList.remove('light-nav', 'opaque-bg');
+        nextBtn.addEventListener('click', () => {
+            let maxIndex = window.innerWidth <= 992 ? cards.length - 1 : cards.length - 2;
+            if (currentIndex < maxIndex) {
+                currentIndex++;
             } else {
-                mainHeader.classList.add('light-nav', 'opaque-bg');
+                currentIndex = 0; 
             }
+            updateSlider();
         });
+
+        prevBtn.addEventListener('click', () => {
+            let maxIndex = window.innerWidth <= 992 ? cards.length - 1 : cards.length - 2;
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = maxIndex; 
+            }
+            updateSlider();
+        });
+
+        window.addEventListener('resize', updateSlider);
     </script>
 </body>
 </html>
