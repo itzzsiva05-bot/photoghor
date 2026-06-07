@@ -1,743 +1,674 @@
-
+{% extends 'photoshop/base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}{{ photo.title }} | Photoghor{% endblock %}
 
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block desktop_nav_extra %}
+    <li><a href="{% url 'photo_detail' photo.id %}" class="active">Photo Detail</a></li>
+{% endblock %}
 
-<title>{{ photo.title }} | Photoghor</title>
+{% block mobile_nav_extra %}
+    <a href="{% url 'photo_detail' photo.id %}" class="active">
+        <i class="fa-solid fa-circle-info"></i> Photo Detail
+    </a>
+{% endblock %}
 
+{% block extra_head %}
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+/* =========================
+   DETAIL PAGE — HIDE THEME BTN
+========================= */
+.theme-toggle-btn{ display:none !important; }
 
+/* =========================
+   DETAIL PAGE VARIABLES
+========================= */
 :root{
-    --black:#111;
-    --white:#fff;
-    --border:#e5e5e5;
-    --grey:#777;
+    --border:    #e5e5e5;
+    --grey:      #777;
+    --menu-bg:   #ffffff;
+    --menu-text: #333333;
+}
+[data-theme="dark"]{
+    --border:    #333333;
+    --grey:      #aaaaaa;
+    --menu-bg:   #1a1a1a;
+    --menu-text: #eeeeee;
 }
 
-body{
-    font-family:'Barlow',sans-serif;
-    background:#fff;
-    color:#333;
-    overflow-x:hidden;
+/* =========================
+   TOP RIGHT MENU BUTTON  (3-line ☰ style)
+========================= */
+.options-menu-container {
+    position: fixed;
+    top: 20px;
+    right: 25px;
+    z-index: 9999;
 }
 
-/* ================= NAVBAR ================= */
-
-nav{
-    width:100%;
-    height:70px;
-    background:#111;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between; /* லோகோ மற்றும் மெனு பகுதியை இரு முனைகளுக்கும் தள்ளும் */
-
-    padding:0 50px;
-
-    position:sticky;
-    top:0;
-    z-index:999;
-}
-
-.logo{
-    color:#fff;
-    text-decoration:none;
-
-    font-size:28px;
-    font-weight:700;
-
-    letter-spacing:2px;
-    text-transform:uppercase;
-
-    font-family:'Barlow Condensed',sans-serif;
-}
-
-/* புதிய மெனு கண்டெய்னர் - இது ஆப்ஷன்களையும் பட்டனையும் ஒன்றாக சேர்க்கும் */
-.menu-container {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* ஆப்ஷன்களுக்கும் பட்டனுக்கும் இடையே உள்ள சிறிய இடைவெளி */
-}
-
-/* NAVIGATION LINKS STYLING */
-.nav-links {
-    list-style: none;
-    display: none; /* ஆரம்பத்தில் மறைந்திருக்கும் */
-    gap: 15px; /* ஒவ்வொரு ஆப்ஷனுக்கும் இடையே உள்ள இடைவெளி */
-    align-items: center;
-}
-
-.nav-links.show {
-    display: flex; 
-}
-
-.nav-links a {
-    color: #999;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 14px;
-    letter-spacing: 1px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    font-family: 'Barlow Condensed', sans-serif;
-    white-space: nowrap; /* டெக்ஸ்ட் அடுத்த வரிக்கு உடையாமல் தடுக்க */
-}
-
-.nav-links a.active, .nav-links a:hover {
-    color: #fff;
-    background-color: #222;
-}
-
-/* GOLDEN MENU BUTTON STYLING */
+/* The pill-shaped MENU button matching navbar style */
 .menu-btn {
-    background: transparent;
-    border: 2px solid #444;
-    color: #cca353; 
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 13px;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Barlow Condensed', sans-serif;
-    transition: border-color 0.3s ease;
+    display:         flex;
+    align-items:     center;
+    gap:             10px;
+    padding:         10px 20px;
+    background:      transparent;
+    border:          1.5px solid rgba(255,255,255,0.55);
+    border-radius:   50px;
+    color:           #fff;
+    cursor:          pointer;
+    font-family:     'Barlow Condensed', sans-serif;
+    font-size:       14px;
+    font-weight:     600;
+    letter-spacing:  1.5px;
+    text-transform:  uppercase;
+    transition:      background 0.25s, border-color 0.25s;
+    user-select:     none;
+}
+.menu-btn:hover {
+    background:    rgba(255,255,255,0.12);
+    border-color:  rgba(255,255,255,0.9);
 }
 
-.menu-btn:focus {
-    outline: none;
-    border-color: #666;
+/* Hamburger / X icon inside button */
+.menu-btn .ham-icon {
+    display:        flex;
+    flex-direction: column;
+    gap:            4px;
+    width:          18px;
+}
+.menu-btn .ham-icon span {
+    display:          block;
+    height:           2px;
+    background:       #fff;
+    border-radius:    2px;
+    transition:       transform 0.35s cubic-bezier(.77,0,.18,1),
+                      opacity   0.25s;
+    transform-origin: center;
 }
 
-/* ================= HERO ================= */
+/* Animate to X when open */
+.menu-btn.open .ham-icon span:nth-child(1){
+    transform: translateY(6px) rotate(45deg);
+}
+.menu-btn.open .ham-icon span:nth-child(2){
+    opacity: 0;
+    transform: scaleX(0);
+}
+.menu-btn.open .ham-icon span:nth-child(3){
+    transform: translateY(-6px) rotate(-45deg);
+}
 
+/* =========================
+   FULL-SCREEN OVERLAY MENU
+========================= */
+.nav-overlay {
+    position:   fixed;
+    inset:      0;
+    z-index:    9000;
+    display:    flex;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* Dark backdrop */
+.nav-overlay-backdrop {
+    position:   absolute;
+    inset:      0;
+    background: rgba(0,0,0,0.65);
+    opacity:    0;
+    transition: opacity 0.4s ease;
+    backdrop-filter: blur(4px);
+}
+
+/* Slide-in panel from right */
+.nav-overlay-panel {
+    position:        relative;
+    margin-left:     auto;
+    width:           min(380px, 88vw);
+    height:          100%;
+    background:      #111;
+    display:         flex;
+    flex-direction:  column;
+    padding:         0;
+    transform:       translateX(100%);
+    transition:      transform 0.45s cubic-bezier(.77,0,.18,1);
+    overflow:        hidden;
+}
+
+/* Open state */
+.nav-overlay.open {
+    pointer-events: all;
+    visibility:     visible;
+}
+.nav-overlay.open .nav-overlay-backdrop {
+    opacity: 1;
+}
+.nav-overlay.open .nav-overlay-panel {
+    transform: translateX(0);
+}
+
+/* Panel header */
+.panel-header {
+    padding:        38px 36px 28px;
+    border-bottom:  1px solid rgba(255,255,255,0.08);
+    display:        flex;
+    align-items:    center;
+    justify-content: space-between;
+}
+.panel-logo {
+    font-family:    'Barlow Condensed', sans-serif;
+    font-size:      22px;
+    font-weight:    700;
+    color:          #fff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.panel-close {
+    width:        36px;
+    height:       36px;
+    border:       1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    background:   transparent;
+    color:        #fff;
+    display:      flex;
+    align-items:  center;
+    justify-content: center;
+    cursor:       pointer;
+    font-size:    14px;
+    transition:   background 0.2s, border-color 0.2s;
+}
+.panel-close:hover {
+    background:   rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.5);
+}
+
+/* Nav links */
+.panel-nav {
+    flex: 1;
+    padding: 18px 0;
+    overflow-y: auto;
+}
+.panel-nav a {
+    display:         flex;
+    align-items:     center;
+    gap:             18px;
+    padding:         17px 36px;
+    color:           rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-family:     'Barlow Condensed', sans-serif;
+    font-size:       17px;
+    font-weight:     500;
+    letter-spacing:  1px;
+    text-transform:  uppercase;
+    border-bottom:   1px solid rgba(255,255,255,0.05);
+    transition:      color 0.2s, background 0.2s, padding-left 0.25s;
+    position:        relative;
+}
+.panel-nav a:last-child { border-bottom: none; }
+
+.panel-nav a i {
+    width:      22px;
+    text-align: center;
+    font-size:  15px;
+    color:      rgba(255,255,255,0.35);
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+/* Left accent bar on hover */
+.panel-nav a::before {
+    content:    '';
+    position:   absolute;
+    left:       0;
+    top:        20%;
+    height:     60%;
+    width:      3px;
+    background: #fff;
+    border-radius: 0 3px 3px 0;
+    transform:  scaleY(0);
+    transition: transform 0.25s cubic-bezier(.77,0,.18,1);
+}
+.panel-nav a:hover {
+    color:        #fff;
+    background:   rgba(255,255,255,0.05);
+    padding-left: 44px;
+}
+.panel-nav a:hover::before { transform: scaleY(1); }
+.panel-nav a:hover i       { color: rgba(255,255,255,0.7); }
+
+/* Danger style for Report */
+.panel-nav a.danger       { color: rgba(255,80,80,0.75); }
+.panel-nav a.danger i     { color: rgba(255,80,80,0.4);  }
+.panel-nav a.danger:hover { color: #ff5050; background: rgba(255,80,80,0.07); }
+.panel-nav a.danger::before { background: #ff5050; }
+
+/* Panel footer */
+.panel-footer {
+    padding:     24px 36px;
+    border-top:  1px solid rgba(255,255,255,0.08);
+    display:     flex;
+    gap:         16px;
+    flex-wrap:   wrap;
+}
+.panel-footer a {
+    color:           rgba(255,255,255,0.4);
+    text-decoration: none;
+    font-family:     'Barlow', sans-serif;
+    font-size:       13px;
+    transition:      color 0.2s;
+}
+.panel-footer a:hover { color: #fff; }
+
+/* Stagger animation for links */
+.panel-nav a {
+    opacity:   0;
+    transform: translateX(24px);
+    transition:
+        opacity   0.35s ease,
+        transform 0.35s ease,
+        color     0.2s,
+        background 0.2s,
+        padding-left 0.25s;
+}
+.nav-overlay.open .panel-nav a {
+    opacity:   1;
+    transform: translateX(0);
+}
+.nav-overlay.open .panel-nav a:nth-child(1) { transition-delay: 0.10s; }
+.nav-overlay.open .panel-nav a:nth-child(2) { transition-delay: 0.15s; }
+.nav-overlay.open .panel-nav a:nth-child(3) { transition-delay: 0.20s; }
+.nav-overlay.open .panel-nav a:nth-child(4) { transition-delay: 0.25s; }
+.nav-overlay.open .panel-nav a:nth-child(5) { transition-delay: 0.30s; }
+.nav-overlay.open .panel-nav a:nth-child(6) { transition-delay: 0.35s; }
+
+/* =========================
+   HERO
+========================= */
 .hero{
-    height:260px;
-
+    height:      260px;
     background:
-    linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
-    url("{% static 'images/1920.jpg' %}");
-
-    background-size:cover;
-    background-position:center;
-
-    display:flex;
-    align-items:center;
-
-    padding:0 60px;
+        linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
+        url("{% static 'images/1920.jpg' %}") center/cover;
+    display:     flex;
+    align-items: center;
+    padding:     0 60px;
 }
-
 .hero-content{
-    width:100%;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+    width:           100%;
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
 }
-
 .hero-title{
-    color:#fff;
-
-    font-size:52px;
-    font-weight:700;
-
-    text-transform:uppercase;
-    letter-spacing:3px;
-
-    font-family:'Barlow Condensed',sans-serif;
+    color:          #fff;
+    font-size:      52px;
+    font-weight:    700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-family:    'Barlow Condensed', sans-serif;
 }
-
 .breadcrumb{
-    display:flex;
-    align-items:center;
-    gap:10px;
-
-    color:#fff;
-
-    font-size:14px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-
-    font-family:'Barlow Condensed',sans-serif;
+    display:        flex;
+    align-items:    center;
+    gap:            10px;
+    color:          #fff;
+    font-size:      14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family:    'Barlow Condensed', sans-serif;
 }
+.breadcrumb a{ color:#fff; text-decoration:none; }
 
-.breadcrumb a{
-    color:#fff;
-    text-decoration:none;
-}
-
-/* ================= IMAGE ================= */
-
-.photo-wrap{
-    padding:60px;
-}
-
+/* =========================
+   PHOTO IMAGE
+========================= */
+.photo-wrap{ padding: 60px; }
 .photo-wrap img{
-    width:100%;
-    height:600px;
-    object-fit:cover;
-    display:block;
-    border-radius:10px;
+    width:         100%;
+    height:        600px;
+    object-fit:    cover;
+    display:       block;
+    border-radius: 10px;
 }
 
-/* ================= INFO SECTION ================= */
-
+/* =========================
+   INFO SECTION
+========================= */
 .info-section{
-    padding:0 60px 80px;
-
-    display:grid;
-    grid-template-columns:300px 1fr;
-    gap:60px;
+    padding:               0 60px 80px;
+    display:               grid;
+    grid-template-columns: 300px 1fr;
+    gap:                   60px;
 }
 
-/* ================= SIDEBAR ================= */
-
+/* =========================
+   SIDEBAR
+========================= */
 .sidebar{
-    border:1px solid var(--border);
-    border-radius:10px;
-    overflow:hidden;
+    border:        1px solid var(--border);
+    border-radius: 10px;
+    overflow:      hidden;
 }
-
 .sidebar-row{
-    display:flex;
-    gap:15px;
-
-    padding:22px;
-
-    border-bottom:1px solid var(--border);
+    display:       flex;
+    gap:           15px;
+    padding:       22px;
+    border-bottom: 1px solid var(--border);
 }
-
-.sidebar-row:last-child{
-    border-bottom:none;
-}
-
-.sidebar-row i{
-    color:#888;
-    margin-top:5px;
-}
-
+.sidebar-row:last-child{ border-bottom: none; }
+.sidebar-row i{ color:#888; margin-top:5px; }
 .sidebar-label{
-    font-size:14px;
-    font-weight:600;
-
-    text-transform:uppercase;
-    letter-spacing:1px;
-
-    color:#666;
-
-    font-family:'Barlow Condensed',sans-serif;
+    font-size:      14px;
+    font-weight:    600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color:          #666;
+    font-family:    'Barlow Condensed', sans-serif;
 }
+.sidebar-value{ margin-top:5px; }
 
-.sidebar-value{
-    margin-top:5px;
-}
-
-/* ================= CONTENT ================= */
-
+/* =========================
+   PHOTO INFO
+========================= */
 .photo-info h2{
-    font-size:42px;
-
-    text-transform:uppercase;
-    letter-spacing:2px;
-
-    margin-bottom:25px;
-    padding-bottom:15px;
-
-    border-bottom:1px solid var(--border);
-
-    font-family:'Barlow Condensed',sans-serif;
+    font-size:      42px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom:  25px;
+    padding-bottom: 15px;
+    border-bottom:  1px solid var(--border);
+    font-family:    'Barlow Condensed', sans-serif;
 }
-
 .photo-name{
-    font-size:24px;
-    font-weight:600;
-
-    margin-bottom:20px;
-
-    text-transform:uppercase;
-
-    font-family:'Barlow Condensed',sans-serif;
+    font-size:      24px;
+    font-weight:    600;
+    margin-bottom:  20px;
+    text-transform: uppercase;
+    font-family:    'Barlow Condensed', sans-serif;
 }
 
-.photo-info p{
-    color:#555;
-    line-height:1.9;
-}
-
-/* ================= SHARE ================= */
-
+/* =========================
+   SHARE
+========================= */
 .share-row{
-    margin-top:35px;
-    padding-top:30px;
-
-    border-top:1px solid var(--border);
-
-    display:flex;
-    align-items:center;
-    gap:20px;
-    flex-wrap:wrap;
+    margin-top:  35px;
+    padding-top: 30px;
+    border-top:  1px solid var(--border);
+    display:     flex;
+    align-items: center;
+    gap:         20px;
+    flex-wrap:   wrap;
 }
-
 .share-label{
-    font-size:16px;
-    font-weight:600;
-
-    text-transform:uppercase;
-    letter-spacing:1px;
-
-    font-family:'Barlow Condensed',sans-serif;
+    font-size:      16px;
+    font-weight:    600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family:    'Barlow Condensed', sans-serif;
 }
-
 .share-icons{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    flex-wrap:wrap;
+    display:     flex;
+    align-items: center;
+    gap:         14px;
+    flex-wrap:   wrap;
 }
-
 .share-icons a{
-    width:42px;
-    height:42px;
-
-    border:1px solid var(--border);
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:#555;
-    text-decoration:none;
-
-    transition:.3s;
+    width:           42px;
+    height:          42px;
+    border:          1px solid var(--border);
+    border-radius:   50%;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    color:           #555;
+    text-decoration: none;
+    transition:      .3s;
 }
-
 .share-icons a:hover{
-    background:#111;
-    color:#fff;
-    border-color:#111;
+    background:   #111;
+    color:        #fff;
+    border-color: #111;
 }
 
-/* ================= FOOTER ================= */
-
-footer{
-    background:#111;
-
-    padding:35px 60px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    flex-wrap:wrap;
-    gap:20px;
+/* =========================
+   FOOTER
+========================= */
+.detail-footer{
+    background:      #111;
+    padding:         35px 60px;
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    flex-wrap:       wrap;
+    gap:             20px;
 }
+.footer-links{ display:flex; gap:20px; flex-wrap:wrap; }
+.footer-links a{ color:#aaa; text-decoration:none; }
+.footer-links a:hover{ color:#fff; }
+.footer-copy{ color:#888; font-size:14px; }
+.footer-copy strong{ color:#fff; }
 
-.footer-links{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-}
-
-.footer-links a{
-    color:#aaa;
-    text-decoration:none;
-}
-
-.footer-links a:hover{
-    color:#fff;
-}
-
-.footer-copy{
-    color:#888;
-    font-size:14px;
-}
-
-.footer-copy strong{
-    color:#fff;
-}
-
-/* ================= MOBILE & RESPONSIVE ================= */
-
+/* =========================
+   RESPONSIVE
+========================= */
 @media(max-width:900px){
-
-    nav{
-        padding:0 25px;
-    }
-
-    /* மொபைல் திரையில் ஆப்ஷன்கள் வழக்கம் போல் முழு அகலத்திற்கு வர */
-    .nav-links.show {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background: #111;
-        padding: 20px;
-        border-bottom: 1px solid #222;
-        gap: 15px;
-        align-items: flex-start;
-    }
-
-    .hero{
-        height:220px;
-        padding:0 25px;
-    }
-
-    .hero-content{
-        flex-direction:column;
-        align-items:flex-start;
-        justify-content:center;
-        gap:10px;
-    }
-
-    .hero-title{
-        font-size:38px;
-    }
-
-    .photo-wrap{
-        padding:30px 25px;
-    }
-
-    .photo-wrap img{
-        height:420px;
-    }
-
-    .info-section{
-        grid-template-columns:1fr;
-        padding:0 25px 60px;
-        gap:35px;
-    }
-
-    footer{
-        padding:30px 25px;
-    }
+    .hero{ height:220px; padding:0 25px; }
+    .hero-content{ flex-direction:column; align-items:flex-start; justify-content:center; gap:10px; }
+    .hero-title{ font-size:38px; }
+    .photo-wrap{ padding:30px 25px; }
+    .photo-wrap img{ height:420px; }
+    .info-section{ grid-template-columns:1fr; padding:0 25px 60px; gap:35px; }
+    .detail-footer{ padding:30px 25px; }
 }
-
 @media(max-width:600px){
-
-    nav{
-        height:65px;
-        padding:0 15px;
-    }
-
-    .nav-links.show {
-        top: 65px;
-    }
-
-    .logo{
-        font-size:22px;
-    }
-
-    .hero{
-        height:180px;
-        padding:0 15px;
-    }
-
-    .hero-title{
-        font-size:28px;
-    }
-
-    .breadcrumb{
-        display:none;
-    }
-
-    .photo-wrap{
-        padding:20px 15px;
-    }
-
-    .photo-wrap img{
-        height:250px;
-    }
-
-    .info-section{
-        padding:0 15px 50px;
-    }
-
-    .sidebar-row{
-        padding:18px 15px;
-    }
-
-    .photo-info h2{
-        font-size:28px;
-    }
-
-    .photo-name{
-        font-size:18px;
-    }
-
-    .photo-info p{
-        font-size:15px;
-    }
-
-    .share-icons a{
-        width:38px;
-        height:38px;
-        font-size:14px;
-    }
-
-    footer{
-        padding:25px 15px;
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
+    .options-menu-container{ top:12px; right:15px; }
+    .menu-btn{ padding:8px 14px; font-size:12px; }
+    .hero{ height:180px; padding:0 15px; }
+    .hero-title{ font-size:28px; }
+    .breadcrumb{ display:none; }
+    .photo-wrap{ padding:20px 15px; }
+    .photo-wrap img{ height:250px; }
+    .info-section{ padding:0 15px 50px; }
+    .sidebar-row{ padding:18px 15px; }
+    .photo-info h2{ font-size:28px; }
+    .photo-name{ font-size:18px; }
+    .photo-info p{ font-size:15px; }
+    .share-icons a{ width:38px; height:38px; font-size:14px; }
+    .detail-footer{ padding:25px 15px; flex-direction:column; align-items:flex-start; }
 }
-
 </style>
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
 
-<nav>
-
-    <a href="{% url 'home' %}" class="logo">
-        Photoghor
-    </a>
-
-    <div class="menu-container">
-        
-        <ul class="nav-links" id="navLinks">
-            <li><a href="{% url 'profile' %}">HOME</a></li>
-            <li><a href="{% url 'home'%}" class="active">PHOTO GALLERY</a></li>
-        </ul>
-
-        <button class="menu-btn" id="menuBtn">
-            <span id="menuIcon"><i class="fas fa-bars"></i></span>
-            <span>MENU</span>
-        </button>
-
-    </div>
-
-</nav>
-
-<section class="hero">
-
-    <div class="hero-content">
-
-        <h1 class="hero-title">
-            Photo Details
-        </h1>
-
-        <div class="breadcrumb">
-
-            <a href="{% url 'home' %}">
-                Home
-            </a>
-
-            <span>/</span>
-
-            <a href="#">
-                Photo Gallery
-            </a>
-
+<!-- ══════════════════════════════
+     MENU BUTTON (top-right fixed)
+══════════════════════════════ -->
+<div class="options-menu-container">
+    <button class="menu-btn" id="menuBtn" onclick="openMenu()" aria-label="Open menu" aria-expanded="false">
+        <div class="ham-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-
-    </div>
-
-</section>
-
-<div class="photo-wrap">
-
-    <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
-
+        <span class="btn-label">Menu</span>
+    </button>
 </div>
 
+<!-- ══════════════════════════════
+     FULL-SCREEN SLIDE OVERLAY
+══════════════════════════════ -->
+<div class="nav-overlay" id="navOverlay" role="dialog" aria-modal="true" aria-label="Navigation menu">
+
+    <!-- Backdrop — click to close -->
+    <div class="nav-overlay-backdrop" id="navBackdrop" onclick="closeMenu()"></div>
+
+    <!-- Slide panel -->
+    <div class="nav-overlay-panel">
+
+        <!-- Header -->
+        <div class="panel-header">
+            <span class="panel-logo">Photoghor</span>
+            <button class="panel-close" onclick="closeMenu()" aria-label="Close menu">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Navigation links -->
+        <nav class="panel-nav" id="panelNav">
+            <a href="{% url 'home' %}">
+                <i class="fa-solid fa-house"></i> Home
+            </a>
+            <a href="{% url 'home' %}">
+                <i class="fa-solid fa-images"></i> Photo Gallery
+            </a>
+            <a href="{{ photo.image.url }}" download>
+                <i class="fa-solid fa-download"></i> Download Image
+            </a>
+            <a href="javascript:void(0);" onclick="copyLink(); closeMenu();">
+                <i class="fa-solid fa-link"></i> Copy Link
+            </a>
+            <a href="javascript:void(0);" onclick="window.print(); closeMenu();">
+                <i class="fa-solid fa-print"></i> Print Page
+            </a>
+            <a href="#" class="danger">
+                <i class="fa-solid fa-circle-exclamation"></i> Report
+            </a>
+        </nav>
+
+        <!-- Footer -->
+        <div class="panel-footer">
+            <a href="https://www.facebook.com/"  target="_blank">Facebook</a>
+            <a href="https://twitter.com/"       target="_blank">Twitter</a>
+            <a href="https://www.instagram.com/" target="_blank">Instagram</a>
+            <a href="https://www.linkedin.com/"  target="_blank">LinkedIn</a>
+        </div>
+
+    </div><!-- /.nav-overlay-panel -->
+</div><!-- /.nav-overlay -->
+
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Photo Details</h1>
+        <nav class="breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span>/</span>
+            <a href="{% url 'home' %}">Photo Gallery</a>
+            <span>/</span>
+            <span>{{ photo.title }}</span>
+        </nav>
+    </div>
+</section>
+
+<!-- ── PHOTO IMAGE ── -->
+<div class="photo-wrap">
+    <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+</div>
+
+<!-- ── INFO SECTION ── -->
 <div class="info-section">
-
     <aside class="sidebar">
-
         <div class="sidebar-row">
-
             <i class="fas fa-user"></i>
-
             <div>
-
-                <div class="sidebar-label">
-                    Created By
-                </div>
-
-                <div class="sidebar-value">
-                    {{ photo.author|default:"Akcent Chester" }}
-                </div>
-
+                <div class="sidebar-label">Created By</div>
+                <div class="sidebar-value">{{ photo.author|default:"Akcent Chester" }}</div>
             </div>
-
         </div>
-
         <div class="sidebar-row">
-
             <i class="fas fa-calendar"></i>
-
             <div>
-
-                <div class="sidebar-label">
-                    Completed On
-                </div>
-
-                <div class="sidebar-value">
-                    {{ photo.date|date:"d M Y"|default:"20 Jan 2023" }}
-                </div>
-
+                <div class="sidebar-label">Completed On</div>
+                <div class="sidebar-value">{{ photo.date|date:"d M Y"|default:"20 Jan 2023" }}</div>
             </div>
-
         </div>
-
         <div class="sidebar-row">
-
             <i class="fas fa-code"></i>
-
             <div>
-
-                <div class="sidebar-label">
-                    Skills
-                </div>
-
-                <div class="sidebar-value">
-                    HTML5 / CSS3 / Django
-                </div>
-
+                <div class="sidebar-label">Skills</div>
+                <div class="sidebar-value">HTML5 / CSS3 / Django</div>
             </div>
-
         </div>
-
     </aside>
 
     <article class="photo-info">
-
-        <h2>
-            Photo Info
-        </h2>
-
-        <p class="photo-name">
-            {{ photo.title }}
-        </p>
-
-        <p>
-            {{ photo.description }}
-        </p>
+        <h2>Photo Info</h2>
+        <p class="photo-name">{{ photo.title }}</p>
+        <p>{{ photo.description }}</p>
 
         <div class="share-row">
-
-            <span class="share-label">
-                Share :
-            </span>
-
+            <span class="share-label">Share :</span>
             <div class="share-icons">
-
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
-                   target="_blank">
-
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" title="Facebook">
                     <i class="fab fa-facebook-f"></i>
-
                 </a>
-
-                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ photo.title }}"
-                   target="_blank">
-
+                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ photo.title }}" target="_blank" title="Twitter">
                     <i class="fab fa-twitter"></i>
-
                 </a>
-
-                <a href="https://web.whatsapp.com/send?text={{ request.build_absolute_uri }}"
-                   target="_blank">
-
+                <a href="https://web.whatsapp.com/send?text={{ request.build_absolute_uri }}" target="_blank" title="WhatsApp">
                     <i class="fab fa-whatsapp"></i>
-
                 </a>
-
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}"
-                   target="_blank">
-
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" title="LinkedIn">
                     <i class="fab fa-linkedin-in"></i>
-
                 </a>
-
-                <a href="javascript:void(0);" onclick="copyLink()">
-
+                <a href="javascript:void(0);" onclick="copyLink()" title="Copy Link">
                     <i class="fas fa-link"></i>
-
                 </a>
-
             </div>
-
         </div>
-
     </article>
-
 </div>
 
-<footer>
-
+<!-- ── PAGE FOOTER ── -->
+<footer class="detail-footer">
     <div class="footer-links">
-
-        <a href="https://www.facebook.com/" target="_blank">
-            Facebook
-        </a>
-
-        <a href="https://twitter.com/" target="_blank">
-            Twitter
-        </a>
-
-        <a href="https://www.instagram.com/" target="_blank">
-            Instagram
-        </a>
-
-        <a href="https://www.linkedin.com/" target="_blank">
-            Linkedin
-        </a>
-
+        <a href="https://www.facebook.com/"  target="_blank">Facebook</a>
+        <a href="https://twitter.com/"       target="_blank">Twitter</a>
+        <a href="https://www.instagram.com/" target="_blank">Instagram</a>
+        <a href="https://www.linkedin.com/"  target="_blank">LinkedIn</a>
     </div>
-
     <p class="footer-copy">
-        Copyright © <strong>Photoghor</strong> 2026. All Rights Reserved.
+        Copyright &copy; <strong>Photoghor</strong> 2026. All Rights Reserved.
     </p>
-
 </footer>
 
-<script>
+{% endblock %}
 
-// COPY LINK LOGIC
-function copyLink(){
-    navigator.clipboard.writeText(window.location.href);
-    alert("Link Copied!");
+{% block extra_js %}
+<script>
+const overlay  = document.getElementById('navOverlay');
+const menuBtn  = document.getElementById('menuBtn');
+
+function openMenu() {
+    overlay.classList.add('open');
+    menuBtn.classList.add('open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';   // prevent background scroll
 }
 
-// NAVBAR TOGGLE LOGIC
-const menuBtn = document.getElementById('menuBtn');
-const navLinks = document.getElementById('navLinks');
-const menuIcon = document.getElementById('menuIcon');
+function closeMenu() {
+    overlay.classList.remove('open');
+    menuBtn.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+}
 
-menuBtn.addEventListener('click', () => {
-    navLinks.classList.toggle('show');
-    
-    if (navLinks.classList.contains('show')) {
-        menuIcon.innerHTML = '<i class="fas fa-xmark"></i>';
-    } else {
-        menuIcon.innerHTML = '<i class="fas fa-bars"></i>';
-    }
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeMenu();
 });
 
+// Copy current URL to clipboard
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(function() {
+        alert('Link copied to clipboard!');
+    });
+}
 </script>
-
-</body>
-</html>
+{% endblock %}

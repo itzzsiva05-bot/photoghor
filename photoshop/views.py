@@ -164,9 +164,13 @@ def contact(request):
 
     return render(request, 'photoshop/contact.html')
 
+# views.py top-la import mari:
+from .models import Category, Contact, Gallery as GalleryModel, Photo, PhotoLike
+
+# Bottom function-a fix:
 @login_required
-def Gallery(request):
-    photos = Gallery.objects.all()
+def gallery_view(request):          # rename the function
+    photos = GalleryModel.objects.all()
     return render(request, "photoshop/gallery.html", {
         "photos": photos
     })

@@ -1,30 +1,23 @@
-{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photoghor - Photography Portfolio Template</title>
+    <title>Photoghor - Photography Portfolio</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* -------------------------------------
-           00. GLOBAL RESET & BASE STYLES
-        ------------------------------------- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
         }
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
         body {
             background-color: #ffffff;
             color: #333333;
@@ -32,9 +25,7 @@
             position: relative;
         }
 
-        /* -------------------------------------
-           01. STICKY UI INDICATORS (Left & Right)
-        ------------------------------------- */
+        /* SIDE LABEL */
         .side-label {
             position: fixed;
             left: 30px;
@@ -59,6 +50,7 @@
             margin-right: 10px;
         }
 
+        /* RIGHT DOTS */
         .right-dots {
             position: fixed;
             right: 30px;
@@ -82,9 +74,7 @@
             box-shadow: 0 0 5px rgba(191, 163, 122, 0.5);
         }
 
-        /* -------------------------------------
-           02. NAVIGATION HEADER & SLIDE-IN MENU
-        ------------------------------------- */
+        /* HEADER */
         header {
             position: fixed;
             top: 0;
@@ -111,11 +101,8 @@
             transition: color 0.4s ease;
             z-index: 160;
         }
+        header.overlay-open .logo { color: #ffffff !important; }
 
-        header.overlay-open .logo {
-            color: #ffffff !important;
-        }
-        
         .nav-links {
             display: flex;
             gap: 40px;
@@ -128,13 +115,11 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 150;
         }
-
         header.overlay-open .nav-links {
             opacity: 1;
             transform: translateX(0);
             visibility: visible;
         }
-
         .nav-item {
             font-size: 13px;
             font-weight: 600;
@@ -144,20 +129,13 @@
             letter-spacing: 2px;
             transition: color 0.3s ease;
         }
-        .nav-item:hover, .nav-item.active-link {
-            color: #bfa37a;
-        }
+        .nav-item:hover, .nav-item.active-link { color: #bfa37a; }
 
-        header.light-nav:not(.overlay-open) .logo {
-            color: #000000;
-        }
-        header.light-nav .nav-item {
-            color: #333333;
-        }
-        header.light-nav .nav-item:hover, header.light-nav .nav-item.active-link {
-            color: #bfa37a;
-        }
-        
+        header.light-nav:not(.overlay-open) .logo { color: #000000; }
+        header.light-nav .nav-item { color: #333333; }
+        header.light-nav .nav-item:hover,
+        header.light-nav .nav-item.active-link { color: #bfa37a; }
+
         .menu-toggle {
             cursor: pointer;
             display: flex;
@@ -175,25 +153,18 @@
             transition: all 0.3s ease;
             transform-origin: center;
         }
-        header.light-nav:not(.overlay-open) .menu-toggle span {
-            background-color: #000000;
-        }
-        
+        header.light-nav:not(.overlay-open) .menu-toggle span { background-color: #000000; }
         header.overlay-open .menu-toggle span:nth-child(1) {
             transform: translateY(8px) rotate(45deg);
             background-color: #ffffff !important;
         }
-        header.overlay-open .menu-toggle span:nth-child(2) {
-            opacity: 0;
-        }
+        header.overlay-open .menu-toggle span:nth-child(2) { opacity: 0; }
         header.overlay-open .menu-toggle span:nth-child(3) {
             transform: translateY(-8px) rotate(-45deg);
             background-color: #ffffff !important;
         }
 
-        /* -------------------------------------
-           03. SECTION STRUCTURING & BACKGROUNDS
-        ------------------------------------- */
+        /* SECTIONS */
         section {
             padding: 120px 10% 120px 15%;
             min-height: 100vh;
@@ -210,9 +181,7 @@
             margin-bottom: 15px;
         }
 
-        /* -------------------------------------
-           1. HERO WELCOME SECTION WITH FADE SLIDER
-        ------------------------------------- */
+        /* HERO */
         #welcome {
             padding: 0;
             background: #000000;
@@ -220,42 +189,36 @@
         }
         .hero-slider {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 1;
         }
         .slide {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
             opacity: 0;
             transition: opacity 1.2s ease-in-out;
         }
-        .slide.active-slide {
-            opacity: 1;
-        }
+        .slide.active-slide { opacity: 1; }
         .slide::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2));
         }
         .hero-content {
-            position: relative;
+            position: absolute;
+
+            left: 70px;
+            bottom: 70px;
+
             z-index: 5;
-            max-width: 650px;
-            margin-left: 15%;
+            max-width: 750px;
             color: #ffffff;
-            margin-top: 0;
         }
         .hero-content h1 {
             font-size: 56px;
@@ -291,9 +254,7 @@
             text-decoration: none;
             transition: color 0.3s ease;
         }
-        .social-links a:hover {
-            color: #bfa37a;
-        }
+        .social-links a:hover { color: #bfa37a; }
         .hero-counter {
             position: absolute;
             bottom: 60px;
@@ -301,7 +262,7 @@
             font-size: 14px;
             letter-spacing: 2px;
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255,255,255,0.6);
             z-index: 5;
         }
         .hero-counter span.active-num {
@@ -309,21 +270,15 @@
             font-weight: 700;
         }
 
-        /* -------------------------------------
-           2. ABOUT US SECTION
-        ------------------------------------- */
-        #about {
-            background-color: #ffffff;
-        }
+        /* ABOUT */
+        #about { background-color: #ffffff; }
         .about-container {
             display: flex;
             align-items: center;
             gap: 80px;
             width: 100%;
         }
-        .about-text {
-            flex: 1.1;
-        }
+        .about-text { flex: 1.1; }
         .about-text h2 {
             font-size: 42px;
             font-weight: 700;
@@ -336,12 +291,8 @@
             color: #666666;
             line-height: 1.8;
             margin-bottom: 25px;
-            font-weight: 400;
         }
-        .about-img {
-            flex: 0.9;
-            position: relative;
-        }
+        .about-img { flex: 0.9; position: relative; }
         .about-img img {
             width: 100%;
             max-width: 600px;
@@ -350,30 +301,21 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.04);
         }
 
-        /* -------------------------------------
-           3. PORTFOLIOS FEATURE SECTION
-        ------------------------------------- */
-        #portfolios {
-            background-color: #ffffff;
-            padding-bottom: 40px;
-        }
+        /* PORTFOLIOS */
+        #portfolios { background-color: #ffffff; padding-bottom: 40px; }
         .portfolio-grid {
             display: flex;
             align-items: center;
             gap: 80px;
             width: 100%;
         }
-        .portfolio-img {
-            flex: 1.2;
-        }
+        .portfolio-img { flex: 1.2; }
         .portfolio-img img {
             width: 100%;
             display: block;
             box-shadow: 0 15px 50px rgba(0,0,0,0.06);
         }
-        .portfolio-details {
-            flex: 0.8;
-        }
+        .portfolio-details { flex: 0.8; }
         .portfolio-details h2 {
             font-size: 40px;
             font-weight: 700;
@@ -399,7 +341,7 @@
             border-bottom-color: #111111;
         }
 
-        /* 4. GALLERY PREVIEW */
+        /* GALLERY */
         .gallery-preview-section {
             background: #ffffff;
             padding: 20px 10% 100px 15%;
@@ -417,10 +359,7 @@
             color: #222222;
             font-weight: 700;
         }
-        .slider-controls {
-            display: flex;
-            gap: 12px;
-        }
+        .slider-controls { display: flex; gap: 12px; }
         .slider-btn {
             border: 1px solid #e0e0e0;
             background: none;
@@ -461,16 +400,9 @@
             font-weight: 700;
         }
 
-        /* -------------------------------------
-           4. TESTIMONIALS SLIDER SECTION
-        ------------------------------------- */
-        #testimonials {
-            background: #fafafa;
-            overflow: hidden;
-        }
-        .testimonial-container {
-            width: 100%;
-        }
+        /* TESTIMONIALS */
+        #testimonials { background: #fafafa; overflow: hidden; }
+        .testimonial-container { width: 100%; }
         .testimonial-header {
             display: flex;
             justify-content: space-between;
@@ -482,7 +414,6 @@
             font-weight: 700;
             color: #111111;
         }
-        
         .testimonial-slider-wrapper {
             position: relative;
             width: 100%;
@@ -511,7 +442,6 @@
             position: absolute;
             color: #bfa37a;
             font-size: 14px;
-            font-weight: 300;
         }
         .plus-icon-tl { top: 20px; left: 20px; }
         .plus-icon-tr { top: 20px; right: 20px; }
@@ -542,16 +472,10 @@
             font-size: 14px;
             color: #666666;
             line-height: 1.8;
-            font-weight: 400;
         }
 
-        /* -------------------------------------
-           5. CONTACT FORM & INFO SECTION
-        ------------------------------------- */
-        #contact {
-            background-color: #ffffff;
-            border-bottom: 1px solid #eeeeee;
-        }
+        /* CONTACT */
+        #contact { background-color: #ffffff; border-bottom: 1px solid #eeeeee; }
         .contact-container {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
@@ -576,9 +500,7 @@
             gap: 30px;
             margin-bottom: 35px;
         }
-        .form-group-full {
-            margin-bottom: 45px;
-        }
+        .form-group-full { margin-bottom: 45px; }
         .form-control {
             width: 100%;
             border: none;
@@ -589,9 +511,7 @@
             background: transparent;
             transition: border-bottom-color 0.3s ease;
         }
-        .form-control:focus {
-            border-bottom-color: #111111;
-        }
+        .form-control:focus { border-bottom-color: #111111; }
         .submit-btn {
             background-color: #4a4a4a;
             color: #ffffff;
@@ -604,12 +524,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        .submit-btn:hover {
-            background-color: #111111;
-        }
-        .info-block {
-            margin-bottom: 35px;
-        }
+        .submit-btn:hover { background-color: #111111; }
+        .info-block { margin-bottom: 35px; }
         .info-block h4 {
             font-size: 13px;
             font-weight: 700;
@@ -625,9 +541,7 @@
             margin-bottom: 0;
         }
 
-        /* -------------------------------------
-           04. MINIMAL FOOTER STYLING
-        ------------------------------------- */
+        /* FOOTER */
         footer {
             background-color: #0b0b0b;
             color: #ffffff;
@@ -644,21 +558,11 @@
             font-weight: 500;
             transition: color 0.3s ease;
         }
-        .footer-socials a:hover {
-            color: #bfa37a;
-        }
-        .copyright {
-            color: #888888;
-            letter-spacing: 0.5px;
-        }
-        .copyright span {
-            color: #ffffff;
-            font-weight: 600;
-        }
+        .footer-socials a:hover { color: #bfa37a; }
+        .copyright { color: #888888; letter-spacing: 0.5px; }
+        .copyright span { color: #ffffff; font-weight: 600; }
 
-        /* -------------------------------------
-           05. RESPONSIVE MEDIA BREAKPOINTS
-        ------------------------------------- */
+        /* RESPONSIVE */
         @media (max-width: 1200px) {
             header, header.opaque-bg { padding: 25px 40px; }
             .nav-links { gap: 25px; margin-right: 25px; }
@@ -667,49 +571,32 @@
             footer { padding: 40px 5% 40px 10%; }
             .side-label { left: 15px; }
         }
-
         @media (max-width: 992px) {
             .side-label, .right-dots { display: none; }
-
-            .about-container, .portfolio-grid {
-                flex-direction: column;
-                gap: 50px;
-            }
-            .contact-container {
-                grid-template-columns: 1fr;
-                gap: 50px;
-            }
-
+            .about-container, .portfolio-grid { flex-direction: column; gap: 50px; }
+            .contact-container { grid-template-columns: 1fr; gap: 50px; }
             .about-img img { max-width: 100%; }
             .testimonial-card { flex: 0 0 100%; }
             .gallery-row { grid-template-columns: repeat(2, 1fr); }
-
             header.overlay-open .nav-links {
                 position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background-color: rgba(11, 11, 11, 0.98);
+                top: 0; left: 0;
+                width: 100vw; height: 100vh;
+                background-color: rgba(11,11,11,0.98);
                 flex-direction: column;
                 justify-content: center;
                 gap: 30px;
                 margin: 0;
             }
-            header.overlay-open .nav-item {
-                font-size: 20px;
-                color: #ffffff;
-            }
+            header.overlay-open .nav-item { font-size: 20px; color: #ffffff; }
         }
-
         @media (max-width: 576px) {
             header, header.opaque-bg { padding: 20px 25px; }
             section { padding: 90px 20px; }
             .gallery-preview-section { padding: 10px 20px 60px 20px; }
             .hero-content { margin-left: 0; padding: 0 10px; }
             .hero-content h1 { font-size: 38px; }
-            .about-text h2,
-            .portfolio-details h2,
+            .about-text h2, .portfolio-details h2,
             .testimonial-header h2,
             .contact-form-side h2,
             .contact-info-side h2 { font-size: 30px; }
@@ -728,6 +615,7 @@
     <div class="side-label" id="vertical-label">Welcome</div>
 
     <div class="right-dots">
+        
         <a href="#welcome" class="active" title="Welcome"></a>
         <a href="#about" title="About"></a>
         <a href="#portfolios" title="Portfolios"></a>
@@ -737,19 +625,16 @@
 
     <header id="main-header">
         <div class="logo">Photoghor</div>
-        
         <nav class="nav-links">
+            <a href="{% url 'home'%}"  class="nav-item active-link">Home</a>
             <a href="#welcome" class="nav-item active-link">Welcome</a>
             <a href="#about" class="nav-item">About</a>
             <a href="#portfolios" class="nav-item">Portfolios</a>
             <a href="#testimonials" class="nav-item">Testimonials</a>
             <a href="#contact" class="nav-item">Contact</a>
         </nav>
-        
         <div class="menu-toggle" id="menu-trigger">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
     </header>
 
@@ -760,7 +645,6 @@
             <div class="slide" style="background-image: url('https://htmldemo.net/photoghor/photoghor/img/portfolio/portfolio-image-6.jpg')"></div>
             <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1493863641943-9b68992a8d07?auto=format&fit=crop&w=1920&q=80')"></div>
         </div>
-
         <div class="hero-content">
             <h1>Stay With Your<br>Dream & Passion</h1>
             <p>Photography is about capturing souls not smiles</p>
@@ -772,7 +656,6 @@
                 <a href="#"><i class="fab fa-pinterest-p"></i></a>
             </div>
         </div>
-
         <div class="hero-counter">
             <span class="active-num" id="slide-index-counter">01</span> / 02 / 03
         </div>
@@ -788,7 +671,8 @@
                 <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
             </div>
             <div class="about-img">
-                <img src="{%static 'images/a.JPG'%}" alt="Makx Rosi Portrait">
+                <!-- NOTE: Replace this src with your actual image path -->
+                <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&q=80" alt="Makx Rosi Portrait">
             </div>
         </div>
     </section>
@@ -797,7 +681,7 @@
     <section id="portfolios">
         <div class="portfolio-grid">
             <div class="portfolio-img">
-                <img src="https://images.unsplash.com/photo-1516624683217-bf02fc6b6b7c?auto=format&fit=crop&w=1000&q=80" alt="Sleeping Child Portfolio Art">
+                <img src="https://images.unsplash.com/photo-1516624683217-bf02fc6b6b7c?auto=format&fit=crop&w=1000&q=80" alt="Portfolio Art">
             </div>
             <div class="portfolio-details">
                 <div class="subtitle">Photography</div>
@@ -839,17 +723,15 @@
                 <div>
                     <div class="subtitle">Testimonials</div>
                     <h2>What We Found</h2>
-                    <p style="color:#666666; font-size:14px; margin-top:12px;">It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
+                    <p style="color:#666666;font-size:14px;margin-top:12px;">It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
                 </div>
                 <div class="slider-controls">
                     <button class="slider-btn" id="testi-prev"><i class="fas fa-chevron-left"></i></button>
                     <button class="slider-btn" id="testi-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
-            
             <div class="testimonial-slider-wrapper">
                 <div class="testimonial-grid" id="testimonial-track">
-                    <!-- Profile 1 -->
                     <div class="testimonial-card">
                         <div class="testimonial-card-inner">
                             <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
@@ -859,7 +741,6 @@
                             <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
                         </div>
                     </div>
-                    <!-- Profile 2 -->
                     <div class="testimonial-card">
                         <div class="testimonial-card-inner">
                             <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
@@ -869,7 +750,6 @@
                             <p>It is a long established fact that a reader will be has a more-or-less normal distribution of letters, as opposed formally not using.</p>
                         </div>
                     </div>
-                    <!-- Profile 3 -->
                     <div class="testimonial-card">
                         <div class="testimonial-card-inner">
                             <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
@@ -879,7 +759,6 @@
                             <p>Fantastic response time and breathtaking portfolios! Their focus on visual balance and aesthetic storytelling changed our entire campaign style.</p>
                         </div>
                     </div>
-                    <!-- Profile 4 -->
                     <div class="testimonial-card">
                         <div class="testimonial-card-inner">
                             <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
@@ -889,7 +768,6 @@
                             <p>The perspective shifts are mindblowing. Working together on editorial projects gave us unique visual layouts that our clients absolutely loved.</p>
                         </div>
                     </div>
-                    <!-- Profile 5 -->
                     <div class="testimonial-card">
                         <div class="testimonial-card-inner">
                             <span class="plus-icon-tl">+</span><span class="plus-icon-tr">+</span>
@@ -911,7 +789,6 @@
                 <div class="subtitle">Contact</div>
                 <h2>Contact Form</h2>
                 <p>It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
-                
                 <form action="#" onsubmit="event.preventDefault(); alert('Your message has been sent!');">
                     <div class="form-group-row">
                         <input type="text" class="form-control" placeholder="Name*" required>
@@ -921,23 +798,21 @@
                         <input type="text" class="form-control" placeholder="Subject*" required>
                     </div>
                     <div class="form-group-full">
-                        <input type="text" class="form-control" placeholder="Message" style="margin-bottom: 15px;">
+                        <input type="text" class="form-control" placeholder="Message" style="margin-bottom:15px;">
                     </div>
                     <button type="submit" class="submit-btn">Submit</button>
                 </form>
             </div>
-            
             <div class="contact-info-side">
                 <h2>Quick Contact</h2>
                 <p>It is a long established fact that a reader will be distracted by the readable content of a page buildup</p>
-                
                 <div class="info-block">
                     <h4>Phone Number</h4>
-                    <p>+88012659845 / +88012659864</p>
+                    <p>+91 9360406621 / +91 9360840742</p>
                 </div>
                 <div class="info-block">
                     <h4>E-mail Address</h4>
-                    <p>photoghor@gmail.com /<br>servphotogr@gmail.com</p>
+                    <p>chadura@gmail.com /<br>vinothc2005@gmail.com</p>
                 </div>
                 <div class="info-block">
                     <h4>Our Address</h4>
@@ -961,7 +836,7 @@
     </footer>
 
     <script>
-        // --- 1. Menu Interaction ---
+        // 1. Menu Toggle
         const menuTrigger = document.getElementById('menu-trigger');
         const mainHeader = document.getElementById('main-header');
         const navItems = document.querySelectorAll('.nav-item');
@@ -971,82 +846,151 @@
             mainHeader.classList.toggle('overlay-open');
         });
 
-        const bindSmoothScroll = (elements) => {
-            elements.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    mainHeader.classList.remove('overlay-open');
-                    const targetId = link.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    if (targetSection) {
-                        targetSection.scrollIntoView({ behavior: 'smooth' });
-                    }
+       const bindSmoothScroll = (elements) => {
+    elements.forEach(link => {
+        link.addEventListener('click', (e) => {
+
+            const href = link.getAttribute('href');
+
+            if (!href.startsWith('#')) {
+                return;   // Django URL normal-a open aagum
+            }
+
+            e.preventDefault();
+
+            mainHeader.classList.remove('overlay-open');
+
+            const targetSection = document.querySelector(href);
+
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth'
                 });
-            });
-        };
+            }
+        });
+    });
+};
         bindSmoothScroll(navItems);
         bindSmoothScroll(dots);
 
-        // --- 2. Hero Slider ---
+        // 2. Hero Slider
         const welcomeSlides = document.querySelectorAll('.slide');
         const counterContainer = document.getElementById('slide-index-counter');
         let currentSlideIndex = 0;
-        const loopLimit = welcomeSlides.length;
 
         function runImageTransitions() {
             welcomeSlides[currentSlideIndex].classList.remove('active-slide');
-            currentSlideIndex = (currentSlideIndex + 1) % loopLimit;
+            currentSlideIndex = (currentSlideIndex + 1) % welcomeSlides.length;
             welcomeSlides[currentSlideIndex].classList.add('active-slide');
-            if (counterContainer) {
-                counterContainer.textContent = `0${currentSlideIndex + 1}`;
-            }
+            if (counterContainer) counterContainer.textContent = `0${currentSlideIndex + 1}`;
         }
         setInterval(runImageTransitions, 4000);
 
-        // --- 3. Testimonials Slider Functional ---
-        const track = document.getElementById('testimonial-track');
-        const nextBtn = document.getElementById('testi-next');
-        const prevBtn = document.getElementById('testi-prev');
-        const cards = document.querySelectorAll('.testimonial-card');
-        
-        let currentIndex = 0;
-        
-        function updateSlider() {
-            let step = 50; 
-            let maxIndex = cards.length - 2; 
-            
-            if (window.innerWidth <= 992) {
-                step = 100; 
-                maxIndex = cards.length - 1; 
+        // 3. Testimonials Slider
+const track = document.getElementById("testimonial-track");
+const cards = document.querySelectorAll(".testimonial-card");
+
+const nextBtn = document.getElementById("testi-next");
+const prevBtn = document.getElementById("testi-prev");
+
+let currentIndex = 0;
+
+function visibleCards() {
+    return window.innerWidth <= 992 ? 1 : 2;
+}
+
+function updateSlider() {
+
+    const cardWidth = cards[0].offsetWidth;
+
+    track.style.transform =
+        `translateX(-${currentIndex * cardWidth}px)`;
+}
+
+nextBtn.addEventListener("click", () => {
+
+    const maxIndex =
+        cards.length - visibleCards();
+
+    currentIndex =
+        currentIndex >= maxIndex
+            ? 0
+            : currentIndex + 1;
+
+    updateSlider();
+});
+
+prevBtn.addEventListener("click", () => {
+
+    const maxIndex =
+        cards.length - visibleCards();
+
+    currentIndex =
+        currentIndex <= 0
+            ? maxIndex
+            : currentIndex - 1;
+
+    updateSlider();
+});
+
+setInterval(() => {
+
+    const maxIndex =
+        cards.length - visibleCards();
+
+    currentIndex =
+        currentIndex >= maxIndex
+            ? 0
+            : currentIndex + 1;
+
+    updateSlider();
+
+}, 4000);
+
+window.addEventListener("resize", updateSlider);
+
+updateSlider();
+
+        // 4. Scroll Spy — Side Label + Right Dots + Nav + Header
+        const sideLabel = document.getElementById('vertical-label');
+        const sectionMap = {
+            'welcome': 'Welcome',
+            'about': 'About',
+            'portfolios': 'Portfolios',
+            'testimonials': 'Testimonials',
+            'contact': 'Contact'
+        };
+        const allSections = document.querySelectorAll('section[id]');
+
+        function updateActiveSection() {
+            let currentSectionId = 'welcome';
+            const scrollY = window.scrollY + window.innerHeight / 3;
+
+            allSections.forEach(section => {
+                if (section.offsetTop <= scrollY) currentSectionId = section.id;
+            });
+
+            if (sideLabel) sideLabel.textContent = sectionMap[currentSectionId] || 'Welcome';
+
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('href') === `#${currentSectionId}`) dot.classList.add('active');
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active-link');
+                if (item.getAttribute('href') === `#${currentSectionId}`) item.classList.add('active-link');
+            });
+
+            if (currentSectionId === 'welcome') {
+                mainHeader.classList.remove('light-nav', 'opaque-bg');
+            } else {
+                mainHeader.classList.add('light-nav', 'opaque-bg');
             }
-            
-            if (currentIndex > maxIndex) currentIndex = maxIndex;
-            if (currentIndex < 0) currentIndex = 0;
-            
-            track.style.transform = `translateX(-${currentIndex * step}%)`;
         }
 
-        nextBtn.addEventListener('click', () => {
-            let maxIndex = window.innerWidth <= 992 ? cards.length - 1 : cards.length - 2;
-            if (currentIndex < maxIndex) {
-                currentIndex++;
-            } else {
-                currentIndex = 0; 
-            }
-            updateSlider();
-        });
-
-        prevBtn.addEventListener('click', () => {
-            let maxIndex = window.innerWidth <= 992 ? cards.length - 1 : cards.length - 2;
-            if (currentIndex > 0) {
-                currentIndex--;
-            } else {
-                currentIndex = maxIndex; 
-            }
-            updateSlider();
-        });
-
-        window.addEventListener('resize', updateSlider);
+        window.addEventListener('scroll', updateActiveSection);
+        updateActiveSection();
     </script>
 </body>
 </html>
