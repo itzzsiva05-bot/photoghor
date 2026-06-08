@@ -24,17 +24,28 @@
 .theme-toggle-btn{ display:none !important; }
 
 /* =========================
-   DETAIL PAGE VARIABLES
+   THEME RESPONSIVE VARIABLES
 ========================= */
 :root{
-    --border:    #e5e5e5;
-    --grey:      #777;
-    --menu-bg:   #111111;
-    --gold:      #e0b034;
+    --border:         #e5e5e5;
+    --grey:           #777;
+    --menu-bg:        #ffffff; /* மொபைல் கார்டு பேக்ரவுண்ட் */
+    --menu-text:      #111111; 
+    --gold:           #e0b034;
+    --mob-active-bg:  #f5f5f5; /* செலக்ட் செய்யப்பட்ட ஆப்ஷன் பேக்ரவுண்ட் */
+    --box-shadow:     0px 15px 35px rgba(0, 0, 0, 0.15);
+}
+[data-theme="dark"]{
+    --border:         #292929;
+    --grey:           #aaaaaa;
+    --menu-bg:        #181818; 
+    --menu-text:      #ffffff;
+    --mob-active-bg:  #242424;
+    --box-shadow:     0px 15px 35px rgba(0, 0, 0, 0.45);
 }
 
 /* =========================
-   NAVIGATION CONTAINER (Top Bar Right)
+   NAVIGATION CONTAINER
 ========================= */
 .options-menu-container {
     position: fixed;
@@ -43,10 +54,10 @@
     z-index: 9999;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 }
 
-/* Gold Pill-shaped MENU button */
+/* Gold Pill MENU Button */
 .menu-btn {
     display:         flex;
     align-items:     center;
@@ -65,11 +76,8 @@
     transition:      all 0.25s ease;
     user-select:     none;
 }
-.menu-btn:hover {
-    background:    rgba(224, 176, 52, 0.1);
-}
 
-/* Hamburger & X icon logic */
+/* Hamburger to X lines animation */
 .menu-btn .ham-icon {
     display:        flex;
     flex-direction: column;
@@ -81,20 +89,21 @@
     height:           2px;
     background:       var(--gold);
     border-radius:    2px;
-    transition:       transform 0.35s cubic-bezier(.77,0,.18,1), opacity 0.25s;
+    transition:       transform 0.3s ease, opacity 0.2s ease;
     transform-origin: center;
 }
 .menu-btn.open .ham-icon span:nth-child(1){ transform: translateY(6px) rotate(45deg); }
 .menu-btn.open .ham-icon span:nth-child(2){ opacity: 0; transform: scaleX(0); }
 .menu-btn.open .ham-icon span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
 
+
 /* =========================
-   HORIZONTAL MENU WITH ICONS (Desktop & Mobile)
+   TYPE 1: DESKTOP HORIZONTAL MENU (Text Only)
 ========================= */
 .desktop-horizontal-menu {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 25px;
     opacity: 0;
     transform: translateX(30px);
     visibility: hidden;
@@ -105,228 +114,160 @@
     transform: translateX(0);
     visibility: visible;
 }
-
-/* Icon box styling matching image types */
 .desktop-horizontal-menu a {
-    display:         flex;
-    align-items:     center;
-    justify-content: center;
-    width:           42px;
-    height:          42px;
-    color:           #ffffff;
-    background:      #1a1a1a;
-    border:          1px solid rgba(255,255,255,0.1);
-    border-radius:   50%;
+    color:           var(--menu-text);
     text-decoration: none;
-    font-size:       16px;
-    transition:      all 0.3s ease;
-    position:        relative;
+    font-family:     'Barlow Condensed', sans-serif;
+    font-size:       15px;
+    font-weight:     600;
+    letter-spacing:  1.5px;
+    text-transform:  uppercase;
+    transition:      all 0.25s ease;
+    padding:         6px 12px;
 }
-
-/* Hover effect */
-.desktop-horizontal-menu a:hover,
+.desktop-horizontal-menu a:hover {
+    color: var(--gold);
+}
+/* டெஸ்க்டாப் ஆக்டிவ் டேப் ஸ்டைல் */
 .desktop-horizontal-menu a.active {
-    color:           #111;
-    background:      var(--gold);
-    border-color:    var(--gold);
-    transform:       scale(1.05);
+    background: #222222;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 6px;
 }
 
-/* Tooltip text on hover (Optional) */
-.desktop-horizontal-menu a::after {
-    content:         attr(data-title);
-    position:        absolute;
-    bottom:          -35px;
-    left:            50%;
-    transform:       translateX(-50%) translateY(5px);
-    background:      #111;
-    color:           #fff;
-    padding:         4px 8px;
-    font-size:       11px;
-    font-family:     'Barlow', sans-serif;
-    border-radius:   4px;
-    white-space:     nowrap;
-    opacity:         0;
-    visibility:      hidden;
-    transition:      all 0.2s ease;
-    border:          1px solid rgba(255,255,255,0.15);
-}
-.desktop-horizontal-menu a:hover::after {
-    opacity:         1;
-    visibility:      visible;
-    transform:       translateX(-50%) translateY(0);
+/* மொபைல் லேயர் டெஸ்க்டாப்பில் தெரியக்கூடாது */
+.mobile-dropdown-card {
+    display: none;
 }
 
-/* Specific color for WhatsApp icon */
-.desktop-horizontal-menu a.whatsapp-btn:hover {
-    background: #25D366 !important;
-    border-color: #25D366 !important;
-    color: #fff !important;
+
+/* =========================
+   TYPE 2: MOBILE VIEW DROPDOWN (Perfect Match)
+========================= */
+@media(max-width:768px){
+    /* டெஸ்க்டாப் லேயரை மொபைலில் முழுமையாக மறைக்கிறோம் */
+    .desktop-horizontal-menu {
+        display: none !important;
+    }
+
+    .options-menu-container { 
+        top: 15px; 
+        right: 15px; 
+    }
+
+    /* உங்களுடைய ஹோம் பேஜ் போன்ற மிதக்கும் கார்டு லேஅவுட் */
+    .mobile-dropdown-card {
+        display:        flex;
+        position:       fixed;
+        top:            70px;
+        right:          15px;
+        background:     var(--menu-bg);
+        flex-direction: column;
+        gap:            0px; 
+        padding:        12px;
+        border-radius:  16px; /* வளைந்த ஓரங்கள் */
+        width:          240px;
+        align-items:    stretch;
+        box-shadow:     var(--box-shadow);
+        border:         1px solid var(--border);
+        
+        /* தொடக்க நிலை மறைப்பு */
+        opacity:        0;
+        visibility:     hidden;
+        transform:      translateY(-15px) scale(0.95);
+        transform-origin: top right;
+        transition:      all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    /* பட்டனை அழுத்தியவுடன் ஓபன் ஆகும் நிலை */
+    .mobile-dropdown-card.open {
+        opacity:   1;
+        transform: translateY(0) scale(1);
+        visibility: visible;
+    }
+
+    /* மொபைல் வெர்டிகல் லிங்க் ஸ்டைல் */
+    .mobile-dropdown-card a {
+        display:         flex;
+        align-items:     center;
+        gap:             15px; /* ஐகான் - டெக்ஸ்ட் கேப் */
+        padding:         12px 18px;
+        color:           var(--menu-text);
+        font-family:     'Barlow Condensed', sans-serif;
+        font-size:       14px;
+        font-weight:     600;
+        text-transform:  uppercase;
+        letter-spacing:  1px;
+        border-radius:   10px;
+        text-decoration: none;
+        background:      transparent;
+        transition:      all 0.2s ease;
+    }
+
+    /* மொபைல் தங்க நிற தடிமனான ஐகான்கள் */
+    .mobile-dropdown-card a i {
+        font-size: 16px;
+        width:     22px;
+        color:     var(--gold); 
+        text-align: center;
+    }
+
+    .mobile-dropdown-card a:hover {
+        background: var(--mob-active-bg);
+        color:      var(--gold);
+    }
+
+    /* போட்டோ கேலரி ஆக்டிவ் பேக்ரவுண்ட் ஹைலைட் */
+    .mobile-dropdown-card a.active {
+        background: var(--mob-active-bg);
+        color:      var(--gold);
+    }
 }
 
 /* =========================
-   HERO SECTION
+   HERO & STRUCTURE STYLES
 ========================= */
 .hero{
     height:      260px;
-    background:
-        linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
-        url("{% static 'images/1920.jpg' %}") center/cover;
+    background: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)), url("{% static 'images/1920.jpg' %}") center/cover;
     display:     flex;
     align-items: center;
     padding:     0 60px;
 }
-.hero-content{
-    width:           100%;
-    display:         flex;
-    align-items:     center;
-    justify-content: space-between;
-}
-.hero-title{
-    color:          #fff;
-    font-size:      52px;
-    font-weight:    700;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-family:    'Barlow Condensed', sans-serif;
-}
-.breadcrumb{
-    display:        flex;
-    align-items:    center;
-    gap:            10px;
-    color:          #fff;
-    font-size:      14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family:    'Barlow Condensed', sans-serif;
-}
+.hero-content{ width: 100%; display: flex; align-items: center; justify-content: space-between; }
+.hero-title{ color: #fff; font-size: 52px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; font-family: 'Barlow Condensed', sans-serif; }
+.breadcrumb{ display: flex; align-items: center; gap: 10px; color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Barlow Condensed', sans-serif; }
 .breadcrumb a{ color:#fff; text-decoration:none; }
 
-/* =========================
-   PHOTO IMAGE
-========================= */
 .photo-wrap{ padding: 60px; }
-.photo-wrap img{
-    width:         100%;
-    height:        600px;
-    object-fit:    cover;
-    display:       block;
-    border-radius: 10px;
-}
+.photo-wrap img{ width: 100%; height: 600px; object-fit: cover; display: block; border-radius: 10px; }
 
-/* =========================
-   INFO SECTION & SIDEBAR
-========================= */
-.info-section{
-    padding:               0 60px 80px;
-    display:               grid;
-    grid-template-columns: 300px 1fr;
-    gap:                   60px;
-}
-.sidebar{
-    border:        1px solid var(--border);
-    border-radius: 10px;
-    overflow:      hidden;
-}
-.sidebar-row{
-    display:       flex;
-    gap:           15px;
-    padding:       22px;
-    border-bottom: 1px solid var(--border);
-}
+.info-section{ padding: 0 60px 80px; display: grid; grid-template-columns: 300px 1fr; gap: 60px; }
+.sidebar{ border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.sidebar-row{ display: flex; gap: 15px; padding: 22px; border-bottom: 1px solid var(--border); }
 .sidebar-row:last-child{ border-bottom: none; }
 .sidebar-row i{ color:#888; margin-top:5px; }
-.sidebar-label{
-    font-size:      14px;
-    font-weight:    600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color:          #666;
-    font-family:    'Barlow Condensed', sans-serif;
-}
+.sidebar-label{ font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #666; font-family: 'Barlow Condensed', sans-serif; }
 .sidebar-value{ margin-top:5px; }
 
-/* =========================
-   PHOTO INFO & SHARE
-========================= */
-.photo-info h2{
-    font-size:      42px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom:  25px;
-    padding-bottom: 15px;
-    border-bottom:  1px solid var(--border);
-    font-family:    'Barlow Condensed', sans-serif;
-}
-.photo-name{
-    font-size:      24px;
-    font-weight:    600;
-    margin-bottom:  20px;
-    text-transform: uppercase;
-    font-family:    'Barlow Condensed', sans-serif;
-}
-.share-row{
-    margin-top:  35px;
-    padding-top: 30px;
-    border-top:  1px solid var(--border);
-    display:     flex;
-    align-items: center;
-    gap:         20px;
-    flex-wrap:   wrap;
-}
-.share-label{
-    font-size:      16px;
-    font-weight:    600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family:    'Barlow Condensed', sans-serif;
-}
-.share-icons{
-    display:     flex;
-    align-items: center;
-    gap:         14px;
-    flex-wrap:   wrap;
-}
-.share-icons a{
-    width:           42px;
-    height:          42px;
-    border:          1px solid var(--border);
-    border-radius:   50%;
-    display:         flex;
-    align-items:     center;
-    justify-content: center;
-    color:           #555;
-    text-decoration: none;
-    transition:      .3s;
-}
-.share-icons a:hover{
-    background:   #111;
-    color:        #fff;
-    border-color: #111;
-}
-.share-icons a.whatsapp-btn:hover { background: #25D366; border-color: #25D366; }
+.photo-info h2{ font-size: 42px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); font-family: 'Barlow Condensed', sans-serif; }
+.photo-name{ font-size: 24px; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; }
 
-/* =========================
-   FOOTER
-========================= */
-.detail-footer{
-    background:      #111;
-    padding:         35px 60px;
-    display:         flex;
-    align-items:     center;
-    justify-content: space-between;
-    flex-wrap:       wrap;
-    gap:             20px;
-}
+/* Share UI Layout matching image_cf820f */
+.share-row{ margin-top: 35px; padding-top: 30px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.share-label{ font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-family: 'Barlow Condensed', sans-serif; }
+.share-icons{ display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.share-icons a{ width: 42px; height: 42px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #555; text-decoration: none; transition: .3s; }
+.share-icons a:hover{ background: #111; color: #fff; border-color: #111; }
+
+.detail-footer{ background: #111; padding: 35px 60px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
 .footer-links{ display:flex; gap:20px; flex-wrap:wrap; }
 .footer-links a{ color:#aaa; text-decoration:none; }
 .footer-links a:hover{ color:#fff; }
 .footer-copy{ color:#888; font-size:14px; }
 .footer-copy strong{ color:#fff; }
 
-/* =========================
-   RESPONSIVE DESIGN (Mobile & Tablet)
-========================= */
 @media(max-width:900px){
     .hero{ height:220px; padding:0 25px; }
     .hero-content{ flex-direction:column; align-items:flex-start; justify-content:center; gap:10px; }
@@ -337,34 +278,6 @@
     .detail-footer{ padding:30px 25px; }
 }
 @media(max-width:768px){
-    .options-menu-container{ 
-        top:12px; 
-        right:12px; 
-        gap: 10px;
-    }
-    .menu-btn{ 
-        padding:8px 14px; 
-        font-size:12px; 
-        background:#ffffff !important; 
-        color:#111111 !important; 
-        border:1px solid #111111 !important; 
-    }
-    .menu-btn .ham-icon span{ background:#111111 !important; }
-    
-    /* Mobile Responsive Menu Items */
-    .desktop-horizontal-menu {
-        gap: 8px;
-    }
-    .desktop-horizontal-menu a {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
-        background: #ffffff;
-        color: #111111;
-        border: 1px solid #111111;
-    }
-    .desktop-horizontal-menu a::after { display: none; } /* Disable Tooltips on mobile */
-
     .hero{ height:180px; padding:0 15px; }
     .hero-title{ font-size:28px; }
     .breadcrumb{ display:none; }
@@ -376,6 +289,7 @@
     .photo-name{ font-size:18px; }
     .detail-footer{ padding:25px 15px; flex-direction:column; align-items:flex-start; }
 }
+
 </style>
 {% endblock %}
 
@@ -384,15 +298,23 @@
 <div class="options-menu-container">
     
     <nav class="desktop-horizontal-menu" id="desktopMenu">
-        <a href="{% url 'home' %}" data-title="Home"><i class="fa-solid fa-house"></i></a>
-        <a href="{% url 'home' %}" class="active" data-title="Photo Gallery"><i class="fa-solid fa-images"></i></a>
-        <a href="#" data-title="1 Column"><i class="fa-solid fa-table-cells-large"></i></a>
-        <a href="#" data-title="2 Column"><i class="fa-solid fa-grip"></i></a>
-        <a href="#" data-title="4 Column"><i class="fa-solid fa-border-all"></i></a>
-        <a href="javascript:void(0);" class="whatsapp-btn" onclick="shareToWhatsApp()" data-title="Share to WhatsApp">
-            <i class="fa-brands fa-whatsapp"></i>
-        </a>
-        <a href="{% url 'photo_detail' photo.id %}" data-title="Photo Detail"><i class="fa-solid fa-image"></i></a>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'home' %}" class="active">Photo Gallery</a>
+        <a href="#">1 Column</a>
+        <a href="#">2 Column</a>
+        <a href="#">4 Column</a>
+        <a href="javascript:void(0);" onclick="shareToWhatsApp()">Share WhatsApp</a>
+        <a href="{% url 'photo_detail' photo.id %}">Photo Detail</a>
+    </nav>
+
+    <nav class="mobile-dropdown-card" id="mobileMenu">
+        <a href="{% url 'home' %}"><i class="fa-solid fa-house"></i>Home</a>
+        <a href="{% url 'home' %}" class="active"><i class="fa-solid fa-images"></i>Photo Gallery</a>
+        <a href="#"><i class="fa-solid fa-square"></i>1 Column</a>
+        <a href="#"><i class="fa-solid fa-table-columns"></i>2 Column</a>
+        <a href="#"><i class="fa-solid fa-table-cells"></i>4 Column</a>
+        <a href="javascript:void(0);" onclick="shareToWhatsApp()"><i class="fa-brands fa-whatsapp"></i>Share WhatsApp</a>
+        <a href="{% url 'photo_detail' photo.id %}"><i class="fa-solid fa-circle-info"></i>Photo Detail</a>
     </nav>
 
     <button id="menuBtn" class="menu-btn" onclick="toggleMenu()">
@@ -461,7 +383,7 @@
                 <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ photo.title }}" target="_blank" title="Twitter">
                     <i class="fab fa-twitter"></i>
                 </a>
-                <a href="javascript:void(0);" class="whatsapp-btn" onclick="shareToWhatsApp()" title="WhatsApp">
+                <a href="javascript:void(0);" onclick="shareToWhatsApp()" title="WhatsApp">
                     <i class="fab fa-whatsapp"></i>
                 </a>
                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank" title="LinkedIn">
@@ -476,12 +398,19 @@
 </div>
 
 <footer class="detail-footer">
-    <div class="footer-links">
-        <a href="https://www.facebook.com/"  target="_blank">Facebook</a>
-        <a href="https://twitter.com/"       target="_blank">Twitter</a>
-        <a href="https://www.instagram.com/" target="_blank">Instagram</a>
-        <a href="https://www.linkedin.com/"  target="_blank">LinkedIn</a>
-    </div>
+<div class="footer-links">
+    <!-- Facebook Share -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u=YOUR_URL_HERE" target="_blank">Facebook</a>
+    
+    <!-- Twitter (X) Share -->
+    <a href="https://twitter.com/intent/tweet?url=YOUR_URL_HERE&text=Check%20this%20out!" target="_blank">Twitter</a>
+    
+    <!-- LinkedIn Share -->
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=YOUR_URL_HERE" target="_blank">LinkedIn</a>
+    
+    <!-- WhatsApp Share (Instagram-la direct share link illa, so WhatsApp preferred) -->
+    <a href="https://web.whatsapp.com/send?text=YOUR_URL_HERE" target="_blank">WhatsApp</a>
+</div>
     <p class="footer-copy">
         Copyright &copy; <strong>Photoghor</strong> 2026. All Rights Reserved.
     </p>
@@ -491,31 +420,29 @@
 
 {% block extra_js %}
 <script>
-// Toggle menu visibility
+// டெஸ்க்டாப் மற்றும் மொபைல் இரண்டையும் தனித்தனியாகக் கட்டுப்படுத்தும் ஜாவாஸ்கிரிப்ட்
 function toggleMenu() {
-    const menu = document.getElementById("desktopMenu");
+    const dMenu = document.getElementById("desktopMenu");
+    const mMenu = document.getElementById("mobileMenu");
     const btn = document.getElementById("menuBtn");
     
-    menu.classList.toggle("open");
+    // இரண்டு மெனுக்களுக்கும் டாக்ஃகிள் கிளாஸ் சேர்க்கப்படுகிறது
+    dMenu.classList.toggle("open");
+    mMenu.classList.toggle("open");
     btn.classList.toggle("open");
 }
 
-// Smart WhatsApp sharing function for Mobile & Desktop
 function shareToWhatsApp() {
-    // Current page URL and title fetched dynamically
     const pageUrl = window.location.href;
     const pageTitle = "{{ photo.title|escapejs }}";
     const text = `Check out this photo: *${pageTitle}* - ${pageUrl}`;
     
-    // Check if user is on a mobile device to select proper API link
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IPhone|Opera Mini/i.test(navigator.userAgent);
     
     let whatsappUrl = "";
     if (isMobile) {
-        // Opens the Native WhatsApp App directly on mobile
         whatsappUrl = `whatsapp://send?text=${encodeURIComponent(text)}`;
     } else {
-        // Opens Web WhatsApp on Desktop systems
         whatsappUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`;
     }
     
