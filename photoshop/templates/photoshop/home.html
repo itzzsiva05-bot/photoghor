@@ -235,6 +235,11 @@
     .menu-btn{ padding:8px 14px; font-size:12px; }
 }
 
+body {
+        overscroll-behavior-y: contain !important; /* Mobile chrome/safari pull-to-refresh-ai complete-aga disable seiyum */
+        -webkit-overflow-scrolling: touch;
+    }
+
 /* =========================
    HERO
 ========================= */
@@ -632,7 +637,9 @@
     .gallery{
         display:grid!important;
         grid-template-columns: 1fr !important;
-        overflow-x:unset !important;
+        overflow-x:hidden !important;
+        overflow-y: visible !important;
+        touch-action: pan-y !important;
         scroll-snap-type:none !important;
         gap:12px;
         padding:15px;
@@ -828,9 +835,6 @@
     color: #888;
 }
 
-/* ==========================================================================
-   2. MOBILE VIEW (Screens up to 768px wide)
-   ========================================================================== */
 /* ==========================================================================
    2. MOBILE VIEW (Screens up to 768px wide) - FIXED OVERFLOW
    ========================================================================== */
@@ -1101,6 +1105,7 @@
 {% endblock %}
 
 
+
 {% block extra_js %}
 <script>
 
@@ -1326,8 +1331,9 @@ document.addEventListener('click', function(){
     }
 });
 
-/* ── PAGINATION ── */
-var currentVisibleRows = 2;
+
+/* ── 🆕 FIXED PAGINATION LOGIC (NO REFRESH CRASH) ── */
+var currentVisibleRows = 2; // Initial rows count
 
 function getColumnsCount(){
     var gallery = document.querySelector('.gallery');
@@ -1335,16 +1341,12 @@ function getColumnsCount(){
     if(gallery.classList.contains('one-column'))  return 1;
     if(gallery.classList.contains('two-column'))  return 2;
     if(gallery.classList.contains('four-column')) return 4;
-    if(window.innerWidth <= 768) return 1;
+    if(window.innerWidth <= 768) return 1; // Mobile view default columns
     if(window.innerWidth <= 992) return 2;
     return 3;
 }
 
 function initPagination(){
-    if(window.innerWidth <= 768){
-        currentVisibleRows = 3;
-    }
-
     var items = document.querySelectorAll('.gallery-item');
     if(items.length === 0) return;
 
@@ -1363,23 +1365,32 @@ function initPagination(){
     updateLightboxImages();
 }
 
-function handlePaginationClick(){
+window.handlePaginationClick = function() {
     var btn = document.getElementById('actionControlBtn');
+    var items = document.querySelectorAll('.gallery-item');
+    var itemsPerRow = getColumnsCount();
 
+    // "Show Less" mode-il irunthal, refresh pannamal mudhal 2 rows-ukku collapse seiyum logic
     if(btn.classList.contains('reload-mode-btn')){
-        window.location.reload();
+        currentVisibleRows = 2;
+        var targetVisibleCount = itemsPerRow * currentVisibleRows;
+        
+        items.forEach(function(item, index){
+            if(index >= targetVisibleCount) item.classList.add('hidden-item');
+        });
+        
+        updateLightboxImages();
+        updateButtonState();
+        
+        // Gallery top element-ukku smooth scroll seiyum
+        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
         return;
     }
 
-    if(currentVisibleRows === 1){
-        currentVisibleRows = 4;
-    } else {
-        currentVisibleRows += 3;
-    }
-
-    var itemsPerRow        = getColumnsCount();
+    // "View More" click seithaal sariyaaga adutha 3 rows add aagum logic
+    var firstHiddenItem = document.querySelector('.gallery-item.hidden-item');
+    currentVisibleRows += 3; 
     var targetVisibleCount = itemsPerRow * currentVisibleRows;
-    var items              = document.querySelectorAll('.gallery-item');
 
     items.forEach(function(item, index){
         if(index < targetVisibleCount) item.classList.remove('hidden-item');
@@ -1387,7 +1398,14 @@ function handlePaginationClick(){
 
     updateLightboxImages();
     updateButtonState();
-}
+
+    // Smooth-aga add aana photos edg-ukku focus koondhu sellum
+    if(firstHiddenItem) {
+        setTimeout(function() {
+            firstHiddenItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
+};
 
 function updateButtonState(){
     var btn = document.getElementById('actionControlBtn');
@@ -1397,12 +1415,11 @@ function updateButtonState(){
         document.getElementById('paginationWrapper').style.display = 'block';
     }
 
-    var totalItems             = document.querySelectorAll('.gallery-item').length;
-    var hiddenItemsCount       = document.querySelectorAll('.gallery-item.hidden-item').length;
-    var itemsPerRow            = getColumnsCount();
-    var minimumRequiredFor1Row = itemsPerRow * 1;
+    var totalItems       = document.querySelectorAll('.gallery-item').length;
+    var hiddenItemsCount = document.querySelectorAll('.gallery-item.hidden-item').length;
 
-    if(totalItems <= minimumRequiredFor1Row || hiddenItemsCount === 0){
+    // Ella photos-um open aagi hidden items illai endral, Show Less text maari reload class add aagum
+    if(hiddenItemsCount === 0){
         btn.textContent = 'Show Less';
         btn.classList.add('reload-mode-btn');
     } else {
@@ -1419,13 +1436,14 @@ window.addEventListener('resize', function(){
     initPagination();
 });
 
+
 /* ── SHARE FUNCTION ── */
 function showShareToast(message){
     var toast = document.getElementById('shareToast');
     if(!toast) return;
     toast.textContent = message;
     toast.classList.add('show');
-    setTimeout(function(){ toast.classList.remove('show'); }, 3000);
+    setTimeout(function(){ toast.formatList.remove('show'); }, 3000);
 }
 
 function shareLink(platform){
@@ -1490,77 +1508,7 @@ function shareLink(platform){
     }
 }
 
-
-/* ── PAGINATION / CLIENT-SIDE LOAD MORE ── */
-var itemsPerPage = 6; // Oru thadavaiye kaatta vendiya photos-in ennikkai
-var allGalleryItems = [];
-
-document.addEventListener('DOMContentLoaded', function() {
-    allGalleryItems = Array.from(document.querySelectorAll('.gallery .gallery-item'));
-    
-    if (allGalleryItems.length === 0) {
-        var paginationWrapper = document.getElementById('paginationWrapper');
-        if (paginationWrapper) paginationWrapper.style.display = 'none';
-        return;
-    }
-
-    // Starting-il 6 photos-ai thavira mathatha hidden seiya
-    allGalleryItems.forEach(function(item, index) {
-        if (index >= itemsPerPage) {
-            item.classList.add('hidden-item');
-        }
-    });
-
-    updatePaginationButton();
-});
-
-window.handlePaginationClick = function() {
-    // Hidden-aga irukkum photos-ai mattum filter seiya
-    var hiddenItems = allGalleryItems.filter(item => item.classList.contains('hidden-item'));
-    
-    if (hiddenItems.length > 0) {
-        // Puthithaaga open aagum muthal item-ai track seiya (for smooth scroll)
-        var firstNewItem = hiddenItems[0];
-
-        // Next set of photos-ai open seiyum loop
-        for (var i = 0; i < itemsPerPage && i < hiddenItems.length; i++) {
-            hiddenItems[i].classList.remove('hidden-item');
-        }
-        
-        updatePaginationButton();
-
-        // MOBILE VIEW-IL REFRESH POLE TOP-UKKU POGAAMAL, NEW PHOTOS-UKKU SCROLL SEIYA:
-        setTimeout(function() {
-            firstNewItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-
-    } else {
-        // "Show Less" click seithal smooth-aga gallery start aagum idathuku scroll aagum
-        allGalleryItems.forEach(function(item, index) {
-            if (index >= itemsPerPage) {
-                item.classList.add('hidden-item');
-            }
-        });
-        updatePaginationButton();
-        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
-    }
-};
-
-function updatePaginationButton() {
-    var actionBtn = document.getElementById('actionControlBtn');
-    if (!actionBtn) return;
-
-    var hiddenCount = allGalleryItems.filter(item => item.classList.contains('hidden-item')).length;
-
-    if (hiddenCount > 0) {
-        actionBtn.textContent = "View More";
-        actionBtn.classList.remove('reload-mode-btn');
-    } else {
-        actionBtn.textContent = "Show Less";
-        actionBtn.classList.add('reload-mode-btn');
-    }
-}
-
 </script>
+
 {% endblock %}
 
