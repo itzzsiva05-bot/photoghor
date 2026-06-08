@@ -828,51 +828,41 @@
     color: #888;
 }
 
-@media (max-width:768px){
-
-    .footer-container{
-        display:grid !important;
-        grid-template-columns:repeat(3,1fr);
-        gap:8px;
-        align-items:start;
+/* ==========================================================================
+   2. MOBILE VIEW (Screens up to 768px wide)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Container-ah Flex-la irundhu Grid-ku mathrom */
+    .footer-container {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr); /* Mobile-layum mela 2 column-ah split panni katum */
+        gap: 30px 20px; /* row gap 30px, column gap 20px */
     }
 
-    .footer-brand,
-    .footer-contact,
-    .footer-social-section{
-        width:100%;
-        min-width:0;
-        padding:10px;
-        border-radius:10px;
-        overflow:hidden;
+    /* Row 1, Column 1 */
+    .footer-brand {
+        grid-column: 1 / 2;
+        order: unset; 
+    }
+    
+    /* Row 1, Column 2 */
+    .footer-contact {
+        grid-column: 2 / 3;
+        order: unset; 
+    }
+    
+    /* Row 2: Idhu full width span aagi keela varum */
+    .footer-social-section {
+        grid-column: 1 / -1; /* Full horizontal span taking 1st and 2nd column area */
+        margin-top: 10px;
     }
 
-    .footer-brand h2{
-        font-size:14px;
+    /* Mobile view alignments */
+    .footer-container > div {
+        text-align: left;
     }
-
-    .footer-header{
-        font-size:12px;
-    }
-
-    .footer-brand p,
-    .footer-contact-item,
-    .footer-social-subtitle{
-        font-size:10px;
-        line-height:1.3;
-    }
-
-    .footer-share-icons{
-        display:flex;
-        flex-wrap:wrap;
-        justify-content:center;
-        gap:5px;
-    }
-
-    .footer-share-icons a{
-        width:28px;
-        height:28px;
-        font-size:11px;
+    .footer-share-icons {
+        justify-content: flex-start;
     }
 }
 
