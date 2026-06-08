@@ -143,15 +143,34 @@
         main{
             min-height:calc(100vh - 75px);
         }
+        .theme-toggle-btn{
+    width:40px;
+    height:40px;
+    border:1px solid var(--border-color);
+    border-radius:8px;
+    background:transparent;
+    color:var(--text-primary);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
 
         @media(max-width:768px){
 
-            .logo{
-                font-size:24px;
-            }
+    .theme-toggle-btn{
+        display:flex !important;
+        align-items:center;
+        justify-content:center;
+    }
 
+    .logo{
+        font-size:24px;
+    }
+
+}
             
-        }
+        
     </style>
 
     {% block extra_head %}{% endblock %}
@@ -166,6 +185,10 @@
         </a>
 
         <div class="header-right">
+
+               <button class="theme-toggle-btn">
+                 <i class="fa-solid fa-moon"></i>
+               </button>
             {% block header_extra %}
             {% endblock %}
         </div>
@@ -191,6 +214,35 @@
 <script src="{% static 'photoshop/js/main.js' %}"></script>
 
 <script>
+
+const themeBtn = document.querySelector('.theme-toggle-btn');
+
+themeBtn.addEventListener('click', () => {
+
+    const html = document.documentElement;
+
+    if(html.getAttribute('data-theme') === 'dark'){
+        html.setAttribute('data-theme','light');
+        localStorage.setItem('theme','light');
+        themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    }else{
+        html.setAttribute('data-theme','dark');
+        localStorage.setItem('theme','dark');
+        themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+    }
+
+});
+
+const savedTheme = localStorage.getItem('theme');
+
+if(savedTheme){
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    if(savedTheme === 'light'){
+        themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    }
+}
+
 setTimeout(() => {
 
     const toast = document.getElementById('toast-container');
