@@ -631,7 +631,7 @@
 
     .gallery{
         display:grid!important;
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         overflow-x:unset !important;
         scroll-snap-type:none !important;
         gap:12px;
@@ -1487,6 +1487,77 @@ function shareLink(platform){
             shareUrls[platform],
             '_blank'
         );
+    }
+}
+
+
+/* ── PAGINATION / CLIENT-SIDE LOAD MORE ── */
+var itemsPerPage = 6; // Oru thadavaiye kaatta vendiya photos-in ennikkai
+var allGalleryItems = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    allGalleryItems = Array.from(document.querySelectorAll('.gallery .gallery-item'));
+    
+    if (allGalleryItems.length === 0) {
+        var paginationWrapper = document.getElementById('paginationWrapper');
+        if (paginationWrapper) paginationWrapper.style.display = 'none';
+        return;
+    }
+
+    // Starting-il 6 photos-ai thavira mathatha hidden seiya
+    allGalleryItems.forEach(function(item, index) {
+        if (index >= itemsPerPage) {
+            item.classList.add('hidden-item');
+        }
+    });
+
+    updatePaginationButton();
+});
+
+window.handlePaginationClick = function() {
+    // Hidden-aga irukkum photos-ai mattum filter seiya
+    var hiddenItems = allGalleryItems.filter(item => item.classList.contains('hidden-item'));
+    
+    if (hiddenItems.length > 0) {
+        // Puthithaaga open aagum muthal item-ai track seiya (for smooth scroll)
+        var firstNewItem = hiddenItems[0];
+
+        // Next set of photos-ai open seiyum loop
+        for (var i = 0; i < itemsPerPage && i < hiddenItems.length; i++) {
+            hiddenItems[i].classList.remove('hidden-item');
+        }
+        
+        updatePaginationButton();
+
+        // MOBILE VIEW-IL REFRESH POLE TOP-UKKU POGAAMAL, NEW PHOTOS-UKKU SCROLL SEIYA:
+        setTimeout(function() {
+            firstNewItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+
+    } else {
+        // "Show Less" click seithal smooth-aga gallery start aagum idathuku scroll aagum
+        allGalleryItems.forEach(function(item, index) {
+            if (index >= itemsPerPage) {
+                item.classList.add('hidden-item');
+            }
+        });
+        updatePaginationButton();
+        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    }
+};
+
+function updatePaginationButton() {
+    var actionBtn = document.getElementById('actionControlBtn');
+    if (!actionBtn) return;
+
+    var hiddenCount = allGalleryItems.filter(item => item.classList.contains('hidden-item')).length;
+
+    if (hiddenCount > 0) {
+        actionBtn.textContent = "View More";
+        actionBtn.classList.remove('reload-mode-btn');
+    } else {
+        actionBtn.textContent = "Show Less";
+        actionBtn.classList.add('reload-mode-btn');
     }
 }
 
