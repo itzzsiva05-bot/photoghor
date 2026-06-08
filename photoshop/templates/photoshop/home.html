@@ -834,36 +834,45 @@
         display:grid !important;
         grid-template-columns:repeat(3,1fr);
         gap:8px;
+        align-items:start;
     }
 
     .footer-brand,
     .footer-contact,
     .footer-social-section{
-        min-width:auto;
-        padding:12px;
-    }
-
-    .footer-header{
-        font-size:14px;
+        width:100%;
+        min-width:0;
+        padding:10px;
+        border-radius:10px;
+        overflow:hidden;
     }
 
     .footer-brand h2{
-        font-size:16px;
+        font-size:14px;
+    }
+
+    .footer-header{
+        font-size:12px;
     }
 
     .footer-brand p,
     .footer-contact-item,
     .footer-social-subtitle{
-        font-size:11px;
+        font-size:10px;
+        line-height:1.3;
+    }
+
+    .footer-share-icons{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:5px;
     }
 
     .footer-share-icons a{
-        width:32px;
-        height:32px;
-        font-size:13px;
-    }
-    .main-footer{
-        padding:20px 10px 10px;
+        width:28px;
+        height:28px;
+        font-size:11px;
     }
 }
 
@@ -1028,7 +1037,8 @@
             <h3 class="footer-header">Contact Us</h3>
             <div class="footer-contact-item">
                 <i class="fa-solid fa-location-dot"></i>
-                <span>123 Gallery Street, Creative Plaza,<br>Chennai, Tamil Nadu, India.</span>
+                <span>
+                TamilNadu-Tiruchirappalli72, Kamarajar colony,<br> Musiri,Trichy, India 621211,</span>
             </div>
             <div class="footer-contact-item">
                 <i class="fa-solid fa-envelope"></i>
