@@ -1381,7 +1381,7 @@ function updateButtonState(){
     var minimumRequiredFor1Row = itemsPerRow * 1;
 
     if(totalItems <= minimumRequiredFor1Row || hiddenItemsCount === 0){
-        btn.textContent = 'view more';
+        btn.textContent = 'Show Less';
         btn.classList.add('reload-mode-btn');
     } else {
         btn.textContent = 'View More';
@@ -1407,73 +1407,67 @@ function showShareToast(message){
 }
 
 function shareLink(platform){
+
     var pageUrl   = encodeURIComponent(window.location.href);
     var pageTitle = encodeURIComponent(document.title || 'Photoghor Gallery');
     var rawUrl    = window.location.href;
 
-    /* ── Mobile: Use native Web Share API if available ── */
-    if(platform !== 'copy' && navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
-        navigator.share({
-            title: document.title || 'Photoghor Gallery',
-            text:  'Check out Photoghor — beautiful photography gallery!',
-            url:   rawUrl
-        }).catch(function(err){
-            /* User cancelled — do nothing */
-        });
-        return;
+    /* MOBILE DIRECT APP SHARE */
+    if(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
+
+        if(platform === 'whatsapp'){
+            window.location.href =
+                'https://wa.me/?text=' +
+                encodeURIComponent(
+                    'Check out Photoghor Gallery\n' + rawUrl
+                );
+            return;
+        }
+
+        if(platform === 'facebook'){
+            window.location.href =
+                'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl;
+            return;
+        }
+
+        if(platform === 'twitter'){
+            window.location.href =
+                'https://twitter.com/intent/tweet?url=' +
+                pageUrl + '&text=' + pageTitle;
+            return;
+        }
+
+        if(platform === 'linkedin'){
+            window.location.href =
+                'https://www.linkedin.com/sharing/share-offsite/?url=' +
+                pageUrl;
+            return;
+        }
     }
 
-    /* ── Desktop / explicit platform share ── */
+    /* DESKTOP SHARE */
     var shareUrls = {
         facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl,
         whatsapp: 'https://web.whatsapp.com/send?text=' + pageTitle + '%20' + pageUrl,
-        twitter:  'https://twitter.com/intent/tweet?url=' + pageUrl + '&text=' + pageTitle,
+        twitter: 'https://twitter.com/intent/tweet?url=' + pageUrl + '&text=' + pageTitle,
         linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl
     };
 
     if(platform === 'copy'){
-        /* Copy link to clipboard */
-        if(navigator.clipboard && navigator.clipboard.writeText){
-            navigator.clipboard.writeText(rawUrl).then(function(){
-                showShareToast('✓ Link copied to clipboard!');
-            }).catch(function(){
-                fallbackCopy(rawUrl);
-            });
-        } else {
-            fallbackCopy(rawUrl);
-        }
+        navigator.clipboard.writeText(rawUrl).then(function(){
+            showShareToast('✓ Link copied to clipboard!');
+        });
         return;
     }
 
     if(shareUrls[platform]){
-        var w = 600, h = 500;
-        var left = Math.round((screen.width  - w) / 2);
-        var top  = Math.round((screen.height - h) / 2);
         window.open(
             shareUrls[platform],
-            'share_' + platform,
-            'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top +
-            ',toolbar=0,menubar=0,location=0,scrollbars=1,resizable=1'
+            '_blank'
         );
     }
 }
 
-function fallbackCopy(text){
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity  = '0';
-    document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    try {
-        document.execCommand('copy');
-        showShareToast('✓ Link copied to clipboard!');
-    } catch(e){
-        showShareToast('Could not copy link. Please copy manually.');
-    }
-    document.body.removeChild(ta);
-}
-
 </script>
 {% endblock %}
+
