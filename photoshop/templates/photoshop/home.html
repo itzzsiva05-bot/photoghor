@@ -831,38 +831,70 @@
 /* ==========================================================================
    2. MOBILE VIEW (Screens up to 768px wide)
    ========================================================================== */
+/* ==========================================================================
+   2. MOBILE VIEW (Screens up to 768px wide) - FIXED OVERFLOW
+   ========================================================================== */
 @media (max-width: 768px) {
-    /* Container-ah Flex-la irundhu Grid-ku mathrom */
     .footer-container {
         display: grid !important;
-        grid-template-columns: repeat(2, 1fr); /* Mobile-layum mela 2 column-ah split panni katum */
-        gap: 30px 20px; /* row gap 30px, column gap 20px */
+        grid-template-columns: 1fr 1fr; /* Equal 2 columns split */
+        gap: 25px 15px; /* Comfortable spacing without crowding */
+        overflow: hidden; /* Prevent child components from breaking container bounds */
     }
 
     /* Row 1, Column 1 */
     .footer-brand {
         grid-column: 1 / 2;
-        order: unset; 
     }
     
     /* Row 1, Column 2 */
     .footer-contact {
         grid-column: 2 / 3;
-        order: unset; 
+        min-width: 0; /* CRITICAL FIX: Allows grid items to shrink smaller than their content */
     }
     
-    /* Row 2: Idhu full width span aagi keela varum */
+    /* Row 2: Share Section */
     .footer-social-section {
-        grid-column: 1 / -1; /* Full horizontal span taking 1st and 2nd column area */
+        grid-column: 1 / -1; 
         margin-top: 10px;
     }
 
-    /* Mobile view alignments */
+    /* Typography fixes to prevent text cutoff on small screens */
+    .footer-brand h2, .footer-header {
+        font-size: 16px !important; /* Slightly smaller headers so they don't break lines awkwardly */
+        margin-bottom: 12px;
+    }
+
+    .footer-brand p, .footer-contact-item span {
+        font-size: 12px !important; /* Optimal compact reading size for mobile split-view */
+        line-height: 1.4;
+        word-wrap: break-word; /* Forces address text to wrap down */
+        word-break: break-word;
+    }
+
+    /* Specifically targets long email strings like photoghor.official@gmail.com */
+    .footer-contact-item span {
+        display: inline-block;
+        width: 100%;
+        overflow-wrap: break-word; /* Forces the long email text to wrap onto a new line safely */
+    }
+
+    .footer-contact-item {
+        gap: 8px; /* Tighter gap between the icon and text */
+        margin-bottom: 12px;
+    }
+
+    .footer-contact-item i {
+        font-size: 14px; /* Matches scaled down text */
+    }
+
+    /* Mobile alignments */
     .footer-container > div {
         text-align: left;
     }
     .footer-share-icons {
         justify-content: flex-start;
+        gap: 10px; /* Marginally tighter gap so icons stay on one line if possible */
     }
 }
 
