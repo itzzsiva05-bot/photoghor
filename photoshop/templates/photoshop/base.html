@@ -7,13 +7,7 @@
 
     <title>{% block title %}PHOTOGHOR{% endblock %}</title>
 
-    <!-- Load Saved Theme Before Render -->
-    <script>
-    (function () {
-        const savedTheme = localStorage.getItem('pg-theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
-    </script>
+   
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -99,27 +93,7 @@
             gap:12px;
         }
 
-        /* THEME BUTTON */
 
-        .theme-toggle-btn{
-            width:42px;
-            height:42px;
-            border-radius:10px;
-            border:2px solid var(--border-color);
-            background:transparent;
-            color:var(--accent);
-            cursor:pointer;
-            transition:.3s;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:18px;
-        }
-
-        .theme-toggle-btn:hover{
-            transform:rotate(20deg);
-            border-color:var(--accent);
-        }
 
         /* TOAST */
 
@@ -176,11 +150,7 @@
                 font-size:24px;
             }
 
-            .theme-toggle-btn{
-                width:36px;
-                height:36px;
-                font-size:15px;
-            }
+            
         }
     </style>
 
@@ -196,18 +166,8 @@
         </a>
 
         <div class="header-right">
-
             {% block header_extra %}
             {% endblock %}
-
-            <button class="theme-toggle-btn"
-                    onclick="toggleTheme()"
-                    title="Toggle Theme">
-
-                <i class="fa-solid fa-moon" id="themeIcon"></i>
-
-            </button>
-
         </div>
 
     </div>
@@ -231,62 +191,20 @@
 <script src="{% static 'photoshop/js/main.js' %}"></script>
 
 <script>
-    function syncThemeIcon(theme){
-        const icon = document.getElementById('themeIcon');
+setTimeout(() => {
 
-        if(!icon) return;
+    const toast = document.getElementById('toast-container');
 
-        if(theme === 'light'){
-            icon.className = 'fa-solid fa-sun';
-        }else{
-            icon.className = 'fa-solid fa-moon';
-        }
-    }
-
-    function toggleTheme(){
-
-        const currentTheme =
-            document.documentElement.getAttribute('data-theme') || 'dark';
-
-        const nextTheme =
-            currentTheme === 'light' ? 'dark' : 'light';
-
-        document.documentElement.setAttribute(
-            'data-theme',
-            nextTheme
-        );
-
-        localStorage.setItem(
-            'pg-theme',
-            nextTheme
-        );
-
-        syncThemeIcon(nextTheme);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-
-        syncThemeIcon(
-            localStorage.getItem('pg-theme') || 'dark'
-        );
+    if (toast) {
+        toast.style.transition = '.5s';
+        toast.style.opacity = '0';
 
         setTimeout(() => {
+            toast.remove();
+        }, 500);
+    }
 
-            const toast =
-                document.getElementById('toast-container');
-
-            if(toast){
-                toast.style.transition = '.5s';
-                toast.style.opacity = '0';
-
-                setTimeout(() => {
-                    toast.remove();
-                },500);
-            }
-
-        },3000);
-
-    });
+}, 3000);
 </script>
 
 {% block extra_js %}

@@ -630,11 +630,11 @@
     .breadcrumbs{ font-size:14px; }
 
     .gallery{
-        display:flex !important;
-        flex-direction:column !important;
+        display:grid!important;
+        grid-template-columns: 1fr;
         overflow-x:unset !important;
         scroll-snap-type:none !important;
-        gap:16px;
+        gap:12px;
         padding:15px;
         -webkit-overflow-scrolling:auto;
         scrollbar-width:auto;
@@ -646,15 +646,34 @@
         scroll-snap-align:none;
         border-radius:12px;
     }
-    .gallery.one-column,
-    .gallery.two-column,
-    .gallery.four-column{
-        display:flex !important;
-        grid-template-columns:none !important;
+    
+         /* 1 Column */
+    .gallery.one-column{
+        grid-template-columns:1fr !important;
     }
-    .gallery.one-column .gallery-item img,
-    .gallery.two-column .gallery-item img,
-    .gallery.four-column .gallery-item img{ height:300px !important; }
+
+    /* 2 Column */
+    .gallery.two-column{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    /* 4 Column */
+    .gallery.four-column{
+        grid-template-columns:repeat(4,1fr) !important;
+    }
+
+    .gallery.one-column .gallery-item img{
+        height:300px !important;
+    }
+
+    .gallery.two-column .gallery-item img{
+        height:180px !important;
+    }
+
+    .gallery.four-column .gallery-item img{
+        height:100px !important;
+    }
+
 
     .overlay{ opacity:0; transition:.3s; }
     .icon{ opacity:0; transition:.3s; }
@@ -809,15 +828,42 @@
     color: #888;
 }
 
-@media (max-width: 768px) {
-    .footer-container {
-        text-align: center;
+@media (max-width:768px){
+
+    .footer-container{
+        display:grid !important;
+        grid-template-columns:repeat(3,1fr);
+        gap:8px;
     }
-    .footer-contact-item {
-        justify-content: center;
+
+    .footer-brand,
+    .footer-contact,
+    .footer-social-section{
+        min-width:auto;
+        padding:12px;
     }
-    .footer-share-icons {
-        justify-content: center;
+
+    .footer-header{
+        font-size:14px;
+    }
+
+    .footer-brand h2{
+        font-size:16px;
+    }
+
+    .footer-brand p,
+    .footer-contact-item,
+    .footer-social-subtitle{
+        font-size:11px;
+    }
+
+    .footer-share-icons a{
+        width:32px;
+        height:32px;
+        font-size:13px;
+    }
+    .main-footer{
+        padding:20px 10px 10px;
     }
 }
 
@@ -1264,7 +1310,7 @@ function getColumnsCount(){
 
 function initPagination(){
     if(window.innerWidth <= 768){
-        currentVisibleRows = 1;
+        currentVisibleRows = 3;
     }
 
     var items = document.querySelectorAll('.gallery-item');
