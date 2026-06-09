@@ -236,9 +236,9 @@
 }
 
 body {
-        overscroll-behavior-y: contain !important; /* Mobile chrome/safari pull-to-refresh-ai complete-aga disable seiyum */
-        -webkit-overflow-scrolling: touch;
-    }
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch;
+}
 
 /* =========================
    HERO
@@ -653,35 +653,27 @@ body {
         scroll-snap-align:none;
         border-radius:12px;
     }
-    
-         /* 1 Column */
+
     .gallery.one-column{
         grid-template-columns:1fr !important;
     }
-
-    /* 2 Column */
     .gallery.two-column{
         grid-template-columns:repeat(2,1fr) !important;
     }
-
-    /* 4 Column */
     .gallery.four-column{
         grid-template-columns:repeat(4,1fr) !important;
     }
-
     .gallery.one-column .gallery-item img{
         height:300px !important;
     }
-
     .gallery.two-column .gallery-item img{
         height:180px !important;
     }
-
     .gallery.four-column .gallery-item img{
         height:100px !important;
     }
 
-
+    /* Mobile overlay: hidden by default, shown on .active */
     .overlay{ opacity:0; transition:.3s; }
     .icon{ opacity:0; transition:.3s; }
     .gallery-item.active .overlay{ opacity:1; }
@@ -836,70 +828,86 @@ body {
 }
 
 /* ==========================================================================
-   2. MOBILE VIEW (Screens up to 768px wide) - FIXED OVERFLOW
+   MOBILE FOOTER (max-width: 768px)
    ========================================================================== */
 @media (max-width: 768px) {
     .footer-container {
         display: grid !important;
-        grid-template-columns: 1fr 1fr; /* Equal 2 columns split */
-        gap: 25px 15px; /* Comfortable spacing without crowding */
-        overflow: hidden; /* Prevent child components from breaking container bounds */
+        grid-template-columns: 1fr 1fr;
+        gap: 25px 15px;
+        overflow: hidden;
     }
 
-    /* Row 1, Column 1 */
     .footer-brand {
         grid-column: 1 / 2;
     }
-    
-    /* Row 1, Column 2 */
+
     .footer-contact {
         grid-column: 2 / 3;
-        min-width: 0; /* CRITICAL FIX: Allows grid items to shrink smaller than their content */
+        min-width: 0;
     }
-    
-    /* Row 2: Share Section */
+
     .footer-social-section {
-        grid-column: 1 / -1; 
+        grid-column: 1 / -1;
         margin-top: 10px;
     }
 
-    /* Typography fixes to prevent text cutoff on small screens */
     .footer-brand h2, .footer-header {
-        font-size: 16px !important; /* Slightly smaller headers so they don't break lines awkwardly */
+        font-size: 16px !important;
         margin-bottom: 12px;
     }
 
-    .footer-brand p, .footer-contact-item span {
-        font-size: 12px !important; /* Optimal compact reading size for mobile split-view */
+    .footer-brand p, .footer-contact-item span, .footer-contact-item a {
+        font-size: 12px !important;
         line-height: 1.4;
-        word-wrap: break-word; /* Forces address text to wrap down */
+        word-wrap: break-word;
         word-break: break-word;
     }
 
-    /* Specifically targets long email strings like photoghor.official@gmail.com */
-    .footer-contact-item span {
+    .footer-contact-item span,
+    .footer-contact-item a {
         display: inline-block;
         width: 100%;
-        overflow-wrap: break-word; /* Forces the long email text to wrap onto a new line safely */
+        overflow-wrap: break-word;
     }
 
     .footer-contact-item {
-        gap: 8px; /* Tighter gap between the icon and text */
+        gap: 8px;
         margin-bottom: 12px;
     }
 
     .footer-contact-item i {
-        font-size: 14px; /* Matches scaled down text */
+        font-size: 14px;
     }
 
-    /* Mobile alignments */
     .footer-container > div {
         text-align: left;
     }
+
     .footer-share-icons {
         justify-content: flex-start;
-        gap: 10px; /* Marginally tighter gap so icons stay on one line if possible */
+        gap: 10px;
     }
+}
+
+
+/* =========================
+   FOOTER CONTACT LINKS
+========================= */
+.footer-contact-link {
+    color: var(--text-nav);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 14px;
+    line-height: 1.6;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    display: inline-block;
+    width: 100%;
+}
+.footer-contact-link:hover {
+    color: #e0b04f;
+    text-decoration: underline;
 }
 
 </style>
@@ -908,7 +916,7 @@ body {
 
 {% block content %}
 
-<!-- ── EXTRA HEADER NAV (Menu + Dropdown) ── -->
+<!-- ── MOBILE DROPDOWN ── -->
 <nav class="mobile-dropdown" id="mobileDropdown" aria-label="Mobile navigation">
     <a href="{% url 'profile' %}">
         <i class="fa-solid fa-house"></i> Home
@@ -986,9 +994,8 @@ body {
                     </div>
                 </div>
 
-                <button class="icon"
-                        onclick="openImage('{{ img_url }}'); event.stopPropagation();"
-                        title="Preview">
+                <!-- FIX: Removed inline onclick — event binding done in JS to prevent mobile bubbling -->
+                <button class="icon" title="Preview">
                     <i class="fa-solid fa-eye"></i>
                 </button>
             </div>
@@ -1063,12 +1070,11 @@ body {
             <h3 class="footer-header">Contact Us</h3>
             <div class="footer-contact-item">
                 <i class="fa-solid fa-location-dot"></i>
-                <span>
-                TamilNadu-Tiruchirappalli72, Kamarajar colony,<br> Musiri,Trichy, India 621211,</span>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kamarajar+colony+Musiri+Trichy+Tamil+Nadu+India+621211" target="_blank" rel="noopener noreferrer" class="footer-contact-link">TamilNadu-Tiruchirappalli72, Kamarajar colony,<br> Musiri, Trichy, India 621211</a>
             </div>
             <div class="footer-contact-item">
                 <i class="fa-solid fa-envelope"></i>
-                <span>photoghor.official@gmail.com</span>
+                <a href="https://mail.google.com/mail/?view=cm&to=itzzsiva05@gmail.com" target="_blank" rel="noopener noreferrer" class="footer-contact-link">itzzsiva05@gmail.com</a>
             </div>
         </div>
 
@@ -1157,6 +1163,7 @@ document.addEventListener('DOMContentLoaded', function(){
     headerContainer.appendChild(navGroup);
 
     initMenuEvents();
+    initGalleryItems();          /* FIX: bind icon clicks after DOM ready */
 });
 
 /* ── MENU EVENTS ── */
@@ -1207,7 +1214,7 @@ function initMenuEvents(){
 /* ── KEYBOARD ── */
 document.addEventListener('keydown', function(e){
     if(e.key === 'Escape'){
-        if(window.closeDesktopNav) window.closeDesktopNav();
+        if(window.closeDesktopNav)    window.closeDesktopNav();
         if(window.closeMobileDropdown) window.closeMobileDropdown();
         closeImage();
     }
@@ -1309,31 +1316,58 @@ function setColumns(cols){
     initPagination();
 }
 
-/* ── MOBILE ACTIVE OVERLAY ── */
-document.querySelectorAll('.gallery-item').forEach(function(item){
-    item.addEventListener('click', function(e){
-        if(window.innerWidth <= 768){
-            if(e.target.closest('a') || e.target.closest('button')) return;
-            document.querySelectorAll('.gallery-item').forEach(function(box){
-                if(box !== item) box.classList.remove('active');
+/* =====================================================================
+   FIX: initGalleryItems
+   - Binds each .icon button with stopPropagation via addEventListener
+     so the click does NOT bubble up to the .gallery-item listener.
+   - Mobile active-overlay logic now also guards against icon/button/a
+     so tapping the eye button never toggles the active class.
+   ===================================================================== */
+function initGalleryItems(){
+    document.querySelectorAll('.gallery-item').forEach(function(item){
+
+        /* --- Eye icon: open lightbox, NO bubble --- */
+        var iconBtn = item.querySelector('.icon');
+        if(iconBtn){
+            iconBtn.addEventListener('click', function(e){
+                e.stopPropagation();               /* stop bubble to gallery-item */
+                var img = item.querySelector('img');
+                if(img) openImage(img.src);
             });
-            this.classList.toggle('active');
-            e.stopPropagation();
+        }
+
+        /* --- Gallery-item tap (mobile active overlay) --- */
+        item.addEventListener('click', function(e){
+            if(window.innerWidth <= 768){
+                /* Ignore taps on any interactive child (links, buttons, icon) */
+                if(
+                    e.target.closest('a') ||
+                    e.target.closest('button') ||
+                    e.target.closest('.icon')
+                ) return;
+
+                /* Deactivate all others, toggle this one */
+                document.querySelectorAll('.gallery-item').forEach(function(box){
+                    if(box !== item) box.classList.remove('active');
+                });
+                item.classList.toggle('active');
+                e.stopPropagation();
+            }
+        });
+    });
+
+    /* Tap outside gallery clears all active states */
+    document.addEventListener('click', function(){
+        if(window.innerWidth <= 768){
+            document.querySelectorAll('.gallery-item').forEach(function(item){
+                item.classList.remove('active');
+            });
         }
     });
-});
+}
 
-document.addEventListener('click', function(){
-    if(window.innerWidth <= 768){
-        document.querySelectorAll('.gallery-item').forEach(function(item){
-            item.classList.remove('active');
-        });
-    }
-});
-
-
-/* ── 🆕 FIXED PAGINATION LOGIC (NO REFRESH CRASH) ── */
-var currentVisibleRows = 2; // Initial rows count
+/* ── PAGINATION ── */
+var currentVisibleRows = 2;
 
 function getColumnsCount(){
     var gallery = document.querySelector('.gallery');
@@ -1341,7 +1375,7 @@ function getColumnsCount(){
     if(gallery.classList.contains('one-column'))  return 1;
     if(gallery.classList.contains('two-column'))  return 2;
     if(gallery.classList.contains('four-column')) return 4;
-    if(window.innerWidth <= 768) return 1; // Mobile view default columns
+    if(window.innerWidth <= 768) return 1;
     if(window.innerWidth <= 992) return 2;
     return 3;
 }
@@ -1365,31 +1399,20 @@ function initPagination(){
     updateLightboxImages();
 }
 
-window.handlePaginationClick = function() {
-    var btn = document.getElementById('actionControlBtn');
-    var items = document.querySelectorAll('.gallery-item');
+window.handlePaginationClick = function(){
+    var btn     = document.getElementById('actionControlBtn');
+    var items   = document.querySelectorAll('.gallery-item');
     var itemsPerRow = getColumnsCount();
 
-    // "Show Less" mode-il irunthal, refresh pannamal mudhal 2 rows-ukku collapse seiyum logic
+    /* Show Less — page reload */
     if(btn.classList.contains('reload-mode-btn')){
-        currentVisibleRows = 2;
-        var targetVisibleCount = itemsPerRow * currentVisibleRows;
-        
-        items.forEach(function(item, index){
-            if(index >= targetVisibleCount) item.classList.add('hidden-item');
-        });
-        
-        updateLightboxImages();
-        updateButtonState();
-        
-        // Gallery top element-ukku smooth scroll seiyum
-        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+        window.location.reload();
         return;
     }
 
-    // "View More" click seithaal sariyaaga adutha 3 rows add aagum logic
+    /* View More — reveal 3 more rows */
     var firstHiddenItem = document.querySelector('.gallery-item.hidden-item');
-    currentVisibleRows += 3; 
+    currentVisibleRows += 3;
     var targetVisibleCount = itemsPerRow * currentVisibleRows;
 
     items.forEach(function(item, index){
@@ -1399,10 +1422,9 @@ window.handlePaginationClick = function() {
     updateLightboxImages();
     updateButtonState();
 
-    // Smooth-aga add aana photos edg-ukku focus koondhu sellum
-    if(firstHiddenItem) {
-        setTimeout(function() {
-            firstHiddenItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if(firstHiddenItem){
+        setTimeout(function(){
+            firstHiddenItem.scrollIntoView({ behavior:'smooth', block:'center' });
         }, 100);
     }
 };
@@ -1415,10 +1437,8 @@ function updateButtonState(){
         document.getElementById('paginationWrapper').style.display = 'block';
     }
 
-    var totalItems       = document.querySelectorAll('.gallery-item').length;
     var hiddenItemsCount = document.querySelectorAll('.gallery-item.hidden-item').length;
 
-    // Ella photos-um open aagi hidden items illai endral, Show Less text maari reload class add aagum
     if(hiddenItemsCount === 0){
         btn.textContent = 'Show Less';
         btn.classList.add('reload-mode-btn');
@@ -1436,60 +1456,47 @@ window.addEventListener('resize', function(){
     initPagination();
 });
 
-
 /* ── SHARE FUNCTION ── */
 function showShareToast(message){
     var toast = document.getElementById('shareToast');
     if(!toast) return;
     toast.textContent = message;
     toast.classList.add('show');
-    setTimeout(function(){ toast.formatList.remove('show'); }, 3000);
+    /* FIX: was toast.formatList.remove (typo) → now toast.classList.remove */
+    setTimeout(function(){ toast.classList.remove('show'); }, 3000);
 }
 
 function shareLink(platform){
-
     var pageUrl   = encodeURIComponent(window.location.href);
     var pageTitle = encodeURIComponent(document.title || 'Photoghor Gallery');
     var rawUrl    = window.location.href;
 
-    /* MOBILE DIRECT APP SHARE */
+    /* MOBILE: open native app directly */
     if(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
-
         if(platform === 'whatsapp'){
-            window.location.href =
-                'https://wa.me/?text=' +
-                encodeURIComponent(
-                    'Check out Photoghor Gallery\n' + rawUrl
-                );
+            window.location.href = 'https://wa.me/?text=' +
+                encodeURIComponent('Check out Photoghor Gallery\n' + rawUrl);
             return;
         }
-
         if(platform === 'facebook'){
-            window.location.href =
-                'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl;
+            window.location.href = 'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl;
             return;
         }
-
         if(platform === 'twitter'){
-            window.location.href =
-                'https://twitter.com/intent/tweet?url=' +
-                pageUrl + '&text=' + pageTitle;
+            window.location.href = 'https://twitter.com/intent/tweet?url=' + pageUrl + '&text=' + pageTitle;
             return;
         }
-
         if(platform === 'linkedin'){
-            window.location.href =
-                'https://www.linkedin.com/sharing/share-offsite/?url=' +
-                pageUrl;
+            window.location.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl;
             return;
         }
     }
 
-    /* DESKTOP SHARE */
+    /* DESKTOP */
     var shareUrls = {
         facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl,
         whatsapp: 'https://web.whatsapp.com/send?text=' + pageTitle + '%20' + pageUrl,
-        twitter: 'https://twitter.com/intent/tweet?url=' + pageUrl + '&text=' + pageTitle,
+        twitter:  'https://twitter.com/intent/tweet?url=' + pageUrl + '&text=' + pageTitle,
         linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl
     };
 
@@ -1501,14 +1508,9 @@ function shareLink(platform){
     }
 
     if(shareUrls[platform]){
-        window.open(
-            shareUrls[platform],
-            '_blank'
-        );
+        window.open(shareUrls[platform], '_blank');
     }
 }
 
 </script>
-
 {% endblock %}
-
