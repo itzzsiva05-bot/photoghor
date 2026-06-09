@@ -103,29 +103,6 @@ def profile(request):
     return render(request, "photoshop/profile.html")
 
 
-
-
-@login_required(login_url='index')
-def download_all_images(request):
-    images   = Gallery.objects.all()
-    response = HttpResponse(content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename="gallery_images.zip"'
-
-    with zipfile.ZipFile(response, 'w') as zf:
-        for img in images:
-            if img.image:
-                try:
-                    # 10-second timeout prevents worker threads from hanging
-                    r = req.get(img.image.url, timeout=10)
-                    if r.status_code == 200:
-                        zf.writestr(os.path.basename(img.image.name), r.content)
-                except req.RequestException:
-                    # Skip images that cannot be fetched rather than aborting the zip
-                    continue
-
-    return response
-
-
 @login_required(login_url='index')
 @require_POST
 def like_photo(request, photo_id):
