@@ -13,6 +13,8 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from .models import Category, Contact, Gallery, Photo, PhotoLike
+from .models import Category as DB_Category, Photo as DB_Photo, Gallery as DB_Gallery
+from .models import Gallery as GalleryModel
 
 
 # ---------------------------------------------------------------------------
@@ -20,6 +22,11 @@ from .models import Category, Contact, Gallery, Photo, PhotoLike
 # ---------------------------------------------------------------------------
 
 def index(request):
+    """
+    Login page — kept active so {% url 'index' %} and
+    @login_required(login_url='index') both resolve correctly.
+    Already-authenticated users are sent straight to live_preview.
+    """
     if request.user.is_authenticated:
         return redirect('live_preview')
 
@@ -63,26 +70,24 @@ def live_preview(request):
     })
 
 
-from .models import Category as DB_Category, Photo as DB_Photo, Gallery as DB_Gallery
-
 def home(request):
+    col               = request.GET.get('col', '4')
     selected_category = request.GET.get('category')
-    categories_list = DB_Category.objects.all()
+    categories_list   = DB_Category.objects.all()
 
     if selected_category:
-        # Inga namma DB_Photo matrum DB_Gallery use panrom
-        photo_query = list(DB_Photo.objects.filter(
-                        category__name=selected_category
-                     ).exclude(image='').exclude(image=None))
-        
-        gallery_query = list(DB_Gallery.objects.filter(
-                        category__name=selected_category
-                     ).exclude(image='').exclude(image=None))
+        photo_query = list(
+            DB_Photo.objects.filter(category__name=selected_category)
+                            .exclude(image='').exclude(image=None)
+        )
+        gallery_query = list(
+            DB_Gallery.objects.filter(category__name=selected_category)
+                              .exclude(image='').exclude(image=None)
+        )
     else:
-        photo_query = list(DB_Photo.objects.exclude(image='').exclude(image=None))
+        photo_query   = list(DB_Photo.objects.exclude(image='').exclude(image=None))
         gallery_query = list(DB_Gallery.objects.exclude(image='').exclude(image=None))
 
-    # All photos bundle dynamic tag injection
     all_combined_photos = (
         [{'type': 'photo',   'obj': p} for p in photo_query] +
         [{'type': 'gallery', 'obj': g} for g in gallery_query]
@@ -91,6 +96,7 @@ def home(request):
     return render(request, 'photoshop/home.html', {
         'categories': categories_list,
         'photos':     all_combined_photos,
+        'col':        col,
     })
 
 
@@ -103,13 +109,16 @@ def profile(request):
     return render(request, "photoshop/profile.html")
 
 
+# ---------------------------------------------------------------------------
+# Like (login required — redirects to login page)
+# ---------------------------------------------------------------------------
+
 @login_required(login_url='index')
 @require_POST
 def like_photo(request, photo_id):
     """
     Toggle a daily like for the authenticated user.
-
-    Uses get_or_create to eliminate the race condition present in the
+    Uses get_or_create to eliminate the race condition in the
     previous check-then-create pattern.
     """
     photo = get_object_or_404(Photo, pk=photo_id)
@@ -141,13 +150,14 @@ def contact(request):
 
     return render(request, 'photoshop/contact.html')
 
-# views.py top-la import mari:
-from .models import Category, Contact, Gallery as GalleryModel, Photo, PhotoLike
 
-# Bottom function-a fix:
-@login_required
-def gallery_view(request):          # rename the function
+# ---------------------------------------------------------------------------
+# Gallery
+# ---------------------------------------------------------------------------
+
+@login_required(login_url='index')
+def gallery_view(request):
     photos = GalleryModel.objects.all()
     return render(request, "photoshop/gallery.html", {
-        "photos": photos
+        "photos": photos,
     })

@@ -276,21 +276,22 @@ body{
 </style>
 
 <div class="landing">
+   
 
-    <!-- Noise -->
+    
     <div class="landing__noise"></div>
 
-    <!-- Header -->
+  
     <header class="landing__header">
         <span class="logo">
             PHOTO<span class="logo--accent">GHOR</span>
         </span>
     </header>
 
-    <!-- Main -->
+    
     <main class="landing__main">
 
-        <!-- Left -->
+       
         <div class="landing__tagline">
             <h1 class="landing__title">
                 Your photos.<br>
@@ -303,10 +304,10 @@ body{
             </p>
         </div>
 
-        <!-- Right -->
+        
         <div class="landing__auth">
 
-            <!-- Google -->
+            
             <a href="{% provider_login_url 'google' %}" class="btn btn--google">
 
                 <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
@@ -319,17 +320,17 @@ body{
                 Continue with Google
             </a>
 
-            <!-- Divider -->
+           
             <div class="landing__divider">
                 <span>or</span>
             </div>
 
-            <!-- Email Login -->
+           
             <a href="{% url 'account_login' %}" class="btn btn--outline">
                 Sign in with Email
             </a>
 
-            <!-- Signup -->
+            
             <a href="{% url 'account_signup' %}" class="btn btn--ghost">
                 Create account
             </a>
@@ -338,7 +339,7 @@ body{
 
     </main>
 
-    <!-- Film Strip -->
+   
     <div class="landing__film-strip">
 
         {% for i in "1234567890123456" %}

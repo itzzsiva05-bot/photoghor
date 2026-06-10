@@ -64,7 +64,7 @@ body { background:var(--bg-page); color:var(--text-primary); overflow-x:hidden; 
 .home-header.opaque-bg {
     background:var(--bg-header); padding:20px 80px;
     box-shadow:0 2px 20px rgba(0,0,0,.08);
-    border-bottom:1px solid var(--border-color);
+    border-bottom:1px solid var(yellow);
 }
 .home-logo {
     font-size:24px; font-weight:700; letter-spacing:3px;
@@ -92,6 +92,7 @@ body { background:var(--bg-page); color:var(--text-primary); overflow-x:hidden; 
 .home-header.opaque-bg:not(.overlay-open) .nav-item:hover { color:var(--accent); }
 .home-header.overlay-open .nav-item { color:var(--accent); }
 
+/* ── FIX: display:none → display:flex so theme button is visible ── */
 .home-theme-btn {
     background:none; border:1px solid rgba(255,255,255,.4); color:#fff;
     width:38px; height:38px; border-radius:8px; cursor:pointer;
@@ -113,7 +114,9 @@ body { background:var(--bg-page); color:var(--text-primary); overflow-x:hidden; 
     transition:all 0.3s; display:block;
 }
 .home-header.opaque-bg:not(.overlay-open) .menu-toggle span { background:var(--text-primary); }
-.home-header.overlay-open .menu-toggle span { background:#fff !important; }
+/* overlay open — always white X, beats any opaque-bg rule */
+.home-header.overlay-open .menu-toggle span,
+.home-header.opaque-bg.overlay-open .menu-toggle span { background:#f2bb14 !important; }
 .home-header.overlay-open .menu-toggle span:nth-child(1) { transform:translateY(8px) rotate(45deg); }
 .home-header.overlay-open .menu-toggle span:nth-child(2) { opacity:0; }
 .home-header.overlay-open .menu-toggle span:nth-child(3) { transform:translateY(-8px) rotate(-45deg); }
@@ -185,78 +188,54 @@ section {
     border:15px solid var(--card-bg); box-shadow:0 10px 40px rgba(0,0,0,.1);
 }
 
-/* ══════════════════════════════════════════
-   PORTFOLIOS — IMAGE SLIDER (CENTERED)
-══════════════════════════════════════════ */
+/* PORTFOLIOS */
 #portfolios { background:var(--bg-page); padding:0; overflow:hidden; }
 
 .portfolio-outer {
-    display: flex;
-    align-items: stretch;
-    width: 100%;
-    position: relative;
-    background: var(--bg-page);
-    overflow: hidden; /* prevent image bleed */
+    display:flex; align-items:stretch;
+    width:100%; position:relative;
+    background:var(--bg-page); overflow:hidden;
 }
 
-/* LEFT: image — fixed height, fully centered, clipped */
 .portfolio-img-area {
-    flex: 1.3;
-    position: relative;
-    overflow: hidden; /* clip — no bleed outside */
-    height: 560px;
-    background: #111;
+    flex:1.3; position:relative;
+    overflow:hidden; height:560px; background:#111;
 }
 
 .port-slide {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    opacity: 0;
-    transition: opacity 1s ease;
-    overflow: hidden; /* double-clip just in case */
+    position:absolute; top:0; left:0;
+    width:100%; height:100%;
+    opacity:0; transition:opacity 1s ease; overflow:hidden;
 }
-.port-slide.active { opacity: 1; }
-
+.port-slide.active { opacity:1; }
 .port-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
-    display: block;
+    width:100%; height:100%;
+    object-fit:cover; object-position:center center; display:block;
 }
 
-/* RIGHT: details panel — vertically centered */
 .portfolio-details-area {
-    flex: 0.85;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 40px 80px;
-    height: 560px;
-    box-sizing: border-box;
+    flex:0.85; display:flex; flex-direction:column;
+    justify-content:center; padding:40px 80px;
+    height:560px; box-sizing:border-box;
 }
 .portfolio-details-area .subtitle {
-    margin-bottom: 14px;
-    font-size: 11px; font-weight: 500; letter-spacing: 3px;
-    color: var(--accent); text-transform: uppercase;
+    margin-bottom:14px; font-size:11px; font-weight:500;
+    letter-spacing:3px; color:var(--accent); text-transform:uppercase;
 }
 .portfolio-details-area h2 {
-    font-size: 48px; font-weight: 600; line-height: 1.2;
-    color: var(--text-primary); margin-bottom: 0;
+    font-size:48px; font-weight:600; line-height:1.2;
+    color:var(--text-primary); margin-bottom:0;
 }
 .port-divider {
-    width: 1px; height: 60px;
-    background: var(--border-color);
-    margin: 30px 0;
+    width:1px; height:60px;
+    background:var(--border-color); margin:30px 0;
 }
 .view-details-btn {
-    font-size: 13px; font-weight: 700;
-    color: var(--text-primary); text-decoration: none;
-    letter-spacing: 1.5px; transition: color 0.3s;
-    display: inline-block;
+    font-size:13px; font-weight:700;
+    color:var(--text-primary); text-decoration:none;
+    letter-spacing:1.5px; transition:color 0.3s; display:inline-block;
 }
-.view-details-btn:hover { color: var(--accent); }
+.view-details-btn:hover { color:var(--accent); }
 
 /* GALLERY */
 .gallery-preview-section {
@@ -284,29 +263,14 @@ section {
 }
 .gallery-counter-row .gc-cur { color:var(--accent); font-weight:700; }
 
-/* Gallery — 2 columns only */
-.gallery-slider-wrap {
-    margin-top: 25px;
-    width: 100%;
-}
+.gallery-slider-wrap { margin-top:25px; width:100%; }
 .gallery-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    display:grid; grid-template-columns:1fr 1fr; gap:16px;
 }
 .gallery-layout img {
-    width: 100%; height: 260px;
-    object-fit: cover; object-position: center center;
-    display: block;
-    box-shadow: 0 5px 20px rgba(0,0,0,.1);
-    transition: opacity 0.4s ease;
-}
-@media(max-width:768px) {
-    .gallery-layout img { height: 180px; }
-}
-@media(max-width:480px) {
-    .gallery-layout { gap: 10px; }
-    .gallery-layout img { height: 130px; }
+    width:100%; height:260px;
+    object-fit:cover; object-position:center center; display:block;
+    box-shadow:0 5px 20px rgba(0,0,0,.1); transition:opacity 0.4s ease;
 }
 
 /* TESTIMONIALS */
@@ -369,32 +333,28 @@ section {
 
 /* FOOTER */
 footer {
-    background:#0b0b0b; color:#fff;
-    padding:50px 10% 50px 15%;
-    display:flex; justify-content:space-between; align-items:center;
-    font-size:13px; flex-wrap:wrap; gap:20px;
+    background:#0b0b0b; color:#fff; padding:40px 80px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
 }
 .footer-share-label {
     font-size:11px; letter-spacing:3px; text-transform:uppercase;
     color:#666; margin-bottom:14px;
 }
-.footer-socials { display:flex; gap:12px; flex-wrap:wrap; }
+.footer-socials { display:flex; gap:35px; align-items:center; flex-wrap:wrap; }
 .share-btn {
-    display:inline-flex; align-items:center; gap:8px;
-    padding:9px 18px; border-radius:4px;
-    font-size:12px; font-weight:600; letter-spacing:.5px;
-    text-decoration:none; color:#fff; cursor:pointer;
-    transition:transform 0.2s, filter 0.2s; border:none;
+    display:inline-flex; align-items:center; border-radius:4px;
+    padding:5px 3px; color:#fff; text-decoration:none;
+    gap:8px; font-size:15px; transition:all .3s ease;
 }
-.share-btn:hover { filter:brightness(1.15); transform:translateY(-2px); }
-.share-btn i { font-size:14px; }
-.share-btn.fb   { background:#1877f2; }
-.share-btn.tw   { background:#1da1f2; }
-.share-btn.wa   { background:#25d366; }
-.share-btn.li   { background:#0077b5; }
-.share-btn.pi   { background:#e60023; }
-.share-btn.cp   { background:#444; }
-.copyright { color:#666; letter-spacing:.5px; }
+.share-btn:hover { transform:translateY(-2px); opacity:.9; }
+.share-btn i { display:inline-block !important; font-size:16px; }
+.share-btn.fb { background:#1877f2; }
+.share-btn.tw { background:#1da1f2; }
+.share-btn.wa { background:#25d366; }
+.share-btn.li { background:#0077b5; }
+.share-btn.pi { background:#e60023; }
+.share-btn.cp { background:#444; }
+.copyright { color:#fff; font-size:14px; letter-spacing:.5px; }
 .copyright span { color:#fff; font-weight:600; }
 .copy-toast {
     position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
@@ -404,7 +364,7 @@ footer {
 }
 .copy-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-/* ── RESPONSIVE ── */
+/* RESPONSIVE */
 @media(max-width:1200px) {
     .home-header,.home-header.opaque-bg { padding:25px 40px; }
     section { padding:100px 5% 100px 10%; }
@@ -419,27 +379,17 @@ footer {
     .contact-container { grid-template-columns:1fr; gap:50px; }
     .about-img img { max-width:100%; }
     .testimonial-card { flex:0 0 100%; }
-
-    /* Portfolio — stack vertically on tablet/mobile */
-    .portfolio-outer {
-        flex-direction: column;
-    }
-    .portfolio-img-area {
-        width: 100%; flex: none;
-        height: 56vw; min-height: 280px;
-    }
-    .portfolio-details-area {
-        flex: none; width: 100%; height: auto;
-        padding: 35px 30px;
-        justify-content: flex-start; /* top-align on mobile */
-    }
-    .portfolio-details-area h2 { font-size: 32px; }
-    .port-divider { height: 40px; margin: 20px 0; }
-
-    /* Gallery */
+    .portfolio-outer { flex-direction:column; }
+    .portfolio-img-area { width:100%; flex:none; height:56vw; min-height:280px; }
+    .portfolio-details-area { flex:none; width:100%; height:auto; padding:35px 30px; justify-content:flex-start; }
+    .portfolio-details-area h2 { font-size:32px; }
+    .port-divider { height:40px; margin:20px 0; }
     .gallery-preview-section { padding:25px 5% 60px 5%; }
     .gallery-row { grid-template-columns:repeat(2,1fr); gap:14px; }
     .gallery-item img { height:180px; }
+}
+@media(max-width:768px) {
+    .gallery-layout img { height:180px; }
 }
 @media(max-width:576px) {
     .home-header,.home-header.opaque-bg { padding:20px 25px; }
@@ -449,23 +399,22 @@ footer {
     .hero-content h1 { font-size:36px; }
     .about-text h2,.testimonial-header h2,
     .contact-form-side h2,.contact-info-side h2 { font-size:28px; }
-
-    /* Portfolio full width on small mobile */
-    .portfolio-img-area { height: 70vw; min-height: 240px; }
-    .portfolio-details-area { padding: 28px 20px; }
-    .portfolio-details-area h2 { font-size: 26px; }
-    .port-divider { height: 30px; margin: 18px 0; }
-
-    /* Gallery single col */
+    .portfolio-img-area { height:70vw; min-height:240px; }
+    .portfolio-details-area { padding:28px 20px; }
+    .portfolio-details-area h2 { font-size:26px; }
+    .port-divider { height:30px; margin:18px 0; }
     .gallery-row { grid-template-columns:1fr; gap:14px; }
     .gallery-item img { height:200px; }
     .gallery-counter-row { font-size:12px; }
-
     .form-group-row { grid-template-columns:1fr; gap:35px; }
     footer { flex-direction:column; gap:16px; }
     .footer-socials { gap:8px; flex-wrap:wrap; }
     .share-btn { padding:8px 12px; font-size:11px; }
     .testimonial-header { flex-direction:column; align-items:flex-start; gap:20px; }
+}
+@media(max-width:480px) {
+    .gallery-layout { gap:10px; }
+    .gallery-layout img { height:130px; }
 }
 </style>
 </head>
@@ -536,19 +485,15 @@ footer {
     </div>
 </section>
 
-<!-- ══ PORTFOLIOS — SLIDER ══ -->
+<!-- PORTFOLIOS -->
 <section id="portfolios" style="padding:0; min-height:auto;">
     <div class="portfolio-outer">
-
-        <!-- LEFT: Image — driven by linked slider -->
         <div class="portfolio-img-area" id="port-img-area">
             <img id="port-main-img"
                  src="http://res.cloudinary.com/drjhngqp0/image/upload/v1/media/gallery/sp_pfbndj"
                  alt="Portfolio"
                  style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:opacity 0.4s ease;">
         </div>
-
-        <!-- RIGHT: Details -->
         <div class="portfolio-details-area" id="port-details">
             <div class="subtitle" id="port-cat">Photography</div>
             <h2 id="port-title">Beautiful Girl Sleeping at Home</h2>
@@ -675,9 +620,7 @@ footer {
             </div>
             <div class="info-block">
                 <h4>Our Address</h4>
-                <p>TamilNadu-Tiruchirappalli72, Kamarajar colony,
-                    Musiri, Trichy, India 621211
-                </p>
+                <p>TamilNadu-Tiruchirappalli72, Kamarajar colony,<br>Musiri, Trichy, India 621211</p>
             </div>
         </div>
     </div>
@@ -697,7 +640,7 @@ footer {
 <div class="copy-toast" id="copy-toast">Link copied to clipboard!</div>
 
 <script>
-// ── THEME TOGGLE ──────────────────────────────────────────────────
+// THEME TOGGLE
 const themeBtn  = document.getElementById('home-theme-btn');
 const themeIcon = document.getElementById('home-theme-icon');
 function syncIcon() {
@@ -714,7 +657,7 @@ themeBtn.addEventListener('click', () => {
 const saved = localStorage.getItem('theme');
 if (saved) { document.documentElement.setAttribute('data-theme', saved); syncIcon(); }
 
-// ── MENU ──────────────────────────────────────────────────────────
+// MENU
 const menuTrigger = document.getElementById('menu-trigger');
 const mainHeader  = document.getElementById('main-header');
 menuTrigger.addEventListener('click', () => mainHeader.classList.toggle('overlay-open'));
@@ -736,7 +679,7 @@ document.querySelectorAll('.right-dots a').forEach(a => {
     });
 });
 
-// ── HERO SLIDER ───────────────────────────────────────────────────
+// HERO SLIDER
 const heroSlides  = document.querySelectorAll('.slide');
 const heroCounter = document.getElementById('slide-index-counter');
 let hIdx = 0;
@@ -748,13 +691,7 @@ function nextHero() {
 }
 setInterval(nextHero, 4000);
 
-// ══════════════════════════════════════════════════════════════════
-// UNIFIED LINKED SLIDER
-// Portfolio (top)     → image[n]
-// Gallery col-left    → image[n+1]
-// Gallery col-right   → image[n+2]
-// Next/Prev shifts everything by 1
-// ══════════════════════════════════════════════════════════════════
+// LINKED GALLERY SLIDER
 const allImages = [
     { src:'http://res.cloudinary.com/drjhngqp0/image/upload/v1/media/photos/a_lpspy9', cat:'Photography', title:'Beautiful memories.' },
     { src:'http://res.cloudinary.com/drjhngqp0/image/upload/v1/media/gallery/12_f5zfua', cat:'Landscape',   title:'Dark Weather in Hulyan Forest' },
@@ -808,11 +745,10 @@ function goPrev() { activeIdx = (activeIdx - 1 + TOTAL) % TOTAL; renderAll(true)
 
 document.getElementById('gal-next').addEventListener('click', goNext);
 document.getElementById('gal-prev').addEventListener('click', goPrev);
-
 setInterval(goNext, 5000);
 renderAll(false);
 
-// ── TESTIMONIALS SLIDER ───────────────────────────────────────────
+// TESTIMONIALS SLIDER
 const track   = document.getElementById('testimonial-track');
 const tCards  = document.querySelectorAll('.testimonial-card');
 let tIdx = 0;
@@ -830,7 +766,7 @@ setInterval(() => {
 window.addEventListener('resize', updateT);
 updateT();
 
-// ── SCROLL SPY ────────────────────────────────────────────────────
+// SCROLL SPY
 const sideLabel  = document.getElementById('vertical-label');
 const dots       = document.querySelectorAll('.right-dots a');
 const navItems   = document.querySelectorAll('.nav-item');
@@ -849,7 +785,7 @@ function updateSpy() {
 window.addEventListener('scroll', updateSpy);
 updateSpy();
 
-// ── FOOTER SHARE BUTTONS ──────────────────────────────────────────
+// FOOTER SHARE BUTTONS
 function buildShareButtons() {
     const url   = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(document.title);

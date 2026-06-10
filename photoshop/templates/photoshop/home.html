@@ -247,7 +247,7 @@ body {
 .hero-banner{
     position:relative;
     background: url('{% static "images/gallery-banner.jpg" %}') center/cover,
-                url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1400&q=80') center/cover;
+                url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80') center/cover;
     background-size: cover;
     background-position: center;
     height:180px;
@@ -1512,5 +1512,21 @@ function shareLink(platform){
     }
 }
 
+document.addEventListener('DOMContentLoaded', function(){
+
+    const params = new URLSearchParams(window.location.search);
+    const col = params.get('col');
+
+    if(col === '1'){
+        setColumns(1);
+    }
+    else if(col === '2'){
+        setColumns(2);
+    }
+    else if(col === '4'){
+        setColumns(4);
+    }
+
+});
 </script>
 {% endblock %}
