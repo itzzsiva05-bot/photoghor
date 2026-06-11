@@ -1,64 +1,68 @@
 {% extends 'photoshop/base.html' %}
 {% load static %}
 
-{% block title %}Photoghor Gallery{% endblock %}
-
+{% block title %}Photoghor — Photo Detail{% endblock %}
 {% block header_extra %}{% endblock %}
 
 {% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── RESET ── */
+/* ══ RESET ══ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── THEME VARIABLES ── */
+/* ══ THEME VARIABLES ══ */
 [data-theme="dark"] {
-  --bg:           #0f0f0f;
-  --fg:           #f0f0f0;
-  --border:       #292929;
-  --grey:         #aaaaaa;
-  --menu-bg:      #181818;
-  --menu-text:    #ffffff;
-  --gold:         #e0b034;
-  --mob-active:   #242424;
-  --shadow:       0px 15px 35px rgba(0,0,0,0.45);
-  --sidebar-bg:   #141414;
-  --card-bg:      #141414;
+  --bg:         #0f0f0f;
+  --fg:         #f0f0f0;
+  --border:     #292929;
+  --grey:       #aaaaaa;
+  --menu-bg:    #181818;
+  --menu-text:  #ffffff;
+  --gold:       #e0b034;
+  --mob-active: #242424;
+  --shadow:     0 15px 35px rgba(0,0,0,0.55);
+  --sidebar-bg: #141414;
 }
-
 [data-theme="light"] {
-  --bg:           #ffffff;
-  --fg:           #111111;
-  --border:       #e5e5e5;
-  --grey:         #777777;
-  --menu-bg:      #ffffff;
-  --menu-text:    #111111;
-  --gold:         #e0b034;
-  --mob-active:   #f5f5f5;
-  --shadow:       0px 15px 35px rgba(0,0,0,0.15);
-  --sidebar-bg:   #fafafa;
-  --card-bg:      #fafafa;
+  --bg:         #ffffff;
+  --fg:         #111111;
+  --border:     #e5e5e5;
+  --grey:       #777777;
+  --menu-bg:    #ffffff;
+  --menu-text:  #111111;
+  --gold:       #c99a20;
+  --mob-active: #f5f5f5;
+  --shadow:     0 15px 35px rgba(0,0,0,0.12);
+  --sidebar-bg: #fafafa;
 }
 
+html { scroll-behavior: smooth; }
 body {
   font-family: 'Barlow', sans-serif;
-  background: var(--bg);
-  color: var(--fg);
-  transition: background 0.3s, color 0.3s;
+  background: var(--bg); color: var(--fg);
+  transition: background .3s, color .3s;
+  min-height: 100vh;
 }
 
-/* ── THEME TOGGLE ── */
-.theme-btn {
-  display: none !important;
-  visibility: hidden !important;
-}
-
-/* ── NAV CONTAINER ── */
+/* ══════════════════════════════════════
+   NAV CONTAINER
+══════════════════════════════════════ */
 .options-menu-container {
   position: fixed; top: 20px; right: 25px;
-  z-index: 9999; display: flex; align-items: center; gap: 25px;
+  z-index: 9999; display: flex; align-items: center; gap: 14px;
 }
 
-/* ── MENU BUTTON ── */
+/* ── THEME BUTTON ── */
+.theme-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: transparent;
+  color: var(--fg); cursor: pointer; font-size: 15px;
+  display: none; align-items: center; justify-content: center;
+  transition: all .25s;
+}
+.theme-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── HAMBURGER BUTTON ── */
 .menu-btn {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 20px; background: transparent;
@@ -69,9 +73,10 @@ body {
   letter-spacing: 1.5px; text-transform: uppercase;
   transition: all .25s; user-select: none;
 }
+.menu-btn:hover { background: var(--gold); color: #000; }
 .ham-icon { display: flex; flex-direction: column; gap: 4px; width: 16px; }
 .ham-icon span {
-  display: block; height: 2px; background: var(--gold);
+  display: block; height: 2px; background: currentColor;
   border-radius: 2px;
   transition: transform .3s ease, opacity .2s ease;
   transform-origin: center;
@@ -82,7 +87,7 @@ body {
 
 /* ── DESKTOP HORIZONTAL MENU ── */
 .desktop-horizontal-menu {
-  display: flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; gap: 4px;
   opacity: 0; transform: translateX(30px); visibility: hidden;
   transition: all .4s cubic-bezier(0.16,1,0.3,1);
 }
@@ -92,27 +97,57 @@ body {
 .desktop-horizontal-menu a {
   color: var(--menu-text); text-decoration: none;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px; font-weight: 600;
+  font-size: 13px; font-weight: 600;
   letter-spacing: 1.3px; text-transform: uppercase;
-  padding: 8px 14px; border-radius: 6px;
-  transition: all .2s;
+  padding: 8px 13px; border-radius: 6px;
+  transition: all .2s; white-space: nowrap;
 }
 .desktop-horizontal-menu a:hover { color: var(--gold); }
-.desktop-horizontal-menu a.active {
-  background: #222222; color: #ffffff;
-}
-[data-theme="light"] .desktop-horizontal-menu a.active {
-  background: #111111; color: #ffffff;
-}
+.desktop-horizontal-menu a.active { background: #222; color: #fff; }
+[data-theme="light"] .desktop-horizontal-menu a.active { background: #111; color: #fff; }
 
-/* Mobile layer hidden on desktop */
-.mobile-dropdown-card { display: none; }
+/* ── MOBILE DROPDOWN CARD ── */
+.mobile-dropdown-card {
+  display: none; /* shown via media query */
+  position: fixed; top: 70px; right: 15px;
+  background: var(--menu-bg);
+  flex-direction: column; padding: 10px;
+  border-radius: 16px; width: 240px;
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+  opacity: 0; visibility: hidden;
+  transform: translateY(-14px) scale(0.95);
+  transform-origin: top right;
+  transition: all .35s cubic-bezier(0.16,1,0.3,1);
+  z-index: 9998;
+}
+.mobile-dropdown-card.open {
+  opacity: 1; transform: translateY(0) scale(1); visibility: visible;
+}
+.mobile-dropdown-card a {
+  display: flex; align-items: center; gap: 13px;
+  padding: 11px 16px; color: var(--menu-text);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px;
+  border-radius: 10px; text-decoration: none; transition: all .2s;
+}
+.mobile-dropdown-card a i {
+  font-size: 15px; width: 20px;
+  color: var(--gold); text-align: center; flex-shrink: 0;
+}
+.mobile-dropdown-card a:hover,
+.mobile-dropdown-card a.active { background: var(--mob-active); color: var(--gold); }
+.mob-divider { height: 1px; background: var(--border); margin: 5px 0; }
 
-/* ── HERO ── */
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
 .hero {
-  height: 260px;
-  background: linear-gradient(rgba(0,0,0,.62),rgba(0,0,0,.62)),
-    url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80') center/cover;
+  height: 280px;
+  background:
+    linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.65)),
+    url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80')
+    center / cover no-repeat;
   display: flex; align-items: center; padding: 0 60px;
 }
 .hero-content {
@@ -120,120 +155,144 @@ body {
   align-items: center; justify-content: space-between;
 }
 .hero-title {
-  color: #fff; font-size: 52px; font-weight: 700;
+  color: #fff; font-size: 54px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 3px;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Barlow Condensed', sans-serif; line-height: 1;
 }
+.hero-title span { color: var(--gold); }
 .breadcrumb {
   display: flex; align-items: center; gap: 10px;
-  color: #fff; font-size: 14px;
+  color: rgba(255,255,255,.7); font-size: 13px;
   text-transform: uppercase; letter-spacing: 1px;
   font-family: 'Barlow Condensed', sans-serif;
 }
-.breadcrumb a { color: #fff; text-decoration: none; transition: color .2s; }
+.breadcrumb a { color: rgba(255,255,255,.7); text-decoration: none; transition: color .2s; }
 .breadcrumb a:hover { color: var(--gold); }
+.breadcrumb .sep { color: var(--gold); }
 
-/* ── PHOTO WRAP ── */
-.photo-wrap { padding: 60px; }
+/* ══════════════════════════════════════
+   PHOTO WRAP
+══════════════════════════════════════ */
+.photo-wrap { padding: 50px 60px 0; }
 .photo-wrap img {
-  width: 100%; height: 600px; object-fit: cover;
-  display: block; border-radius: 10px;
+  width: 100%; height: 620px; object-fit: cover;
+  display: block; border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
 }
 
-/* ── INFO SECTION ── */
+/* ══════════════════════════════════════
+   INFO SECTION
+══════════════════════════════════════ */
 .info-section {
-  padding: 0 60px 80px;
-  display: grid; grid-template-columns: 300px 1fr; gap: 60px;
+  padding: 50px 60px 80px;
+  display: grid; grid-template-columns: 290px 1fr;
+  gap: 60px; align-items: start;
 }
 
 /* ── SIDEBAR ── */
 .sidebar {
   border: 1px solid var(--border);
-  border-radius: 10px; overflow: hidden;
+  border-radius: 12px; overflow: hidden;
   background: var(--sidebar-bg);
+  position: sticky; top: 90px;
 }
 .sidebar-row {
-  display: flex; gap: 15px; padding: 22px;
-  border-bottom: 1px solid var(--border);
+  display: flex; gap: 15px; padding: 20px;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
 }
 .sidebar-row:last-child { border-bottom: none; }
-.sidebar-row > i { color: #888; margin-top: 5px; font-size: 15px; }
-.sidebar-label {
-  font-size: 13px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1px;
-  color: var(--grey);
-  font-family: 'Barlow Condensed', sans-serif;
+.sidebar-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(224,176,52,.1);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.sidebar-value { margin-top: 5px; font-size: 15px; }
+.sidebar-icon i { color: var(--gold); font-size: 14px; }
+.sidebar-label {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--grey); font-family: 'Barlow Condensed', sans-serif;
+  margin-bottom: 4px;
+}
+.sidebar-value { font-size: 14px; font-weight: 500; line-height: 1.4; }
 
 /* ── PHOTO INFO ── */
-.photo-info h2 {
-  font-size: 42px; text-transform: uppercase;
-  letter-spacing: 2px; margin-bottom: 25px;
-  padding-bottom: 15px; border-bottom: 1px solid var(--border);
+.photo-info-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 26px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.photo-info-header h2 {
+  font-size: 38px; text-transform: uppercase;
+  letter-spacing: 2px; margin: 0;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+}
+.info-badge {
+  background: var(--gold); color: #000;
   font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 5px 11px; border-radius: 4px; white-space: nowrap;
 }
 .photo-name {
-  font-size: 20px; font-weight: 600; margin-bottom: 16px;
+  font-size: 20px; font-weight: 700; margin-bottom: 18px;
   text-transform: uppercase;
   font-family: 'Barlow Condensed', sans-serif;
   color: var(--gold); letter-spacing: 1px;
+  display: flex; align-items: center; gap: 10px;
 }
-.photo-desc {
-  line-height: 1.85; color: var(--grey); font-size: 15px;
+.photo-name::before {
+  content: ''; display: block; width: 4px; height: 20px;
+  background: var(--gold); border-radius: 2px; flex-shrink: 0;
 }
+.photo-desc { line-height: 1.9; color: var(--grey); font-size: 15px; max-width: 680px; }
 
-/* ── INLINE SHARE ROW ── */
+/* ── SHARE ROW (inline icons) ── */
 .share-row {
-  margin-top: 35px; padding-top: 30px;
+  margin-top: 34px; padding-top: 28px;
   border-top: 1px solid var(--border);
-  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
 }
 .share-label {
-  font-size: 16px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1px;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  font-family: 'Barlow Condensed', sans-serif; color: var(--grey);
 }
-.share-icons { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.share-icons { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .share-icons a {
-  width: 42px; height: 42px;
+  width: 40px; height: 40px;
   border: 1px solid var(--border); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: #555; text-decoration: none; transition: .3s;
+  color: var(--grey); text-decoration: none;
+  font-size: 14px; transition: all .25s;
 }
-.share-icons a:hover { background: #111; color: #fff; border-color: #111; }
+.share-icons a:hover { background: var(--gold); color: #000; border-color: var(--gold); transform: translateY(-2px); }
 
-/* ══════════════════════════════
-   FOOTER — BRANDED SHARE BUTTONS
-══════════════════════════════ */
+/* ══════════════════════════════════════
+   FOOTER SHARE BAR
+══════════════════════════════════════ */
 .detail-footer {
-  background: #111111;
-  padding: 28px 60px;
+  background: #111111; padding: 32px 60px;
   display: flex; align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap; gap: 20px;
+  justify-content: space-between; flex-wrap: wrap; gap: 20px;
+  border-top: 1px solid #1e1e1e;
 }
 .footer-share-label {
-  font-size: 11px; font-weight: 600;
+  font-size: 11px; font-weight: 700;
   letter-spacing: 2.5px; text-transform: uppercase;
-  color: #888; margin-bottom: 13px;
+  color: #666; margin-bottom: 14px;
   font-family: 'Barlow Condensed', sans-serif;
 }
-.footer-share-btns {
-  display: flex; gap: 10px;
-  flex-wrap: wrap; align-items: center;
-}
+.footer-share-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .fsb {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 16px; border-radius: 6px;
+  padding: 9px 16px; border-radius: 7px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px; font-weight: 600; letter-spacing: 0.4px;
+  font-size: 13px; font-weight: 700; letter-spacing: .3px;
   color: #fff; text-decoration: none; border: none;
-  cursor: pointer;
+  cursor: pointer; white-space: nowrap;
   transition: filter .2s ease, transform .15s ease;
-  white-space: nowrap;
 }
-.fsb:hover  { filter: brightness(1.18); transform: translateY(-2px); }
+.fsb:hover  { filter: brightness(1.2); transform: translateY(-2px); }
 .fsb:active { transform: translateY(0); }
 .fsb i { font-size: 13px; }
 .fsb-facebook  { background: #1877f2; }
@@ -241,84 +300,95 @@ body {
 .fsb-whatsapp  { background: #25d366; }
 .fsb-linkedin  { background: #0a66c2; }
 .fsb-pinterest { background: #e60023; }
-.fsb-copy      { background: #555555; }
-.fsb-copy.copied { background: #2e7d32; transition: background .3s; }
-.footer-copy { color: #888; font-size: 14px; }
-.footer-copy strong { color: #fff; }
+.fsb-copy      { background: #444444; }
+.fsb-copy.copied { background: #2e7d32; }
+.footer-copy { color: #555; font-size: 13px; }
+.footer-copy strong { color: #888; }
 
-/* ══════════════════════════════
-   RESPONSIVE — TABLET ≤ 900px
-══════════════════════════════ */
+/* ══════════════════════════════════════
+   TABLET ≤ 1024px
+══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero { height: 240px; padding: 0 40px; }
+  .hero-title { font-size: 44px; }
+  .photo-wrap { padding: 40px 40px 0; }
+  .photo-wrap img { height: 500px; }
+  .info-section { padding: 40px 40px 70px; gap: 40px; grid-template-columns: 260px 1fr; }
+  .detail-footer { padding: 28px 40px; }
+}
+
+/* ══════════════════════════════════════
+   TABLET ≤ 900px
+══════════════════════════════════════ */
 @media (max-width: 900px) {
   .hero { height: 220px; padding: 0 25px; }
-  .hero-content { flex-direction: column; align-items: flex-start; justify-content: center; gap: 10px; }
-  .hero-title { font-size: 38px; }
-  .photo-wrap { padding: 30px 25px; }
+  .hero-content { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .hero-title { font-size: 36px; }
+  .photo-wrap { padding: 30px 25px 0; }
   .photo-wrap img { height: 420px; }
-  .info-section { grid-template-columns: 1fr; padding: 0 25px 60px; gap: 35px; }
+  .info-section { grid-template-columns: 1fr; padding: 30px 25px 60px; gap: 28px; }
+  .sidebar { position: static; }
   .detail-footer { padding: 28px 25px; }
 }
 
-/* ══════════════════════════════
-   RESPONSIVE — MOBILE ≤ 768px
-══════════════════════════════ */
+/* ══════════════════════════════════════
+   MOBILE ≤ 768px — FULL FIX
+══════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  .options-menu-container { top: 15px; right: 15px; }
+  /* Nav */
+  .options-menu-container { top: 12px; right: 12px; gap: 10px; }
   .desktop-horizontal-menu { display: none !important; }
+  .mobile-dropdown-card { display: flex; }
+  .theme-btn { width: 34px; height: 34px; font-size: 13px; }
+  .menu-btn { padding: 9px 14px; font-size: 12px; gap: 8px; }
 
-  .mobile-dropdown-card {
-    display: flex;
-    position: fixed; top: 70px; right: 15px;
-    background: var(--menu-bg);
-    flex-direction: column; gap: 0; padding: 12px;
-    border-radius: 16px; width: 240px; align-items: stretch;
-    box-shadow: var(--shadow); border: 1px solid var(--border);
-    opacity: 0; visibility: hidden;
-    transform: translateY(-15px) scale(0.95);
-    transform-origin: top right;
-    transition: all .35s cubic-bezier(0.16,1,0.3,1);
-    z-index: 9998;
-  }
-  .mobile-dropdown-card.open {
-    opacity: 1; transform: translateY(0) scale(1); visibility: visible;
-  }
-  .mobile-dropdown-card a {
-    display: flex; align-items: center; gap: 15px;
-    padding: 12px 18px; color: var(--menu-text);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 1px;
-    border-radius: 10px; text-decoration: none;
-    background: transparent; transition: all .2s;
-  }
-  .mobile-dropdown-card a i {
-    font-size: 16px; width: 22px;
-    color: var(--gold); text-align: center;
-  }
-  .mobile-dropdown-card a:hover,
-  .mobile-dropdown-card a.active {
-    background: var(--mob-active); color: var(--gold);
-  }
-
-  .hero { height: 180px; padding: 0 15px; }
-  .hero-title { font-size: 28px; }
+  /* Hero */
+  .hero { height: 190px; padding: 0 16px; }
+  .hero-title { font-size: 28px; letter-spacing: 2px; }
   .breadcrumb { display: none; }
 
-  .photo-wrap { padding: 20px 15px; }
-  .photo-wrap img { height: 250px; }
+  /* Photo */
+  .photo-wrap { padding: 16px 16px 0; }
+  .photo-wrap img { height: 230px; border-radius: 8px; }
 
-  .info-section { padding: 0 15px 50px; }
-  .sidebar-row { padding: 18px 15px; }
-  .photo-info h2 { font-size: 28px; }
-  .photo-name { font-size: 18px; }
+  /* Info */
+  .info-section { grid-template-columns: 1fr; padding: 18px 16px 50px; gap: 20px; }
+  .sidebar { position: static; border-radius: 10px; }
+  .sidebar-row { padding: 14px 13px; gap: 11px; }
+  .sidebar-icon { width: 30px; height: 30px; border-radius: 6px; }
+  .sidebar-icon i { font-size: 12px; }
+  .sidebar-label { font-size: 10px; }
+  .sidebar-value { font-size: 13px; }
 
-  .detail-footer {
-    padding: 22px 15px;
-    flex-direction: column; align-items: flex-start;
-  }
-  .fsb { padding: 8px 13px; font-size: 12px; }
-  .footer-share-btns { gap: 8px; }
+  /* Photo info */
+  .photo-info-header { gap: 10px; margin-bottom: 18px; }
+  .photo-info-header h2 { font-size: 24px; letter-spacing: 1.5px; }
+  .info-badge { font-size: 10px; padding: 4px 9px; }
+  .photo-name { font-size: 16px; gap: 8px; }
+  .photo-name::before { height: 16px; }
+  .photo-desc { font-size: 14px; line-height: 1.75; }
+
+  /* Share row */
+  .share-row { margin-top: 22px; padding-top: 18px; gap: 12px; }
+  .share-icons a { width: 36px; height: 36px; font-size: 13px; }
+
+  /* Footer */
+  .detail-footer { padding: 20px 16px; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .footer-share-btns { gap: 6px; }
+  .fsb { padding: 8px 11px; font-size: 11px; gap: 6px; }
+  .fsb i { font-size: 11px; }
+  .footer-copy { font-size: 12px; }
+}
+
+/* ══════════════════════════════════════
+   SMALL MOBILE ≤ 400px
+══════════════════════════════════════ */
+@media (max-width: 400px) {
+  .hero-title { font-size: 22px; }
+  .photo-wrap img { height: 190px; }
+  .photo-info-header h2 { font-size: 20px; }
+  .fsb { padding: 7px 9px; font-size: 10px; }
 }
 </style>
 {% endblock %}
@@ -326,22 +396,27 @@ body {
 
 {% block content %}
 
-<!-- ══════════════════════════
+<!-- ══════════════════════════════════════
      NAVIGATION
-══════════════════════════ -->
+══════════════════════════════════════ -->
 <div class="options-menu-container">
 
-  <!-- ── DESKTOP MENU ── -->
+  <!-- Theme Toggle -->
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </button>
+
+  <!-- Desktop Horizontal Menu -->
   <nav class="desktop-horizontal-menu" id="desktopMenu">
     <a href="/profile/">Home</a>
     <a href="/home/">Photo Gallery</a>
     <a href="/home/?col=1">1 Column</a>
     <a href="/home/?col=2">2 Column</a>
     <a href="/home/?col=4">4 Column</a>
-    <a href="#" class="active" style="background:#222;color:#fff;padding:10px 16px;border-radius:6px;">Photo Detail</a>
+    <a href="#" class="active">Photo Detail</a>
   </nav>
 
-  <!-- ── MOBILE DROPDOWN ── -->
+  <!-- Mobile Dropdown Card -->
   <nav class="mobile-dropdown-card" id="mobileMenu">
     <a href="/profile/" onclick="closeMenu()">
       <i class="fa-solid fa-house"></i>Home
@@ -349,6 +424,7 @@ body {
     <a href="/home/" onclick="closeMenu()">
       <i class="fa-solid fa-images"></i>Photo Gallery
     </a>
+    <div class="mob-divider"></div>
     <a href="/home/?col=1" onclick="closeMenu()">
       <i class="fa-solid fa-square"></i>1 Column
     </a>
@@ -358,88 +434,114 @@ body {
     <a href="/home/?col=4" onclick="closeMenu()">
       <i class="fa-solid fa-border-all"></i>4 Column
     </a>
-    <a href="/photo_detail/" class="active">
+    <div class="mob-divider"></div>
+    <a href="#" class="active">
       <i class="fa-solid fa-circle-info"></i>Photo Detail
     </a>
   </nav>
 
+  <!-- Hamburger Button -->
   <button id="menuBtn" class="menu-btn" onclick="toggleMenu()">
     <span class="ham-icon">
       <span></span><span></span><span></span>
     </span>
     MENU
   </button>
+
 </div>
 
-<!-- ── HERO ── -->
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-content">
-    <h1 class="hero-title">Photo Details</h1>
-    <nav class="breadcrumb">
+    <h1 class="hero-title">Photo <span>Details</span></h1>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/profile/">Home</a>
-      <span>/</span>
+      <span class="sep">/</span>
       <a href="/home/">Photo Gallery</a>
+      <span class="sep">/</span>
+      <span>{{ photo.title }}</span>
     </nav>
   </div>
 </section>
 
-<!-- ── PHOTO ── -->
+<!-- ══════════════════════════════════════
+     PHOTO
+══════════════════════════════════════ -->
 <div class="photo-wrap">
   <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
 </div>
 
+<!-- ══════════════════════════════════════
+     INFO SECTION
+══════════════════════════════════════ -->
 <div class="info-section">
 
   <aside class="sidebar">
     <div class="sidebar-row">
-      <i class="fas fa-user"></i>
+      <div class="sidebar-icon"><i class="fas fa-user"></i></div>
       <div>
         <div class="sidebar-label">Created By</div>
-        <div class="sidebar-value">siva</div>
+        <div class="sidebar-value">Siva</div>
       </div>
     </div>
     <div class="sidebar-row">
-      <i class="fas fa-calendar"></i>
+      <div class="sidebar-icon"><i class="fas fa-calendar-alt"></i></div>
       <div>
         <div class="sidebar-label">Completed On</div>
         <div class="sidebar-value">05 June 2026</div>
       </div>
     </div>
     <div class="sidebar-row">
-      <i class="fas fa-code"></i>
+      <div class="sidebar-icon"><i class="fas fa-code"></i></div>
       <div>
         <div class="sidebar-label">Skills</div>
         <div class="sidebar-value">HTML5 / CSS3 / Django</div>
       </div>
     </div>
     <div class="sidebar-row">
-      <i class="fas fa-tag"></i>
+      <div class="sidebar-icon"><i class="fas fa-tag"></i></div>
       <div>
         <div class="sidebar-label">Category</div>
         <div class="sidebar-value">Landscape Photography</div>
       </div>
     </div>
+    <div class="sidebar-row">
+      <div class="sidebar-icon"><i class="fas fa-camera"></i></div>
+      <div>
+        <div class="sidebar-label">Camera</div>
+        <div class="sidebar-value">Sony A7R IV</div>
+      </div>
+    </div>
   </aside>
 
   <article class="photo-info">
-    <h2>Photo Info</h2>
-    <p class="photo-name">NAME : {{ photo.title }}</p>
+    <div class="photo-info-header">
+      <h2>Photo Info</h2>
+      <span class="info-badge">Landscape</span>
+    </div>
+
+    <p class="photo-name">{{ photo.title }}</p>
     <p class="photo-desc">{{ photo.description }}</p>
 
-    <!-- Inline icon share row -->
+    <!-- Inline Icon Share Row -->
     <div class="share-row">
       <span class="share-label">Share :</span>
       <div class="share-icons">
-        <a href="https://www.facebook.com/sharer/sharer.php?u=https://photoghor.com/photo/1" target="_blank" title="Facebook">
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+           target="_blank" rel="noopener" title="Facebook">
           <i class="fab fa-facebook-f"></i>
         </a>
-        <a href="https://twitter.com/intent/tweet?url=https://photoghor.com/photo/1&text=Mountain Sunrise" target="_blank" title="Twitter">
+        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ photo.title|urlencode }}"
+           target="_blank" rel="noopener" title="Twitter">
           <i class="fab fa-twitter"></i>
         </a>
         <a href="javascript:void(0);" onclick="shareToWhatsApp()" title="WhatsApp">
           <i class="fab fa-whatsapp"></i>
         </a>
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://photoghor.com/photo/1" target="_blank" title="LinkedIn">
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}"
+           target="_blank" rel="noopener" title="LinkedIn">
           <i class="fab fa-linkedin-in"></i>
         </a>
         <a href="javascript:void(0);" onclick="copyIconLink(this)" title="Copy Link">
@@ -448,32 +550,33 @@ body {
       </div>
     </div>
   </article>
+
 </div>
 
-<!-- ══════════════════════════
-     FOOTER — BRANDED BUTTONS
-══════════════════════════ -->
+<!-- ══════════════════════════════════════
+     FOOTER SHARE BAR
+══════════════════════════════════════ -->
 <footer class="detail-footer">
   <div>
     <div class="footer-share-label">Share This Page</div>
     <div class="footer-share-btns">
-      <a href="https://www.facebook.com/sharer/sharer.php?u=https://photoghor.com/photo/1"
-         target="_blank" class="fsb fsb-facebook">
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+         target="_blank" rel="noopener" class="fsb fsb-facebook">
         <i class="fab fa-facebook-f"></i> Facebook
       </a>
-      <a href="https://twitter.com/intent/tweet?url=https://photoghor.com/photo/1&text=Mountain%20Sunrise"
-         target="_blank" class="fsb fsb-twitter">
+      <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ photo.title|urlencode }}"
+         target="_blank" rel="noopener" class="fsb fsb-twitter">
         <i class="fab fa-twitter"></i> Twitter
       </a>
       <a href="javascript:void(0);" onclick="shareToWhatsApp()" class="fsb fsb-whatsapp">
         <i class="fab fa-whatsapp"></i> WhatsApp
       </a>
-      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://photoghor.com/photo/1"
-         target="_blank" class="fsb fsb-linkedin">
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}"
+         target="_blank" rel="noopener" class="fsb fsb-linkedin">
         <i class="fab fa-linkedin-in"></i> LinkedIn
       </a>
-      <a href="https://pinterest.com/pin/create/button/?url=https://photoghor.com/photo/1&description=Mountain%20Sunrise"
-         target="_blank" class="fsb fsb-pinterest">
+      <a href="https://pinterest.com/pin/create/button/?url={{ request.build_absolute_uri }}&description={{ photo.title|urlencode }}"
+         target="_blank" rel="noopener" class="fsb fsb-pinterest">
         <i class="fab fa-pinterest-p"></i> Pinterest
       </a>
       <button onclick="copyFooterLink(this)" class="fsb fsb-copy">
@@ -485,12 +588,30 @@ body {
     Copyright &copy; <strong>Photoghor</strong> 2026. All Rights Reserved.
   </p>
 </footer>
+
 {% endblock %}
 
 
 {% block extra_js %}
 <script>
-/* ── Menu open/close ── */
+/* ══ THEME TOGGLE ══ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? 'light' : 'dark';
+  localStorage.setItem('pg_theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeIcon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+}
+(function () {
+  const saved = localStorage.getItem('pg_theme');
+  if (saved) {
+    document.documentElement.dataset.theme = saved;
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.className = saved === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+  }
+})();
+
+/* ══ MENU OPEN / CLOSE ══ */
 function toggleMenu() {
   document.getElementById('desktopMenu').classList.toggle('open');
   document.getElementById('mobileMenu').classList.toggle('open');
@@ -502,23 +623,25 @@ function closeMenu() {
   document.getElementById('menuBtn').classList.remove('open');
 }
 
-/* Close when clicking outside */
-document.addEventListener('click', function(e) {
-  if (!document.querySelector('.options-menu-container').contains(e.target)) {
-    closeMenu();
-  }
+/* Close when clicking outside the nav container */
+document.addEventListener('click', function (e) {
+  const container = document.querySelector('.options-menu-container');
+  if (container && !container.contains(e.target)) closeMenu();
 });
 
-/* ── WhatsApp ── */
+/* ══ WHATSAPP SHARE ══ */
 function shareToWhatsApp() {
   const url   = window.location.href;
-  const title = 'Mountain Sunrise';
+  const title = '{{ photo.title|escapejs }}';
   const text  = encodeURIComponent('Check out this photo: *' + title + '* — ' + url);
   const isMob = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  window.open(isMob ? 'whatsapp://send?text=' + text : 'https://web.whatsapp.com/send?text=' + text, '_blank');
+  window.open(
+    isMob ? 'whatsapp://send?text=' + text : 'https://web.whatsapp.com/send?text=' + text,
+    '_blank'
+  );
 }
 
-/* ── Copy Link (footer button) ── */
+/* ══ COPY LINK — FOOTER BUTTON ══ */
 function copyFooterLink(btn) {
   navigator.clipboard.writeText(window.location.href).then(() => {
     btn.classList.add('copied');
@@ -530,7 +653,7 @@ function copyFooterLink(btn) {
   });
 }
 
-/* ── Copy Link (icon row) ── */
+/* ══ COPY LINK — ICON ROW ══ */
 function copyIconLink(el) {
   navigator.clipboard.writeText(window.location.href).then(() => {
     el.innerHTML = '<i class="fas fa-check"></i>';

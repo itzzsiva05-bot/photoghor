@@ -1326,16 +1326,21 @@ function setColumns(cols){
    ===================================================================== */
 function initGalleryItems(){
     document.querySelectorAll('.gallery-item').forEach(function(item){
+var iconBtn = item.querySelector('.icon');
 
-        /* --- Eye icon: open lightbox, NO bubble --- */
-        var iconBtn = item.querySelector('.icon');
-        if(iconBtn){
-            iconBtn.addEventListener('click', function(e){
-                e.stopPropagation();               /* stop bubble to gallery-item */
-                var img = item.querySelector('img');
-                if(img) openImage(img.src);
-            });
+if(iconBtn){
+    iconBtn.addEventListener('click', function(e){
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        var img = item.querySelector('img');
+
+        if(img){
+            openImage(img.src);
         }
+    });
+}
 
         /* --- Gallery-item tap (mobile active overlay) --- */
         item.addEventListener('click', function(e){
