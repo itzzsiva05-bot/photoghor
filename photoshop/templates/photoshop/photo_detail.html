@@ -1,17 +1,31 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mountain Sunrise | Photoghor</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'photoshop/base.html' %}
+{% load static %}
+
+{% block title %}Photoghor Gallery{% endblock %}
+
+{% block header_extra %}{% endblock %}
+
+{% block extra_head %}
 <style>
 /* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* ── THEME VARIABLES ── */
-:root {
+[data-theme="dark"] {
+  --bg:           #0f0f0f;
+  --fg:           #f0f0f0;
+  --border:       #292929;
+  --grey:         #aaaaaa;
+  --menu-bg:      #181818;
+  --menu-text:    #ffffff;
+  --gold:         #e0b034;
+  --mob-active:   #242424;
+  --shadow:       0px 15px 35px rgba(0,0,0,0.45);
+  --sidebar-bg:   #141414;
+  --card-bg:      #141414;
+}
+
+[data-theme="light"] {
   --bg:           #ffffff;
   --fg:           #111111;
   --border:       #e5e5e5;
@@ -24,18 +38,6 @@
   --sidebar-bg:   #fafafa;
   --card-bg:      #fafafa;
 }
-[data-theme="dark"] {
-  --bg:           #0f0f0f;
-  --fg:           #f0f0f0;
-  --border:       #292929;
-  --grey:         #aaaaaa;
-  --menu-bg:      #181818;
-  --menu-text:    #ffffff;
-  --mob-active:   #242424;
-  --shadow:       0px 15px 35px rgba(0,0,0,0.45);
-  --sidebar-bg:   #141414;
-  --card-bg:      #141414;
-}
 
 body {
   font-family: 'Barlow', sans-serif;
@@ -46,14 +48,9 @@ body {
 
 /* ── THEME TOGGLE ── */
 .theme-btn {
-  position: fixed; top: 20px; left: 20px; z-index: 10000;
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 1.5px solid var(--border);
-  background: var(--menu-bg); color: var(--fg);
-  cursor: pointer; display: flex; align-items: center;
-  justify-content: center; font-size: 15px; transition: all .25s;
+  display: none !important;
+  visibility: hidden !important;
 }
-.theme-btn:hover { border-color: var(--gold); color: var(--gold); }
 
 /* ── NAV CONTAINER ── */
 .options-menu-container {
@@ -267,7 +264,6 @@ body {
 ══════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Nav */
   .options-menu-container { top: 15px; right: 15px; }
   .desktop-horizontal-menu { display: none !important; }
 
@@ -305,22 +301,18 @@ body {
     background: var(--mob-active); color: var(--gold);
   }
 
-  /* Hero */
   .hero { height: 180px; padding: 0 15px; }
   .hero-title { font-size: 28px; }
   .breadcrumb { display: none; }
 
-  /* Photo */
   .photo-wrap { padding: 20px 15px; }
   .photo-wrap img { height: 250px; }
 
-  /* Info */
   .info-section { padding: 0 15px 50px; }
   .sidebar-row { padding: 18px 15px; }
   .photo-info h2 { font-size: 28px; }
   .photo-name { font-size: 18px; }
 
-  /* Footer */
   .detail-footer {
     padding: 22px 15px;
     flex-direction: column; align-items: flex-start;
@@ -329,13 +321,10 @@ body {
   .footer-share-btns { gap: 8px; }
 }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<!-- ── THEME TOGGLE ── -->
-<button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">
-  <i class="fas fa-moon" id="themeIcon"></i>
-</button>
+
+{% block content %}
 
 <!-- ══════════════════════════
      NAVIGATION
@@ -389,9 +378,7 @@ body {
     <nav class="breadcrumb">
       <a href="/profile/">Home</a>
       <span>/</span>
-      <a href="/gallery/">Photo Gallery</a>
-      <span>/</span>
-      <span>Mountain Sunrise</span>
+      <a href="/home/">Photo Gallery</a>
     </nav>
   </div>
 </section>
@@ -400,7 +387,6 @@ body {
 <div class="photo-wrap">
   <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
 </div>
-
 
 <div class="info-section">
 
@@ -437,13 +423,8 @@ body {
 
   <article class="photo-info">
     <h2>Photo Info</h2>
-     <p class="photo-name">
-        NAME : {{ photo.title }}
-    </p>
-    <p class="photo-desc">
-        {{ photo.description }}
-    </p>
-    
+    <p class="photo-name">NAME : {{ photo.title }}</p>
+    <p class="photo-desc">{{ photo.description }}</p>
 
     <!-- Inline icon share row -->
     <div class="share-row">
@@ -504,10 +485,10 @@ body {
     Copyright &copy; <strong>Photoghor</strong> 2026. All Rights Reserved.
   </p>
 </footer>
+{% endblock %}
 
-<!-- ══════════════════════════
-     JAVASCRIPT
-══════════════════════════ -->
+
+{% block extra_js %}
 <script>
 /* ── Menu open/close ── */
 function toggleMenu() {
@@ -527,19 +508,6 @@ document.addEventListener('click', function(e) {
     closeMenu();
   }
 });
-
-/* ── Theme ── */
-function toggleTheme() {
-  const html = document.documentElement;
-  const icon = document.getElementById('themeIcon');
-  if (html.dataset.theme === 'dark') {
-    html.dataset.theme = 'light';
-    icon.className = 'fas fa-sun';
-  } else {
-    html.dataset.theme = 'dark';
-    icon.className = 'fas fa-moon';
-  }
-}
 
 /* ── WhatsApp ── */
 function shareToWhatsApp() {
@@ -570,5 +538,4 @@ function copyIconLink(el) {
   });
 }
 </script>
-</body>
-</html>
+{% endblock %}

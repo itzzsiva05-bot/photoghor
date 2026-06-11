@@ -140,24 +140,15 @@ def like_photo(request, photo_id):
 def contact(request):
     if request.method == "POST":
         Contact.objects.create(
-            name=request.POST.get('name'),
-            email=request.POST.get('email'),
-            subject=request.POST.get('subject'),
-            message=request.POST.get('message'),
+            name    = request.POST.get('name'),
+            email   = request.POST.get('email'),
+            subject = request.POST.get('subject'),
+            message = request.POST.get('message'),
         )
+        # Return JSON if AJAX request, else redirect
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'ok'})
         messages.success(request, "Message sent successfully!")
         return redirect('contact')
-
     return render(request, 'photoshop/contact.html')
 
-
-# ---------------------------------------------------------------------------
-# Gallery
-# ---------------------------------------------------------------------------
-
-@login_required(login_url='index')
-def gallery_view(request):
-    photos = GalleryModel.objects.all()
-    return render(request, "photoshop/gallery.html", {
-        "photos": photos,
-    })

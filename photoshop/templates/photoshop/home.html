@@ -1152,7 +1152,8 @@ document.addEventListener('DOMContentLoaded', function(){
     `;
 
     /* Wrap nav + menu + existing theme btn */
-    var themeBtn = headerContainer.querySelector('.theme-toggle-btn');
+    var themeBtn = document.querySelector('.theme-toggle-btn');
+if(themeBtn) themeBtn.parentNode.removeChild(themeBtn);
     var navGroup = document.createElement('div');
     navGroup.className = 'nav-menu-group';
 
@@ -1528,5 +1529,6 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
 });
+
 </script>
 {% endblock %}

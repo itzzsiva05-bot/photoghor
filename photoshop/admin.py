@@ -45,8 +45,14 @@ def compress_image(image_file, max_mb=9):
 # ---------------------------------------------------------------------------
 # Admin registrations
 # ---------------------------------------------------------------------------
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display  = ('name', 'email', 'subject', 'created_at')
+    list_filter   = ('created_at',)
+    search_fields = ('name', 'email', 'subject')
+    readonly_fields = ('created_at',)
+    ordering      = ('-created_at',)
 
-admin.site.register(Contact)
 admin.site.register(Register)
 
 
