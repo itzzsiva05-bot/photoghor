@@ -1,6 +1,7 @@
 {% extends 'photoshop/base.html' %}
 {% load static %}
 
+
 {% block title %}Photoghor — Photo Detail{% endblock %}
 {% block header_extra %}{% endblock %}
 
@@ -381,6 +382,28 @@ body {
   .footer-copy { font-size: 12px; }
 }
 
+.hero-content {
+    display: flex;
+    flex-direction: column; /* முதலில் வரிசையாக வரும் */
+    width: 100%;
+    align-items: flex-start; /* பொதுவான அலைன்மென்ட் */
+  }
+
+  /* 2. தலைப்பை இடது பக்கம் வைக்க */
+  .hero-title {
+    align-self: flex-start; /* இடது பக்கம் */
+    text-align: left;
+    font-size: 28px;
+  }
+
+  /* 3. பிரட்க்ரம்ப் பகுதியை வலது பக்கம் கொண்டு வர */
+  .breadcrumb {
+    display: flex !important;
+    align-self: flex-end; /* வலது பக்கம் தள்ள */
+    text-align: right;
+    margin-top: 10px;
+    font-size: 11px;
+  }
 /* ══════════════════════════════════════
    SMALL MOBILE ≤ 400px
 ══════════════════════════════════════ */
@@ -460,8 +483,7 @@ body {
       <a href="/profile/">Home</a>
       <span class="sep">/</span>
       <a href="/home/">Photo Gallery</a>
-      <span class="sep">/</span>
-      <span>{{ photo.title }}</span>
+      
     </nav>
   </div>
 </section>
