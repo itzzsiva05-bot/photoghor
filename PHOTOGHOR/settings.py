@@ -1,11 +1,11 @@
 from pathlib import Path
+from decouple import config
 import os
 import cloudinary
 from dotenv import load_dotenv
-BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(dotenv_path=BASE_DIR / '.env')
+load_dotenv()  
 
-from decouple import config
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG      = config('DEBUG', default=True, cast=bool)
@@ -94,13 +94,12 @@ WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 # =========================================================
 # DATABASE
 # =========================================================
-DATABASE_URL = os.environ.get('DATABASE_URL')
 
-if DATABASE_URL:
+if os.environ.get('DJANGO_ENV') == 'production':
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(
-            default=DATABASE_URL,
+            default=os.environ.get('DATABASE_URL'),
             conn_max_age=600,
         )
     }
@@ -111,6 +110,7 @@ else:
             'NAME'  : BASE_DIR / 'db.sqlite3',
         }
     }
+
 # =========================================================
 # PASSWORD VALIDATORS
 # =========================================================
