@@ -1,11 +1,13 @@
 from pathlib import Path
-from decouple import config
 import os
 import cloudinary
 from dotenv import load_dotenv
-load_dotenv()  
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=BASE_DIR / '.env')
+
+from decouple import config
+
+
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG      = config('DEBUG', default=True, cast=bool)
@@ -94,23 +96,15 @@ WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 # =========================================================
 # DATABASE
 # =========================================================
+# DATABASE
+import dj_database_url
 
-if os.environ.get('DJANGO_ENV') == 'production':
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600,
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME'  : BASE_DIR / 'db.sqlite3',
-        }
-    }
-
+DATABASES = {
+    'default': dj_database_url.parse(
+        'postgresql://database_lcv5_user:XvRUry3OiqVZpOGdH91a0oJdVsRGMHwY@dpg-d85ael0jo89c73b9iaug-a.oregon-postgres.render.com/database_lcv5',
+        conn_max_age=600,
+    )
+}
 # =========================================================
 # PASSWORD VALIDATORS
 # =========================================================

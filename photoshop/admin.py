@@ -53,7 +53,7 @@ class ContactAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
     ordering      = ('-created_at',)
 
-admin.site.register(Register)
+
 
 
 @admin.register(Gallery)
@@ -102,10 +102,7 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(PhotoLike)
-class PhotoLikeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'photo', 'liked_date')
-    list_filter  = ('liked_date',)
+
 
 
 @admin.register(UserProfile)
