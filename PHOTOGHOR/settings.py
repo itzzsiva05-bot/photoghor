@@ -7,8 +7,6 @@ load_dotenv(dotenv_path=BASE_DIR / '.env')
 
 from decouple import config
 
-
-
 SECRET_KEY = config('SECRET_KEY')
 DEBUG      = config('DEBUG', default=True, cast=bool)
 
@@ -96,15 +94,23 @@ WSGI_APPLICATION = 'PHOTOGHOR.wsgi.application'
 # =========================================================
 # DATABASE
 # =========================================================
-# DATABASE
-import dj_database_url
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-DATABASES = {
-    'default': dj_database_url.parse(
-        'postgresql://database_lcv5_user:XvRUry3OiqVZpOGdH91a0oJdVsRGMHwY@dpg-d85ael0jo89c73b9iaug-a.oregon-postgres.render.com/database_lcv5',
-        conn_max_age=600,
-    )
-}
+if DATABASE_URL:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME'  : BASE_DIR / 'db.sqlite3',
+        }
+    }
 # =========================================================
 # PASSWORD VALIDATORS
 # =========================================================
